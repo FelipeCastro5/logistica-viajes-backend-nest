@@ -69,8 +69,8 @@ export class UsuarioController {
       dto.p_apellido,
       dto.s_apellido,
       dto.telefono,
-      dto.correo,
-      dto.contrasena,
+      // dto.correo,
+      // dto.contrasena,
     );
     return this.commandBus.execute(command);
   }

@@ -11,11 +11,22 @@ export class UpdateUsuarioHandler implements ICommandHandler<UpdateUsuarioComman
   constructor(
     @Inject('UsuarioInterface')
     private readonly usuarioRepository: UsuarioInterface,
-  ) {}
+  ) { }
 
   async execute(command: UpdateUsuarioCommand) {
     try {
-      const result = await this.usuarioRepository.updateUsuario(command.id, { ...command });
+      const result = await this.usuarioRepository.updateUsuario(
+        command.id,
+        command.fk_tipodoc,
+        command.num_doc,
+        command.fk_rol,
+        command.fk_contador,
+        command.p_nombre,
+        command.s_nombre,
+        command.p_apellido,
+        command.s_apellido,
+        command.telefono
+      );
       if (!result?.rowCount) {
         return ResponseUtil.error('Usuario no encontrado', 404);
       }

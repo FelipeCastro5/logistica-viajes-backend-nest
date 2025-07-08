@@ -48,12 +48,12 @@ export class UpdateUsuarioDto {
   @IsString()
   telefono: string;
 
-  @ApiProperty({ example: 'juan.perez@example.com', description: 'Correo electrónico del usuario' })
-  @IsEmail()
-  correo: string;
+  // @ApiProperty({ example: 'juan.perez@example.com', description: 'Correo electrónico del usuario' })
+  // @IsEmail()
+  // correo: string;
 
-  @ApiProperty({ example: 'NuevaClave456!', description: 'Nueva contraseña del usuario' })
-  @IsString()
-  @Length(6, 50)
-  contrasena: string;
+  // @ApiProperty({ example: 'NuevaClave456!', description: 'Nueva contraseña del usuario' })
+  // @IsString()
+  // @Length(6, 50)
+  // contrasena: string;
 }

@@ -8,8 +8,8 @@ SET
   s_nombre = $6,
   p_apellido = $7,
   s_apellido = $8,
-  telefono = $9,
-  correo = $10,
-  contrasena = $11
-WHERE id_usuario = $12
+  telefono = $9--,
+--  correo = $10,
+--  contrasena = $11
+WHERE id_usuario = $10
 RETURNING *;

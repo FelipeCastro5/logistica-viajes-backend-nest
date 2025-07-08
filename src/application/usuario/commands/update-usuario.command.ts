@@ -11,7 +11,7 @@ export class UpdateUsuarioCommand {
     public readonly p_apellido: string,
     public readonly s_apellido: string,
     public readonly telefono: string,
-    public readonly correo: string,
-    public readonly contrasena: string,
+    //public readonly correo: string,
+    //public readonly contrasena: string,
   ) {}
 }

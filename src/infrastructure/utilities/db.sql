@@ -57,7 +57,8 @@ create table usuario (
   s_apellido varchar(20),
   telefono varchar(13),
   correo varchar(300),
-  contrasena varchar(50)
+  contrasena varchar(50),
+  estado_usuario boolean default true
 );
 
 create table viaje (
@@ -69,7 +70,7 @@ create table viaje (
   fk_destino int,
   codigo varchar,
   observaciones varchar(250),
-  estado boolean,
+  estado_viaje boolean,
   producto varchar(250),
   detalle_producto varchar(250),
   direccion_llegada varchar(250),
@@ -100,28 +101,28 @@ create table mensajes (
   fecha timestamp default current_timestamp
 );
 
-alter table cliente add foreign key (fk_usuario) references usuario(id_usuario);
+alter table cliente add foreign key (fk_usuario) references usuario(id_usuario) on delete cascade;
 
-alter table usuario add foreign key (fk_rol) references rol (id_rol);
+alter table usuario add foreign key (fk_rol) references rol (id_rol) on delete restrict;
 
-alter table usuario add foreign key (fk_contador) references rol (id_rol);
+alter table usuario add foreign key (fk_contador) references rol (id_rol) on delete set null;
 
-alter table usuario add foreign key (fk_tipodoc) references tipodoc (id_tipodoc);
+alter table usuario add foreign key (fk_tipodoc) references tipodoc (id_tipodoc) on delete restrict;
 
-alter table viaje add foreign key (fk_usuario) references usuario (id_usuario);
+alter table viaje add foreign key (fk_usuario) references usuario (id_usuario) on delete cascade;
 
-alter table viaje add foreign key (fk_manifiesto) references manifiesto (id_manifiesto);
+alter table viaje add foreign key (fk_manifiesto) references manifiesto (id_manifiesto) on delete set null;
 
-alter table viaje add foreign key (fk_cliente) references cliente (id_cliente);
+alter table viaje add foreign key (fk_cliente) references cliente (id_cliente) on delete set null;
 
-alter table viaje add foreign key (fk_origen) references lugar (id_lugar);
+alter table viaje add foreign key (fk_origen) references lugar (id_lugar) on delete set null;
 
-alter table viaje add foreign key (fk_destino) references lugar (id_lugar);
+alter table viaje add foreign key (fk_destino) references lugar (id_lugar) on delete set null;
 
-alter table gastosxviaje add foreign key (fk_viaje) references viaje (id_viaje);
+alter table gastosxviaje add foreign key (fk_viaje) references viaje (id_viaje) on delete cascade;
 
-alter table gastosxviaje add foreign key (fk_gasto) references gasto (id_gasto);
+alter table gastosxviaje add foreign key (fk_gasto) references gasto (id_gasto) on delete restrict;
 
-alter table chat add foreign key (fk_usuario) references usuario (id_usuario);
+alter table chat add foreign key (fk_usuario) references usuario (id_usuario) on delete cascade;
 
-alter table mensajes add foreign key (fk_chat) references chat (id_chat);
+alter table mensajes add foreign key (fk_chat) references chat (id_chat) on delete cascade;
