@@ -6,6 +6,7 @@ import { HistorialModule } from './presentation/modules/historial.module';
 import { iaModule } from './infrastructure/ia-service/ia.module';
 import { UsuarioModule } from './presentation/modules/usuario.module';
 import { ClienteModule } from './presentation/modules/cliente.module';
+import { GastoModule } from './presentation/modules/gasto.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ClienteModule } from './presentation/modules/cliente.module';
     //Entidades
     UsuarioModule,
     ClienteModule,
+    GastoModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
