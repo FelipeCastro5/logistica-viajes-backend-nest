@@ -19,13 +19,24 @@ export class UsuarioRepository implements UsuarioInterface {
     return result.rows[0] || null;
   }
 
-  async createUsuario(usuario: Omit<Usuario, 'id_usuario'>): Promise<Usuario> {
+  async createUsuario(
+    fk_tipodoc: number,
+    num_doc: string,
+    fk_rol: number,
+    fk_contador: number,
+    p_nombre: string,
+    s_nombre: string,
+    p_apellido: string,
+    s_apellido: string,
+    telefono: string,
+    correo: string,
+    contrasena: string
+  ): Promise<Usuario> {
     const query = this.postgresService.getQuery('insert-usuario');
     const params = [
-      usuario.fk_tipodoc, usuario.num_doc, usuario.fk_rol,
-      usuario.fk_contador, usuario.p_nombre, usuario.s_nombre,
-      usuario.p_apellido, usuario.s_apellido, usuario.telefono,
-      usuario.correo, usuario.contrasena
+      fk_tipodoc, num_doc, fk_rol, fk_contador,
+      p_nombre, s_nombre, p_apellido, s_apellido, 
+      telefono, correo, contrasena 
     ];
     const result = await this.postgresService.query<Usuario>(query, params);
     return result.rows[0];
