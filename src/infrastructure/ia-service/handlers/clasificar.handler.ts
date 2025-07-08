@@ -15,6 +15,17 @@ export class ClasificacionHandler {
     private readonly mixtoHandler: MixtoHandler,
   ) {}
 
+
+
+  // idea, en lugar de cargar toda la db, si cargarlo, pero solo para pedir 
+  // las tablas puntuales a las q se consultara informacion
+  // en otra consulta, mandar puntualmente esas tablas y pedir la query
+
+
+
+
+
+
   async procesarPreguntaInteligente(fk_user: number, pregunta: string): Promise<any> {
     try {
       const tipo = await this.toolkit.clasificarTipoDePregunta(pregunta);
