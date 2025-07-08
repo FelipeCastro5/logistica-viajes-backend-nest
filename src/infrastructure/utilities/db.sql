@@ -105,7 +105,7 @@ alter table cliente add foreign key (fk_usuario) references usuario(id_usuario) 
 
 alter table usuario add foreign key (fk_rol) references rol (id_rol) on delete restrict;
 
-alter table usuario add foreign key (fk_contador) references rol (id_rol) on delete set null;
+alter table usuario add foreign key (fk_contador) references usuario (id_usuario) on delete set null;
 
 alter table usuario add foreign key (fk_tipodoc) references tipodoc (id_tipodoc) on delete restrict;
 
