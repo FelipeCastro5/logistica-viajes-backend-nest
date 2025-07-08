@@ -1,0 +1,1 @@
+SELECT * FROM lugar WHERE id_lugar = $1;

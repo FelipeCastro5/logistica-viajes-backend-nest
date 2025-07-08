@@ -7,6 +7,7 @@ import { iaModule } from './infrastructure/ia-service/ia.module';
 import { UsuarioModule } from './presentation/modules/usuario.module';
 import { ClienteModule } from './presentation/modules/cliente.module';
 import { GastoModule } from './presentation/modules/gasto.module';
+import { LugarModule } from './presentation/modules/lugar.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GastoModule } from './presentation/modules/gasto.module';
     UsuarioModule,
     ClienteModule,
     GastoModule,
+    LugarModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
