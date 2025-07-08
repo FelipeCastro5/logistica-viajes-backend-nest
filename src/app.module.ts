@@ -10,6 +10,7 @@ import { GastoModule } from './presentation/modules/gasto.module';
 import { LugarModule } from './presentation/modules/lugar.module';
 import { ManifiestoModule } from './presentation/modules/manifiesto.module';
 import { ViajeModule } from './presentation/modules/viaje.module';
+import { RolModule } from './presentation/modules/rol.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ViajeModule } from './presentation/modules/viaje.module';
     LugarModule,
     ManifiestoModule,
     ViajeModule,
+    RolModule,
     
   ],
   //controllers: [AppController],
