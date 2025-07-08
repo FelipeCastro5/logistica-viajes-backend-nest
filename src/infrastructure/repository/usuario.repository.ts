@@ -22,7 +22,7 @@ export class UsuarioRepository implements UsuarioInterface {
   async createUsuario(usuario: Omit<Usuario, 'id_usuario'>): Promise<Usuario> {
     const query = this.postgresService.getQuery('insert-usuario');
     const params = [
-      usuario.fk_tipodoc, usuario.num_doc, usuario.fk_perfil,
+      usuario.fk_tipodoc, usuario.num_doc, usuario.fk_rol,
       usuario.fk_contador, usuario.p_nombre, usuario.s_nombre,
       usuario.p_apellido, usuario.s_apellido, usuario.telefono,
       usuario.correo, usuario.contrasena
@@ -34,7 +34,7 @@ export class UsuarioRepository implements UsuarioInterface {
   async updateUsuario(id: number, usuario: Omit<Usuario, 'id_usuario'>): Promise<any> {
     const query = this.postgresService.getQuery('update-usuario');
     const params = [
-      usuario.fk_tipodoc, usuario.num_doc, usuario.fk_perfil,
+      usuario.fk_tipodoc, usuario.num_doc, usuario.fk_rol,
       usuario.fk_contador, usuario.p_nombre, usuario.s_nombre,
       usuario.p_apellido, usuario.s_apellido, usuario.telefono,
       usuario.correo, usuario.contrasena, id

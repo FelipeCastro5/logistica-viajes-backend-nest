@@ -1,8 +1,8 @@
 export class Usuario {
   id_usuario: number;
-  fk_tipodoc: string;
+  fk_tipodoc: number;
   num_doc: string;
-  fk_perfil: number;
+  fk_rol: number;
   fk_contador: number;
   p_nombre: string;
   s_nombre: string;

@@ -1,5 +1,5 @@
 INSERT INTO usuario (
-  fk_tipodoc, num_doc, fk_perfil, fk_contador,
+  fk_tipodoc, num_doc, fk_rol, fk_contador,
   p_nombre, s_nombre, p_apellido, s_apellido,
   telefono, correo, contrasena
 )

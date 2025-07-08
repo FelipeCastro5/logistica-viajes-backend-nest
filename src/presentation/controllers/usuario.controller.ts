@@ -41,7 +41,7 @@ export class UsuarioController {
     const command = new CreateUsuarioCommand(
       dto.fk_tipodoc,
       dto.num_doc,
-      dto.fk_perfil,
+      dto.fk_rol,
       dto.fk_contador,
       dto.p_nombre,
       dto.s_nombre,
@@ -62,7 +62,7 @@ export class UsuarioController {
       dto.id,
       dto.fk_tipodoc,
       dto.num_doc,
-      dto.fk_perfil,
+      dto.fk_rol,
       dto.fk_contador,
       dto.p_nombre,
       dto.s_nombre,

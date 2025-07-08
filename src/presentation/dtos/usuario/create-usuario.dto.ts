@@ -2,17 +2,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsInt, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateUsuarioDto {
-  @ApiProperty({ example: 'CC', description: 'Tipo de documento (CC, TI, etc.)' })
+  @ApiProperty({ example: '1', description: 'Tipo de documento (CC, TI, etc.)' })
   @IsString()
-  fk_tipodoc: string;
+  fk_tipodoc: number;
 
   @ApiProperty({ example: '1234567890', description: 'Número de documento' })
   @IsString()
   num_doc: string;
 
-  @ApiProperty({ example: 1, description: 'ID del perfil asociado' })
+  @ApiProperty({ example: 1, description: 'ID del rol asociado' })
   @IsInt()
-  fk_perfil: number;
+  fk_rol: number;
 
   @ApiProperty({ example: 2, description: 'ID del contador asociado' })
   @IsInt()

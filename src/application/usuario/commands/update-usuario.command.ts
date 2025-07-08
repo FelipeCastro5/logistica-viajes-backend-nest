@@ -2,9 +2,9 @@
 export class UpdateUsuarioCommand {
   constructor(
     public readonly id: number,
-    public readonly fk_tipodoc: string,
+    public readonly fk_tipodoc: number,
     public readonly num_doc: string,
-    public readonly fk_perfil: number,
+    public readonly fk_rol: number,
     public readonly fk_contador: number,
     public readonly p_nombre: string,
     public readonly s_nombre: string,

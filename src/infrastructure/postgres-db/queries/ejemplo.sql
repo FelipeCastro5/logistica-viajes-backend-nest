@@ -3,7 +3,7 @@ DELETE FROM usuario WHERE id_usuario = $1;
 SELECT * FROM usuario;
 SELECT * FROM usuario WHERE id_usuario = $1;
 INSERT INTO usuario (
-  fk_tipodoc, num_doc, fk_perfil, fk_contador,
+  fk_tipodoc, num_doc, fk_rol, fk_contador,
   p_nombre, s_nombre, p_apellido, s_apellido,
   telefono, correo, contrasena
 )
@@ -17,7 +17,7 @@ UPDATE usuario
 SET
   fk_tipodoc = $1,
   num_doc = $2,
-  fk_perfil = $3,
+  fk_rol = $3,
   fk_contador = $4,
   p_nombre = $5,
   s_nombre = $6,

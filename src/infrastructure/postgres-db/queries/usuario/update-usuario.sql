@@ -2,7 +2,7 @@ UPDATE usuario
 SET
   fk_tipodoc = $1,
   num_doc = $2,
-  fk_perfil = $3,
+  fk_rol = $3,
   fk_contador = $4,
   p_nombre = $5,
   s_nombre = $6,
