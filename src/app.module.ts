@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HistorialModule } from './presentation/modules/historial.module';
 import { iaModule } from './infrastructure/ia-service/ia.module';
 import { UsuarioModule } from './presentation/modules/usuario.module';
+import { ClienteModule } from './presentation/modules/cliente.module';
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { UsuarioModule } from './presentation/modules/usuario.module';
     GoogleDriveModule,
     ConfigModule.forRoot({ isGlobal: true }), // 👈 carga automáticamente .env
     GeminiModule,
-    UsuarioModule
+    //Entidades
+    UsuarioModule,
+    ClienteModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
