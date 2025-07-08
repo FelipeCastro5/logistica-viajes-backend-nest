@@ -9,6 +9,7 @@ import { ClienteModule } from './presentation/modules/cliente.module';
 import { GastoModule } from './presentation/modules/gasto.module';
 import { LugarModule } from './presentation/modules/lugar.module';
 import { ManifiestoModule } from './presentation/modules/manifiesto.module';
+import { ViajeModule } from './presentation/modules/viaje.module';
 
 @Module({
   imports: [
@@ -23,6 +24,8 @@ import { ManifiestoModule } from './presentation/modules/manifiesto.module';
     GastoModule,
     LugarModule,
     ManifiestoModule,
+    ViajeModule,
+    
   ],
   //controllers: [AppController],
   //providers: [AppService],
