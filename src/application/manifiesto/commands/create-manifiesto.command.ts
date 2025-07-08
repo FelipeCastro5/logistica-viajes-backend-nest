@@ -1,0 +1,19 @@
+// create-manifiesto.command.ts
+export class CreateManifiestoCommand {
+  constructor(
+    public readonly flete_total: number,
+    public readonly porcentaje_retencion_fuente: number,
+    public readonly valor_retencion_fuente: number,
+    public readonly porcentaje_ica: number,
+    public readonly valor_ica: number,
+    public readonly deduccion_fiscal: number,
+    public readonly neto_a_pagar: number,
+    public readonly anticipo: number,
+    public readonly saldo_a_pagar: number,
+    public readonly total_gastos: number,
+    public readonly queda_al_carro: number,
+    public readonly a_favor_del_carro: number,
+    public readonly porcentaje_conductor: number,
+    public readonly ganacia_conductor: number,
+  ) {}
+}

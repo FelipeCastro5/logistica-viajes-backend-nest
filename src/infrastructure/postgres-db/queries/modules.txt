@@ -1,7 +1,11 @@
-dame la query module repository interface y entity de esta tabla como estos ejemplos
+dame las query module repository interface y entity de esta tabla como estos ejemplos
+delete-usuario.sql
 DELETE FROM usuario WHERE id_usuario = $1;
+get-all-usuarios.sql
 SELECT * FROM usuario;
+get-usuario.sql
 SELECT * FROM usuario WHERE id_usuario = $1;
+insert-usuario.sql
 INSERT INTO usuario (
   fk_tipodoc, num_doc, fk_rol, fk_contador,
   p_nombre, s_nombre, p_apellido, s_apellido,
@@ -13,6 +17,7 @@ VALUES (
   $9, $10, $11
 )
 RETURNING *;
+update-usuario.sql
 UPDATE usuario
 SET
   fk_tipodoc = $1,
@@ -28,7 +33,7 @@ SET
   contrasena = $11
 WHERE id_usuario = $12
 RETURNING *;
-
+usuario.module.ts
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { UsuarioRepository } from '../../infrastructure/repository/usuario.repository';
@@ -57,7 +62,7 @@ import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-us
   controllers: [UsuarioController],
 })
 export class UsuarioModule {}
-
+usuario.entity.ts
 export class Usuario {
   id_usuario: number;
   fk_tipodoc: number;
@@ -72,7 +77,7 @@ export class Usuario {
   correo: string;
   contrasena: string;
 }
-
+usuario.interface.ts
 import { Usuario } from './usuario.entity';
 
 export interface UsuarioInterface {
@@ -105,7 +110,7 @@ export interface UsuarioInterface {
   ): Promise<any>;
   deleteUsuario(id: number): Promise<any>;
 }
-
+usuario.repository.ts
 import { Injectable } from '@nestjs/common';
 import { UsuarioInterface } from '../../domain/usuario-domain/usuario.interface';
 import { Usuario } from '../../domain/usuario-domain/usuario.entity';

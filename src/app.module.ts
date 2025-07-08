@@ -8,6 +8,7 @@ import { UsuarioModule } from './presentation/modules/usuario.module';
 import { ClienteModule } from './presentation/modules/cliente.module';
 import { GastoModule } from './presentation/modules/gasto.module';
 import { LugarModule } from './presentation/modules/lugar.module';
+import { ManifiestoModule } from './presentation/modules/manifiesto.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { LugarModule } from './presentation/modules/lugar.module';
     ClienteModule,
     GastoModule,
     LugarModule,
+    ManifiestoModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
