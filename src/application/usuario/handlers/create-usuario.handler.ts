@@ -11,15 +11,18 @@ export class CreateUsuarioHandler implements ICommandHandler<CreateUsuarioComman
   constructor(
     @Inject('UsuarioInterface')
     private readonly usuarioRepository: UsuarioInterface,
-  ) {}
+  ) { }
 
   async execute(command: CreateUsuarioCommand) {
     try {
       const usuario = await this.usuarioRepository.createUsuario({ ...command });
       return ResponseUtil.success(usuario, 'Usuario creado exitosamente', 201);
     } catch (error) {
+      // Si es HttpException, extrae su status
       console.error('Error en CreateUsuarioHandler:', error);
-      return ResponseUtil.error('Error al crear el usuario', 500);
+      const status = error.getStatus?.() ?? 500;
+      const message = error.response?.message || 'Error al crear el usuario';
+      return ResponseUtil.error(message, status);
     }
   }
 }

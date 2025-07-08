@@ -22,7 +22,9 @@ export class DeleteUsuarioHandler implements ICommandHandler<DeleteUsuarioComman
       return ResponseUtil.success(null, 'Usuario eliminado exitosamente', 200);
     } catch (error) {
       console.error('Error en DeleteUsuarioHandler:', error);
-      return ResponseUtil.error('Error al eliminar el usuario', 500);
+      const status = error.getStatus?.() ?? 500;
+      const message = error.response?.message || 'Error al eliminar el usuario';
+      return ResponseUtil.error(message, status);
     }
   }
 }

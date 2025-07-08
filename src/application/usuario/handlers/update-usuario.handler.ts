@@ -22,7 +22,9 @@ export class UpdateUsuarioHandler implements ICommandHandler<UpdateUsuarioComman
       return ResponseUtil.success(null, 'Usuario actualizado exitosamente', 200);
     } catch (error) {
       console.error('Error en UpdateUsuarioHandler:', error);
-      return ResponseUtil.error('Error al actualizar el usuario', 500);
+      const status = error.getStatus?.() ?? 500;
+      const message = error.response?.message || 'Error al actualizar el usuario';
+      return ResponseUtil.error(message, status);
     }
   }
 }

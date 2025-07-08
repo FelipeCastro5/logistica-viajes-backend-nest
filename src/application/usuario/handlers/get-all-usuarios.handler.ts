@@ -19,7 +19,9 @@ export class GetAllUsuariosHandler implements IQueryHandler<GetAllUsuariosComman
       return ResponseUtil.success(usuarios, 'Usuarios obtenidos exitosamente');
     } catch (error) {
       console.error('Error en GetAllUsuariosHandler:', error);
-      return ResponseUtil.error('Error al obtener los usuarios', 500);
+      const status = error.getStatus?.() ?? 500;
+      const message = error.response?.message || 'Error al obtener los usuarios';
+      return ResponseUtil.error(message, status);
     }
   }
 }

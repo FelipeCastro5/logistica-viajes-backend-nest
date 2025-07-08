@@ -22,7 +22,9 @@ export class GetUsuarioByIdHandler implements IQueryHandler<GetUsuarioByIdComman
       return ResponseUtil.success(usuario, 'Usuario encontrado exitosamente');
     } catch (error) {
       console.error('Error en GetUsuarioByIdHandler:', error);
-      return ResponseUtil.error('Error al obtener el usuario', 500);
+      const status = error.getStatus?.() ?? 500;
+      const message = error.response?.message || 'Error al obtener el usuario';
+      return ResponseUtil.error(message, status);
     }
   }
 }
