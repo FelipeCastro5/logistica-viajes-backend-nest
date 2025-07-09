@@ -13,6 +13,7 @@ import { ViajeModule } from './presentation/modules/viaje.module';
 import { RolModule } from './presentation/modules/rol.module';
 import { Tipodoc } from './domain/tipodoc-domain/tipodoc.entity';
 import { GastoxviajeModule } from './presentation/modules/gastoxviaje.module';
+import { MensajeModule } from './presentation/modules/mensaje.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GastoxviajeModule } from './presentation/modules/gastoxviaje.module';
     RolModule,
     Tipodoc,
     GastoxviajeModule,
+    MensajeModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
