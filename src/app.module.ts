@@ -11,6 +11,7 @@ import { LugarModule } from './presentation/modules/lugar.module';
 import { ManifiestoModule } from './presentation/modules/manifiesto.module';
 import { ViajeModule } from './presentation/modules/viaje.module';
 import { RolModule } from './presentation/modules/rol.module';
+import { Tipodoc } from './domain/tipodoc-domain/tipodoc.entity';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RolModule } from './presentation/modules/rol.module';
     ManifiestoModule,
     ViajeModule,
     RolModule,
+    Tipodoc,
     
   ],
   //controllers: [AppController],
