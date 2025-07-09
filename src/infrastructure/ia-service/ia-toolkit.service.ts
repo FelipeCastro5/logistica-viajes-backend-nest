@@ -23,7 +23,10 @@ export class IaToolkitService {
   // 🔹 Generar prompt desde historial
   public generarPromptDesdeHistorial(historial: any[], pregunta: string): string {
     if (historial.length === 0) {
-      return `El usuario pregunta: "${pregunta}". Responde de forma clara y en español.`;
+      return `El usuario pregunta: "${pregunta}". 
+        Responde de forma clara y en español en un máximo de 400 a 500 caracteres. 
+        Además, sugiere un título breve (máximo 80 caracteres) que resuma la conversación. 
+        Incluye el título iniciando una línea con: "Título: ..."`;
     }
 
     const contexto = historial
@@ -98,4 +101,10 @@ Devuelve solo una palabra: sql, historial o mixto.`;
     this.logger.warn(`⚠️ Clasificación no reconocida: ${tipo}. Se usará 'historial' por defecto.`);
     return 'historial';
   }
+
+// function extraerTituloDeRespuesta(respuesta: string): string | null {
+//   const match = respuesta.match(/Título:\s*(.+)/i);
+//   return match ? match[1].trim() : null;
+// }
+
 }
