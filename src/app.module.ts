@@ -14,6 +14,7 @@ import { RolModule } from './presentation/modules/rol.module';
 import { Tipodoc } from './domain/tipodoc-domain/tipodoc.entity';
 import { GastoxviajeModule } from './presentation/modules/gastoxviaje.module';
 import { MensajeModule } from './presentation/modules/mensaje.module';
+import { ChatModule } from './presentation/modules/chat.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MensajeModule } from './presentation/modules/mensaje.module';
     Tipodoc,
     GastoxviajeModule,
     MensajeModule,
+    ChatModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
