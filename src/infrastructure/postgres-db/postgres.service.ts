@@ -28,6 +28,7 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
       port: config.port,
       host: config.host,
       password: config.password,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
     });
     this.connect();
     this.loadQueries();
