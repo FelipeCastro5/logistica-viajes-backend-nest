@@ -15,14 +15,17 @@ import { Tipodoc } from './domain/tipodoc-domain/tipodoc.entity';
 import { GastoxviajeModule } from './presentation/modules/gastoxviaje.module';
 import { MensajeModule } from './presentation/modules/mensaje.module';
 import { ChatModule } from './presentation/modules/chat.module';
+import { EmailModule } from './infrastructure/email-service/email-service.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // 👈 carga automáticamente .env
+    //Services
     iaModule,
     HistorialModule,
     GoogleDriveModule,
-    ConfigModule.forRoot({ isGlobal: true }), // 👈 carga automáticamente .env
     GeminiModule,
+    EmailModule,
     //Entidades
     UsuarioModule,
     ClienteModule,
