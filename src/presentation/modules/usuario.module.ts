@@ -9,10 +9,11 @@ import { UpdateUsuarioHandler } from '../../application/usuario/handlers/update-
 import { DeleteUsuarioHandler } from '../../application/usuario/handlers/delete-usuario.handler';
 import { GetAllUsuariosHandler } from '../../application/usuario/handlers/get-all-usuarios.handler';
 import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-usuario-by-id.handler';
-import { GetUsuarioByCorreoHandler } from 'src/application/usuario/handlers/get-usuario-by-correo.handler';
+import { GetUsuarioByCorreoHandler } from '../../application/usuario/handlers/get-usuario-by-correo.handler';
+import { JwtCustomModule } from '../../infrastructure/jwt/jwt.module';
 
 @Module({
-  imports: [PostgresModule, CqrsModule],
+  imports: [PostgresModule, CqrsModule, JwtCustomModule],
   providers: [
     {
       provide: 'UsuarioInterface',
