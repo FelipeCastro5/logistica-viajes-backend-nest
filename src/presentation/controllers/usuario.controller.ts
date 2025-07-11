@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Query,} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
@@ -10,6 +10,7 @@ import { GetUsuarioByIdCommand } from '../../application/usuario/commands/get-us
 
 import { CreateUsuarioDto } from '../dtos/usuario/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dtos/usuario/update-usuario.dto';
+import { GetUsuarioByCorreoCommand } from 'src/application/usuario/commands/get-usuario-by-correo.command';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -17,7 +18,7 @@ export class UsuarioController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+  ) { }
 
   @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los usuarios' })
@@ -80,5 +81,16 @@ export class UsuarioController {
   @ApiResponse({ status: 200, description: 'Usuario eliminado exitosamente' })
   async deleteUsuario(@Query('id') id: number) {
     return this.commandBus.execute(new DeleteUsuarioCommand(id));
+  }
+
+  @Get('login')
+  @ApiOperation({ summary: 'Obtener usuario por correo para login' })
+  @ApiResponse({ status: 200, description: 'Usuario encontrado exitosamente' })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  async getUsuarioByCorreo(
+    @Query('correo') correo: string,
+    @Query('contrasena') contrasena: string
+  ) {
+    return this.queryBus.execute(new GetUsuarioByCorreoCommand(correo, contrasena));
   }
 }

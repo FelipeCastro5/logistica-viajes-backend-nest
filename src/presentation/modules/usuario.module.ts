@@ -9,6 +9,7 @@ import { UpdateUsuarioHandler } from '../../application/usuario/handlers/update-
 import { DeleteUsuarioHandler } from '../../application/usuario/handlers/delete-usuario.handler';
 import { GetAllUsuariosHandler } from '../../application/usuario/handlers/get-all-usuarios.handler';
 import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-usuario-by-id.handler';
+import { GetUsuarioByCorreoHandler } from 'src/application/usuario/handlers/get-usuario-by-correo.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],
@@ -22,6 +23,7 @@ import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-us
     DeleteUsuarioHandler,
     GetAllUsuariosHandler,
     GetUsuarioByIdHandler,
+    GetUsuarioByCorreoHandler,
   ],
   controllers: [UsuarioController],
 })

@@ -35,8 +35,8 @@ export class UsuarioRepository implements UsuarioInterface {
     const query = this.postgresService.getQuery('insert-usuario');
     const params = [
       fk_tipodoc, num_doc, fk_rol, fk_contador,
-      p_nombre, s_nombre, p_apellido, s_apellido, 
-      telefono, correo, contrasena 
+      p_nombre, s_nombre, p_apellido, s_apellido,
+      telefono, correo, contrasena
     ];
     const result = await this.postgresService.query<Usuario>(query, params);
     return result.rows[0];
@@ -67,5 +67,11 @@ export class UsuarioRepository implements UsuarioInterface {
   async deleteUsuario(id: number): Promise<any> {
     const query = this.postgresService.getQuery('delete-usuario');
     return this.postgresService.query<any[]>(query, [id]);
+  }
+
+  async getByCorreo(correo: string): Promise<any | null> {
+    const query = this.postgresService.getQuery('login');
+    const result = await this.postgresService.query<any>(query, [correo]);
+    return result.rows[0] || null;
   }
 }

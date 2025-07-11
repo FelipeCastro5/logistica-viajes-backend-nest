@@ -29,4 +29,5 @@ export interface UsuarioInterface {
     telefono: string
   ): Promise<any>;
   deleteUsuario(id: number): Promise<any>;
+  getByCorreo(correo: string): Promise<any | null>;
 }
