@@ -4,6 +4,7 @@ import { CreateUsuarioCommand } from '../commands/create-usuario.command';
 import { Inject, Injectable } from '@nestjs/common';
 import { UsuarioInterface } from '../../../domain/usuario-domain/usuario.interface';
 import { ResponseUtil } from '../../utilities/response.util';
+import { HashService } from 'src/application/utilities/hash.service';
 
 @CommandHandler(CreateUsuarioCommand)
 @Injectable()
@@ -15,6 +16,7 @@ export class CreateUsuarioHandler implements ICommandHandler<CreateUsuarioComman
 
   async execute(command: CreateUsuarioCommand) {
     try {
+    const hashedPassword = await HashService.hash(command.contrasena);
       const usuario = await this.usuarioRepository.createUsuario(
         command.fk_tipodoc,
         command.num_doc,
@@ -26,9 +28,10 @@ export class CreateUsuarioHandler implements ICommandHandler<CreateUsuarioComman
         command.s_apellido,
         command.telefono,
         command.correo,
-        command.contrasena
+        hashedPassword 
       );
-      return ResponseUtil.success(usuario, 'Usuario creado exitosamente', 201);
+      const { contrasena, ...usuarioSinContrasena } = usuario;
+      return ResponseUtil.success(usuarioSinContrasena, 'Usuario creado exitosamente', 201);
     } catch (error) {
       // Si es HttpException, extrae su status
       console.error('Error en CreateUsuarioHandler:', error);
