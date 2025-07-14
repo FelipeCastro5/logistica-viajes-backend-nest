@@ -16,6 +16,7 @@ import { GastoxviajeModule } from './presentation/modules/gastoxviaje.module';
 import { MensajeModule } from './presentation/modules/mensaje.module';
 import { ChatModule } from './presentation/modules/chat.module';
 import { EmailModule } from './infrastructure/email-service/email-service.module';
+import { AuthModule } from './infrastructure/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EmailModule } from './infrastructure/email-service/email-service.module
     GoogleDriveModule,
     GeminiModule,
     EmailModule,
+    AuthModule,
     //Entidades
     UsuarioModule,
     ClienteModule,
