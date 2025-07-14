@@ -10,6 +10,7 @@ import { GetViajeByIdCommand } from '../../application/viaje/commands/get-viaje-
 
 import { CreateViajeDto } from '../dtos/viaje/create-viaje.dto';
 import { UpdateViajeDto } from '../dtos/viaje/update-viaje.dto';
+import { GetViajesPaginatedByUsuarioCommand } from 'src/application/viaje/commands/get-viajes-paginated-by-usuario.command';
 
 @ApiTags('Viajes')
 @Controller('viajes')
@@ -17,7 +18,7 @@ export class ViajeController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+  ) { }
 
   @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los viajes' })
@@ -86,5 +87,19 @@ export class ViajeController {
   @ApiResponse({ status: 404, description: 'Viaje no encontrado' })
   async deleteViaje(@Query('id') id: number) {
     return this.commandBus.execute(new DeleteViajeCommand(id));
+  }
+
+  @Get('paginatedByUsuario')
+  @ApiOperation({ summary: 'Obtener viajes paginados por usuario' })
+  @ApiResponse({ status: 200, description: 'Viajes paginados obtenidos exitosamente' })
+  @ApiResponse({ status: 400, description: 'Parámetros inválidos' })
+  async getViajesPaginatedByUsuario(
+    @Query('id_usuario') id_usuario: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.queryBus.execute(
+      new GetViajesPaginatedByUsuarioCommand(id_usuario, page, limit),
+    );
   }
 }

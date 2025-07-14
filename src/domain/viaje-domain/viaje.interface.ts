@@ -35,4 +35,6 @@ export interface ViajeInterface {
     fecha_llegada: Date
   ): Promise<any>;
   deleteViaje(id: number): Promise<any>;
+  getViajesPaginatedByUsuario(id: number, limit: number,offset: number): Promise<any>;
+  countViajesByUsuario(id: number): Promise<any>;
 }

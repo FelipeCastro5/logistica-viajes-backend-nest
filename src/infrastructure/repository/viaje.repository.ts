@@ -5,7 +5,7 @@ import { PostgresService } from '../postgres-db/postgres.service';
 
 @Injectable()
 export class ViajeRepository implements ViajeInterface {
-  constructor(private readonly postgresService: PostgresService) {}
+  constructor(private readonly postgresService: PostgresService) { }
 
   async getAll(): Promise<Viaje[]> {
     const query = this.postgresService.getQuery('get-all-viajes');
@@ -73,5 +73,17 @@ export class ViajeRepository implements ViajeInterface {
   async deleteViaje(id: number): Promise<any> {
     const query = this.postgresService.getQuery('delete-viaje');
     return this.postgresService.query<any[]>(query, [id]);
+  }
+
+  async getViajesPaginatedByUsuario(id: number, limit: number, offset: number): Promise<any> {
+    const query = this.postgresService.getQuery('get-viajes-paginated-by-usuario');
+    const result = await this.postgresService.query<any>(query, [id,limit,offset]);
+    return result.rows;
+  }
+
+  async countViajesByUsuario(id: number): Promise<any> {
+    const query = this.postgresService.getQuery('count-viajes-by-usuario');
+    const result = await this.postgresService.query<Viaje>(query, [id]);
+    return result.rows[0] || null;
   }
 }
