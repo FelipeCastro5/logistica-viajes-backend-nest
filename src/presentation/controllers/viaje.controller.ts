@@ -7,10 +7,12 @@ import { UpdateViajeCommand } from '../../application/viaje/commands/update-viaj
 import { DeleteViajeCommand } from '../../application/viaje/commands/delete-viaje.command';
 import { GetAllViajesCommand } from '../../application/viaje/commands/get-all-viajes.command';
 import { GetViajeByIdCommand } from '../../application/viaje/commands/get-viaje-by-id.command';
+import { CreateNewViajeCommand } from '../../application/viaje/commands/create-new-viaje.command';
 
 import { CreateViajeDto } from '../dtos/viaje/create-viaje.dto';
 import { UpdateViajeDto } from '../dtos/viaje/update-viaje.dto';
 import { GetViajesPaginatedByUsuarioCommand } from 'src/application/viaje/commands/get-viajes-paginated-by-usuario.command';
+import { CreateNewViajeDto } from '../dtos/viaje/create-new-viaje.dto';
 
 @ApiTags('Viajes')
 @Controller('viajes')
@@ -102,4 +104,41 @@ export class ViajeController {
       new GetViajesPaginatedByUsuarioCommand(id_usuario, page, limit),
     );
   }
+  @Post('createNewViaje')
+  @ApiOperation({ summary: 'Crear un nuevo viaje' })
+  @ApiResponse({ status: 201, description: 'Viaje creado exitosamente' })
+  async createNewViaje(@Body() dto: CreateNewViajeDto) {
+    const command = new CreateNewViajeCommand(
+      dto.fk_usuario,
+      dto.fk_cliente,
+      dto.fk_origen,
+      dto.fk_destino,
+      dto.codigo,
+      dto.observaciones,
+      dto.estado_viaje,
+      dto.producto,
+      dto.detalle_producto,
+      dto.direccion_llegada,
+      dto.fecha_salida,
+      dto.fecha_llegada,
+      // manifiesto
+      dto.flete_total,
+      dto.porcentaje_retencion_fuente,
+      dto.valor_retencion_fuente,
+      dto.porcentaje_ica,
+      dto.valor_ica,
+      dto.deduccion_fiscal,
+      dto.neto_a_pagar,
+      dto.anticipo,
+      dto.saldo_a_pagar,
+      dto.total_gastos,
+      dto.queda_al_carro,
+      dto.a_favor_del_carro,
+      dto.porcentaje_conductor,
+      dto.ganacia_conductor,
+    );
+
+    return this.commandBus.execute(command);
+  }
+
 }

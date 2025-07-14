@@ -25,6 +25,12 @@ export class GetViajesPaginatedByUsuarioHandler implements IQueryHandler<GetViaj
       ]);
 
       const total_items = parseInt(totalObj?.total || '0', 10);
+
+      // ⛔ Si no hay viajes, devuelve 404
+      if (!total_items || viajes.length === 0) {
+        return ResponseUtil.error('No se encontraron viajes para este usuario', 404);
+      }
+
       const total_pages = Math.ceil(total_items / limit);
 
       const paginatedResult: PaginatedDto = {

@@ -10,6 +10,7 @@ import { DeleteViajeHandler } from '../../application/viaje/handlers/delete-viaj
 import { GetAllViajesHandler } from '../../application/viaje/handlers/get-all-viajes.handler';
 import { GetViajeByIdHandler } from '../../application/viaje/handlers/get-viaje-by-id.handler';
 import { GetViajesPaginatedByUsuarioHandler } from 'src/application/viaje/handlers/get-viajes-paginated-by-usuario.handler';
+import { CreateNewViajeHandler } from 'src/application/viaje/handlers/create-new-viaje.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],
@@ -24,6 +25,7 @@ import { GetViajesPaginatedByUsuarioHandler } from 'src/application/viaje/handle
     GetAllViajesHandler,
     GetViajeByIdHandler,
     GetViajesPaginatedByUsuarioHandler,
+    CreateNewViajeHandler,
   ],
   controllers: [ViajeController],
 })

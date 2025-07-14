@@ -77,7 +77,7 @@ export class ViajeRepository implements ViajeInterface {
 
   async getViajesPaginatedByUsuario(id: number, limit: number, offset: number): Promise<any> {
     const query = this.postgresService.getQuery('get-viajes-paginated-by-usuario');
-    const result = await this.postgresService.query<any>(query, [id,limit,offset]);
+    const result = await this.postgresService.query<any>(query, [id, limit, offset]);
     return result.rows;
   }
 
@@ -86,4 +86,44 @@ export class ViajeRepository implements ViajeInterface {
     const result = await this.postgresService.query<Viaje>(query, [id]);
     return result.rows[0] || null;
   }
+
+  async createNewViaje(
+    fk_usuario: number, fk_cliente: number, fk_origen: number, fk_destino: number, codigo: string,
+    observaciones: string, estado_viaje: boolean, producto: string, detalle_producto: string,
+    direccion_llegada: string, fecha_salida: Date, fecha_llegada: Date,
+    //Manifiesto
+    flete_total: number, porcentaje_retencion_fuente: number, valor_retencion_fuente: number,
+    porcentaje_ica: number, valor_ica: number, deduccion_fiscal: number, neto_a_pagar: number, anticipo: number,
+    saldo_a_pagar: number, total_gastos: number, queda_al_carro: number, a_favor_del_carro: number,
+    porcentaje_conductor: number, ganacia_conductor: number
+  ): Promise<any> {
+    const queryManifiesto = this.postgresService.getQuery('insert-manifiesto');
+    const queryViaje = this.postgresService.getQuery('insert-viaje');
+
+    const results = await this.postgresService.queryWithTransactionDynamicArguments<any>([
+      {
+        name: 'manifiesto',
+        query: () => queryManifiesto,
+        values: () => [
+          flete_total, porcentaje_retencion_fuente, valor_retencion_fuente, porcentaje_ica, valor_ica,
+          deduccion_fiscal, neto_a_pagar, anticipo, saldo_a_pagar, total_gastos, queda_al_carro,
+          a_favor_del_carro, porcentaje_conductor, ganacia_conductor,
+        ],
+      },
+      {
+        name: 'viaje',
+        query: () => queryViaje,
+        values: (results) => {
+          const manifiestoId = results.manifiesto.rows[0].id_manifiesto; // o el campo correcto del RETURNING *
+          return [
+            fk_usuario, manifiestoId, fk_cliente, fk_origen, fk_destino, codigo, observaciones, estado_viaje,
+            producto, detalle_producto, direccion_llegada, fecha_salida, fecha_llegada,
+          ];
+        },
+      },
+    ]);
+
+    return results.viaje.rows[0];
+  }
+
 }

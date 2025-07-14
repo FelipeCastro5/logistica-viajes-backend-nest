@@ -164,12 +164,40 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
 
       await client.query('COMMIT');
       return results;
-    } catch (err) {
+    } catch (err: any) {
       await client.query('ROLLBACK');
       console.error('/** ERROR EXECUTING TRANSACTION **/', err);
-      throw new Error('Transaction failed');
+
+      const pgCode = err.code;
+
+      if (pgCode === '23503') {
+        throw new HttpException({
+          message: `Violación de llave foránea: ${err.detail}`,
+          detail: err.detail,
+        }, HttpStatus.CONFLICT);
+      }
+
+      if (pgCode === '23505') {
+        throw new HttpException({
+          message: `Registro duplicado (violación de UNIQUE): ${err.detail}`,
+          detail: err.detail,
+        }, HttpStatus.CONFLICT);
+      }
+
+      if (pgCode === '23502') {
+        throw new HttpException({
+          message: `Campo requerido no puede ser nulo: ${err.detail}`,
+          detail: err.detail,
+        }, HttpStatus.BAD_REQUEST);
+      }
+
+      throw new HttpException({
+        message: 'Error interno en base de datos durante transacción',
+        detail: err.detail || err.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  };
+  }
+
 
   async onModuleInit() { }
 
