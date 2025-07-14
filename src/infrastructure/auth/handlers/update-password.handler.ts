@@ -2,22 +2,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Injectable } from '@nestjs/common';
 import { ResponseUtil } from '../../../application/utilities/response.util';
-import { CambioContrasenaCommand } from '../commands/cambio-contrasena.command';
+import { UpdatePasswordCommand } from '../commands/update-password.command';
 import { AuthInterface } from '../auth.interface';
 import { HashService } from 'src/application/utilities/hash.service';
 
-@CommandHandler(CambioContrasenaCommand)
+@CommandHandler(UpdatePasswordCommand)
 @Injectable()
-export class CambioContrasenaHandler implements ICommandHandler<CambioContrasenaCommand> {
+export class UpdatePasswordHandler implements ICommandHandler<UpdatePasswordCommand> {
   constructor(
     @Inject('AuthInterface')
     private readonly authRepository: AuthInterface,
   ) { }
 
-  async execute(command: CambioContrasenaCommand) {
+  async execute(command: UpdatePasswordCommand) {
     try {
       const hashedPassword = await HashService.hash(command.contrasena);
-      const result = await this.authRepository.cambioContrasena(
+      const result = await this.authRepository.updatePassword(
         command.id,
         hashedPassword,
       );

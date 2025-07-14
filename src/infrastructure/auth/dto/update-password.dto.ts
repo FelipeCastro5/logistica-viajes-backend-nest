@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Length } from 'class-validator';
 
-export class CambioContrasenaDto {
+export class UpdatePasswordDto {
   @ApiProperty({ example: 5, description: 'ID del usuario que se va a actualizar' })
   @IsInt({ message: 'El ID del usuario debe ser un número entero.' })
   id: number;

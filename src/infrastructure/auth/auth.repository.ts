@@ -12,8 +12,8 @@ export class AuthRepository implements AuthInterface {
     return result.rows[0] || null;
   }
 
-  async cambioContrasena(id: number, contrasena: string): Promise<any> {
-    const query = this.postgresService.getQuery('cambio-contrasena');
+  async updatePassword(id: number, contrasena: string): Promise<any> {
+    const query = this.postgresService.getQuery('update-password');
     const params = [contrasena, id];
     return this.postgresService.query<any[]>(query, params);
   }
