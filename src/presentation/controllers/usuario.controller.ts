@@ -10,7 +10,6 @@ import { GetUsuarioByIdCommand } from '../../application/usuario/commands/get-us
 
 import { CreateUsuarioDto } from '../dtos/usuario/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dtos/usuario/update-usuario.dto';
-import { GetUsuarioByCorreoCommand } from 'src/application/usuario/commands/get-usuario-by-correo.command';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -83,14 +82,4 @@ export class UsuarioController {
     return this.commandBus.execute(new DeleteUsuarioCommand(id));
   }
 
-  @Get('login')
-  @ApiOperation({ summary: 'Obtener usuario por correo para login' })
-  @ApiResponse({ status: 200, description: 'Usuario encontrado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
-  async getUsuarioByCorreo(
-    @Query('correo') correo: string,
-    @Query('contrasena') contrasena: string
-  ) {
-    return this.queryBus.execute(new GetUsuarioByCorreoCommand(correo, contrasena));
-  }
 }

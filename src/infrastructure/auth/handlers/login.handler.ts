@@ -28,17 +28,21 @@ export class LoginHandler implements IQueryHandler<loginCommand> {
             }
 
             const payload = {
-                sub: usuario.id,
+                id_usuario: usuario.id_usuario,
                 correo: usuario.correo,
-                rol: usuario.fk_rol,
+                fk_rol: usuario.fk_rol,
+                nombre_rol: usuario.nombre_rol,
+                fk_contador: usuario.fk_contador,
+                p_nombre: usuario.p_nombre,
+                p_apellido: usuario.p_apellido,
             };
 
-            const token = await this.jwtService.generarToken(payload);
+            //const token = await this.jwtService.generarToken(payload);
 
-            return ResponseUtil.success(token, 'Usuario encontrado exitosamente');
+            return ResponseUtil.success(payload, 'Usuario encontrado exitosamente');
 
         } catch (error) {
-            console.error('Error en GetUsuarioByCorreoHandler:', error);
+            console.error('Error en LoginHandler:', error);
             const status = error.getStatus?.() ?? 500;
             const message = error.response?.message || 'Error al obtener el usuario';
             return ResponseUtil.error(message, status);
