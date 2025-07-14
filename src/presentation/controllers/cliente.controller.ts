@@ -10,6 +10,7 @@ import { GetClienteByIdCommand } from '../../application/cliente/commands/get-cl
 
 import { CreateClienteDto } from '../dtos/cliente/create-cliente.dto';
 import { UpdateClienteDto } from '../dtos/cliente/update-cliente.dto';
+import { GetClientesByUsuarioCommand } from 'src/application/cliente/commands/get-clientes-by-usuario.command';
 
 @ApiTags('Clientes')
 @Controller('clientes')
@@ -66,5 +67,13 @@ export class ClienteController {
   @ApiResponse({ status: 200, description: 'Cliente eliminado exitosamente' })
   async deleteCliente(@Query('id') id: number) {
     return this.commandBus.execute(new DeleteClienteCommand(id));
+  }
+
+  @Get('getClientesByUsuario')
+  @ApiOperation({ summary: 'Obtener cliente por ID' })
+  @ApiResponse({ status: 200, description: 'Clientes encontrados exitosamente' })
+  @ApiResponse({ status: 404, description: 'Clientes no encontrados' })
+  async getClientesByUsuario(@Query('fk_usuario') fk_usuario: number) {
+    return this.queryBus.execute(new GetClientesByUsuarioCommand(fk_usuario));
   }
 }

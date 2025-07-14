@@ -17,4 +17,5 @@ export interface ClienteInterface {
     telefono: string
   ): Promise<any>;
   deleteCliente(id: number): Promise<any>;
+  getClientesByUsuario(fk_usuario: number): Promise<Cliente[]>;
 }

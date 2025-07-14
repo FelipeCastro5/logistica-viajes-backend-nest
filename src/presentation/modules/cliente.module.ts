@@ -9,6 +9,7 @@ import { UpdateClienteHandler } from '../../application/cliente/handlers/update-
 import { DeleteClienteHandler } from '../../application/cliente/handlers/delete-cliente.handler';
 import { GetAllClientesHandler } from '../../application/cliente/handlers/get-all-clientes.handler';
 import { GetClienteByIdHandler } from '../../application/cliente/handlers/get-cliente-by-id.handler';
+import { GetClientesByUsuarioHandler } from 'src/application/cliente/handlers/get-cliente-by-usuario.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],
@@ -22,6 +23,7 @@ import { GetClienteByIdHandler } from '../../application/cliente/handlers/get-cl
     DeleteClienteHandler,
     GetAllClientesHandler,
     GetClienteByIdHandler,
+    GetClientesByUsuarioHandler,
   ],
   controllers: [ClienteController],
 })

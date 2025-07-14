@@ -47,4 +47,10 @@ export class ClienteRepository implements ClienteInterface {
     const query = this.postgresService.getQuery('delete-cliente');
     return this.postgresService.query<any[]>(query, [id]);
   }
+
+  async getClientesByUsuario(fk_usuario: number): Promise<Cliente[]> {
+    const query = this.postgresService.getQuery('get-cliente-by-usuario');
+    const result = await this.postgresService.query<Cliente>(query, [fk_usuario]);
+    return result.rows;
+  }
 }
