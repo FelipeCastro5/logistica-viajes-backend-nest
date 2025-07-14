@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Post, Put, Query, } from '@nestjs/common
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { loginCommand } from './commands/login.command';
+import { CambioContrasenaCommand } from './commands/cambio-contrasena.command';
+import { CambioContrasenaDto } from './dto/cambiar-contrasena.dto';
 
 @ApiTags('Author')
 @Controller('Auth')
@@ -20,5 +22,16 @@ export class AuthController {
     @Query('contrasena') contrasena: string
   ) {
     return this.queryBus.execute(new loginCommand(correo, contrasena));
+  }
+
+  @Put('cambiar-contrasena')
+  @ApiOperation({ summary: 'Cambiar contraseña' })
+  @ApiResponse({ status: 200, description: 'contraseña cambiada exitosamente' })
+  async updateUsuario(@Body() dto: CambioContrasenaDto) {
+    const command = new CambioContrasenaCommand(
+      dto.id,
+      dto.contrasena,
+    );
+    return this.commandBus.execute(command);
   }
 }

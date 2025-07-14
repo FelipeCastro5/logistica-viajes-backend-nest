@@ -1,7 +1,6 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { loginCommand } from '../commands/login.command';
 import { Inject, Injectable } from '@nestjs/common';
-import { UsuarioInterface } from '../../../domain/usuario-domain/usuario.interface';
 import { ResponseUtil } from '../../../application/utilities/response.util';
 import { JwtService } from '../../../infrastructure/jwt/jwt.service';
 import { HashService } from '../../../application/utilities/hash.service';
