@@ -14,11 +14,11 @@ export class GetClientesByUsuarioHandler implements IQueryHandler<GetClientesByU
 
   async execute(command: GetClientesByUsuarioCommand) {
     try {
-      const cliente = await this.clienteRepository.getClientesByUsuario(command.fk_usuario);
-      if (!cliente) {
+      const clientes = await this.clienteRepository.getClientesByUsuario(command.fk_usuario);
+      if (!clientes || clientes.length === 0) {
         return ResponseUtil.error('Clientes no encontrados', 404);
       }
-      return ResponseUtil.success(cliente, 'Clientes encontrados exitosamente');
+      return ResponseUtil.success(clientes, 'Clientes encontrados exitosamente');
     } catch (error) {
       console.error('Error en GetClientesByUsuarioHandler:', error);
       const status = error.getStatus?.() ?? 500;

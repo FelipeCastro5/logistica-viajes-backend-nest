@@ -51,6 +51,6 @@ export class ClienteRepository implements ClienteInterface {
   async getClientesByUsuario(fk_usuario: number): Promise<Cliente[]> {
     const query = this.postgresService.getQuery('get-cliente-by-usuario');
     const result = await this.postgresService.query<Cliente>(query, [fk_usuario]);
-    return result.rows;
+    return result.rows || null;
   }
 }
