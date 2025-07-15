@@ -62,7 +62,7 @@ export class ManifiestoController {
     @ApiResponse({ status: 200, description: 'Manifiesto actualizado exitosamente' })
     async updateManifiesto(@Body() dto: UpdateManifiestoDto) {
         const command = new UpdateManifiestoCommand(
-            dto.id,
+            dto.id_manifiesto,
             dto.flete_total,
             dto.porcentaje_retencion_fuente,
             dto.valor_retencion_fuente,

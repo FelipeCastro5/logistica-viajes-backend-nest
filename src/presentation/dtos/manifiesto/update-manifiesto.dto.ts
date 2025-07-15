@@ -4,7 +4,7 @@ import { IsNumber } from 'class-validator';
 export class UpdateManifiestoDto {
   @ApiProperty({ example: 1 })
   @IsNumber({}, { message: 'El ID del manifiesto debe ser un número' })
-  id: number;
+  id_manifiesto: number;
 
   @ApiProperty() @IsNumber({}, { message: 'Flete total debe ser un número válido' }) flete_total: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje retención fuente debe ser un número válido' }) porcentaje_retencion_fuente: number;

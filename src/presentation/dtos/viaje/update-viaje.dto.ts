@@ -4,7 +4,7 @@ import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from
 export class UpdateViajeDto {
   @ApiProperty({ example: 1, description: 'ID del viaje' })
   @IsInt({ message: 'El id debe ser un número entero' })
-  id: number;
+  id_viaje: number;
 
   @ApiProperty({ example: 1, description: 'ID del usuario' })
   @IsInt({ message: 'El fk_usuario debe ser un número entero' })

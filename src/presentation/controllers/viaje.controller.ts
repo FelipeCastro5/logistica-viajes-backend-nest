@@ -65,7 +65,7 @@ export class ViajeController {
   @ApiResponse({ status: 404, description: 'Viaje no encontrado' })
   async updateViaje(@Body() dto: UpdateViajeDto) {
     const command = new UpdateViajeCommand(
-      dto.id,
+      dto.id_viaje,
       dto.fk_usuario,
       dto.fk_manifiesto,
       dto.fk_cliente,
