@@ -10,6 +10,7 @@ import { GetGastoXViajeByIdCommand } from '../../application/gastoxviaje/command
 
 import { CreateGastoXViajeDto } from '../dtos/gastoxviaje/create-gastoxviaje.dto';
 import { UpdateGastoXViajeDto } from '../dtos/gastoxviaje/update-gastoxviaje.dto';
+import { GetGastosByViajeCommand } from 'src/application/gastoxviaje/commands/get-gastos-by-viaje.command';
 
 @ApiTags('Gastos por Viaje')
 @Controller('gastoxviaje')
@@ -17,7 +18,7 @@ export class GastoxviajeController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+  ) { }
 
   @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los gastos por viaje' })
@@ -39,10 +40,7 @@ export class GastoxviajeController {
   @ApiResponse({ status: 201, description: 'Gasto por viaje creado exitosamente' })
   async create(@Body() dto: CreateGastoXViajeDto) {
     const command = new CreateGastoXViajeCommand(
-      dto.fk_viaje,
-      dto.fk_gasto,
-      dto.valor,
-      dto.detalles,
+      dto.fk_viaje, dto.fk_gasto, dto.valor, dto.detalles,
     );
     return this.commandBus.execute(command);
   }
@@ -52,11 +50,7 @@ export class GastoxviajeController {
   @ApiResponse({ status: 200, description: 'Gasto por viaje actualizado exitosamente' })
   async update(@Body() dto: UpdateGastoXViajeDto) {
     const command = new UpdateGastoXViajeCommand(
-      dto.id,
-      dto.fk_viaje,
-      dto.fk_gasto,
-      dto.valor,
-      dto.detalles,
+      dto.id, dto.fk_viaje, dto.fk_gasto, dto.valor, dto.detalles,
     );
     return this.commandBus.execute(command);
   }
@@ -66,5 +60,13 @@ export class GastoxviajeController {
   @ApiResponse({ status: 200, description: 'Gasto por viaje eliminado exitosamente' })
   async delete(@Query('id') id: number) {
     return this.commandBus.execute(new DeleteGastoXViajeCommand(id));
+  }
+
+  @Get('getGastosByViaje')
+  @ApiOperation({ summary: 'Obtener gastos por viaje por ID' })
+  @ApiResponse({ status: 200, description: 'Gastos por viaje encontrado exitosamente' })
+  @ApiResponse({ status: 404, description: 'Gastos por viaje no encontrado' })
+  async getGastosByViaje(@Query('fk_viaje') fk_viaje: number) {
+    return this.queryBus.execute(new GetGastosByViajeCommand(fk_viaje));
   }
 }

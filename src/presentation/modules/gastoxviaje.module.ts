@@ -9,6 +9,7 @@ import { UpdateGastoxviajeHandler } from '../../application/gastoxviaje/handlers
 import { DeleteGastoxviajeHandler } from '../../application/gastoxviaje/handlers/delete-gastoxviaje.handler';
 import { GetGastoxviajeByIdHandler } from '../../application/gastoxviaje/handlers/get-gastoxviaje-by-id.handler';
 import { GetAllGastoxviajeHandler } from '../../application/gastoxviaje/handlers/get-all-gastosxviaje.handler';
+import { GetGastosByViajeHandler } from 'src/application/gastoxviaje/handlers/get-gastos-by-viaje.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],
@@ -22,6 +23,7 @@ import { GetAllGastoxviajeHandler } from '../../application/gastoxviaje/handlers
     DeleteGastoxviajeHandler,
     GetAllGastoxviajeHandler,
     GetGastoxviajeByIdHandler,
+    GetGastosByViajeHandler,
   ],
   controllers: [GastoxviajeController],
 })

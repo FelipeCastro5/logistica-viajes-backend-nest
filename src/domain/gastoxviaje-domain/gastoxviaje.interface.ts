@@ -17,4 +17,5 @@ export interface GastoxviajeInterface {
     detalles: string
   ): Promise<any>;
   deleteGastoxviaje(id: number): Promise<any>;
+  getGastosByViaje(fk: number): Promise<any | null>;
 }

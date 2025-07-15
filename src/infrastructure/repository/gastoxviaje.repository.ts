@@ -47,4 +47,10 @@ export class GastoxviajeRepository implements GastoxviajeInterface {
     const query = this.postgresService.getQuery('delete-gastoxviaje');
     return this.postgresService.query<any[]>(query, [id]);
   }
+
+  async getGastosByViaje(fk: number): Promise<any | null> {
+    const query = this.postgresService.getQuery('get-gastos-by-viaje');
+    const result = await this.postgresService.query<any>(query, [fk]);
+    return result.rows;
+  }
 }
