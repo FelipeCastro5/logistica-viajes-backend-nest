@@ -9,8 +9,8 @@ import { UpdateViajeHandler } from '../../application/viaje/handlers/update-viaj
 import { DeleteViajeHandler } from '../../application/viaje/handlers/delete-viaje.handler';
 import { GetAllViajesHandler } from '../../application/viaje/handlers/get-all-viajes.handler';
 import { GetViajeByIdHandler } from '../../application/viaje/handlers/get-viaje-by-id.handler';
-import { GetViajesPaginatedByUsuarioHandler } from 'src/application/viaje/handlers/get-viajes-paginated-by-usuario.handler';
-import { CreateNewViajeHandler } from 'src/application/viaje/handlers/create-new-viaje.handler';
+import { GetViajesPaginatedByUsuarioHandler } from '../../application/viaje/handlers/get-viajes-paginated-by-usuario.handler';
+import { CreateNewViajeHandler } from '../../application/viaje/handlers/create-new-viaje.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],

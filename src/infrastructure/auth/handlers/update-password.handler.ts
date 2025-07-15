@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ResponseUtil } from '../../../application/utilities/response.util';
 import { UpdatePasswordCommand } from '../commands/update-password.command';
 import { AuthInterface } from '../auth.interface';
-import { HashService } from 'src/application/utilities/hash.service';
+import { HashService } from '../../../application/utilities/hash.service';
 
 @CommandHandler(UpdatePasswordCommand)
 @Injectable()

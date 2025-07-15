@@ -10,7 +10,7 @@ import { GetClienteByIdCommand } from '../../application/cliente/commands/get-cl
 
 import { CreateClienteDto } from '../dtos/cliente/create-cliente.dto';
 import { UpdateClienteDto } from '../dtos/cliente/update-cliente.dto';
-import { GetClientesByUsuarioCommand } from 'src/application/cliente/commands/get-clientes-by-usuario.command';
+import { GetClientesByUsuarioCommand } from '../../application/cliente/commands/get-clientes-by-usuario.command';
 
 @ApiTags('Clientes')
 @Controller('clientes')

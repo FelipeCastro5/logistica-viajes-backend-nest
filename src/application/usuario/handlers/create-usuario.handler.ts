@@ -4,7 +4,7 @@ import { CreateUsuarioCommand } from '../commands/create-usuario.command';
 import { Inject, Injectable } from '@nestjs/common';
 import { UsuarioInterface } from '../../../domain/usuario-domain/usuario.interface';
 import { ResponseUtil } from '../../utilities/response.util';
-import { HashService } from 'src/application/utilities/hash.service';
+import { HashService } from '../../../application/utilities/hash.service';
 
 @CommandHandler(CreateUsuarioCommand)
 @Injectable()

@@ -11,7 +11,7 @@ import { CreateNewViajeCommand } from '../../application/viaje/commands/create-n
 
 import { CreateViajeDto } from '../dtos/viaje/create-viaje.dto';
 import { UpdateViajeDto } from '../dtos/viaje/update-viaje.dto';
-import { GetViajesPaginatedByUsuarioCommand } from 'src/application/viaje/commands/get-viajes-paginated-by-usuario.command';
+import { GetViajesPaginatedByUsuarioCommand } from '../../application/viaje/commands/get-viajes-paginated-by-usuario.command';
 import { CreateNewViajeDto } from '../dtos/viaje/create-new-viaje.dto';
 
 @ApiTags('Viajes')
