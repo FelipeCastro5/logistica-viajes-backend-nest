@@ -1,6 +1,7 @@
 SELECT 
   gxv.id_gastoxviaje,
   gxv.fk_viaje,
+  gxv.fk_gasto,
   gxv.valor,
   gxv.detalles,
   g.nombre_gasto

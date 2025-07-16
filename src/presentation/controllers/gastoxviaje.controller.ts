@@ -50,7 +50,7 @@ export class GastoxviajeController {
   @ApiResponse({ status: 200, description: 'Gasto por viaje actualizado exitosamente' })
   async update(@Body() dto: UpdateGastoXViajeDto) {
     const command = new UpdateGastoXViajeCommand(
-      dto.id, dto.fk_viaje, dto.fk_gasto, dto.valor, dto.detalles,
+      dto.id_gastoxviaje, dto.fk_viaje, dto.fk_gasto, dto.valor, dto.detalles,
     );
     return this.commandBus.execute(command);
   }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateGastoXViajeDto {
@@ -15,10 +15,11 @@ export class CreateGastoXViajeDto {
   @ApiProperty({ example: 50000, description: 'Valor del gasto' })
   @IsNumber({}, { message: 'El campo valor debe ser un número' })
   @Min(1, { message: 'El valor debe ser mayor a 0' })
+  @IsNotEmpty({ message: 'El campo detalles es obligatorio' })
   valor: number;
 
   @ApiProperty({ example: 'Pago de gasolina', description: 'Detalles del gasto' })
   @IsString({ message: 'El campo detalles debe ser una cadena de texto' })
-  @IsNotEmpty({ message: 'El campo detalles es obligatorio' })
+  @IsOptional({ message: 'El campo detalles es obligatorio' })
   detalles: string;
 }
