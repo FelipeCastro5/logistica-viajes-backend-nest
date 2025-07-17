@@ -27,7 +27,7 @@ SELECT
   m.saldo_a_pagar,
   m.total_gastos,
   m.queda_al_carro,
-  m.ganacia_conductor
+  m.ganancia_conductor
 
 FROM viaje v
 INNER JOIN usuario u ON v.fk_usuario = u.id_usuario

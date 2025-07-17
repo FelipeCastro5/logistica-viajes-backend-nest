@@ -31,7 +31,7 @@ create table manifiesto (
   queda_al_carro decimal(15,5),
   a_favor_del_carro decimal(15,5),
   porcentaje_conductor decimal(9,4),
-  ganacia_conductor decimal(15,5)
+  ganancia_conductor decimal(15,5)
 );
 
 create table rol (

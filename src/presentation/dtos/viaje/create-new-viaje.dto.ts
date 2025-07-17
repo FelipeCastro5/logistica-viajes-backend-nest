@@ -69,5 +69,5 @@ export class CreateNewViajeDto {
   @ApiProperty() @IsNumber({}, { message: 'Queda al carro debe ser un número válido' }) queda_al_carro: number;
   @ApiProperty() @IsNumber({}, { message: 'A favor del carro debe ser un número válido' }) a_favor_del_carro: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje conductor debe ser un número válido' }) porcentaje_conductor: number;
-  @ApiProperty() @IsNumber({}, { message: 'Ganancia conductor debe ser un número válido' }) ganacia_conductor: number;
+  @ApiProperty() @IsNumber({}, { message: 'Ganancia conductor debe ser un número válido' }) ganancia_conductor: number;
 }

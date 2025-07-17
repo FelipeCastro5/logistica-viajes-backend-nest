@@ -14,6 +14,6 @@ export class CreateManifiestoCommand {
     public readonly queda_al_carro: number,
     public readonly a_favor_del_carro: number,
     public readonly porcentaje_conductor: number,
-    public readonly ganacia_conductor: number,
+    public readonly ganancia_conductor: number,
   ) {}
 }

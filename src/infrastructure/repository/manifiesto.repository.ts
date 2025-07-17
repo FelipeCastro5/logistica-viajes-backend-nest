@@ -33,7 +33,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
     queda_al_carro: number,
     a_favor_del_carro: number,
     porcentaje_conductor: number,
-    ganacia_conductor: number
+    ganancia_conductor: number
   ): Promise<Manifiesto> {
     const query = this.postgresService.getQuery('insert-manifiesto');
     const params = [
@@ -50,7 +50,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
       queda_al_carro,
       a_favor_del_carro,
       porcentaje_conductor,
-      ganacia_conductor,
+      ganancia_conductor,
     ];
     const result = await this.postgresService.query<Manifiesto>(query, params);
     return result.rows[0];
@@ -71,7 +71,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
     queda_al_carro: number,
     a_favor_del_carro: number,
     porcentaje_conductor: number,
-    ganacia_conductor: number
+    ganancia_conductor: number
   ): Promise<any> {
     const query = this.postgresService.getQuery('update-manifiesto');
     const params = [
@@ -88,7 +88,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
       queda_al_carro,
       a_favor_del_carro,
       porcentaje_conductor,
-      ganacia_conductor,
+      ganancia_conductor,
       id,
     ];
     return this.postgresService.query<any[]>(query, params);

@@ -30,7 +30,7 @@ export class UpdateManifiestoHandler implements ICommandHandler<UpdateManifiesto
         command.queda_al_carro,
         command.a_favor_del_carro,
         command.porcentaje_conductor,
-        command.ganacia_conductor
+        command.ganancia_conductor
       );
       if (!result?.rowCount) {
         return ResponseUtil.error('Manifiesto no encontrado', 404);

@@ -52,7 +52,7 @@ export class ManifiestoController {
             dto.queda_al_carro,
             dto.a_favor_del_carro,
             dto.porcentaje_conductor,
-            dto.ganacia_conductor,
+            dto.ganancia_conductor,
         );
         return this.commandBus.execute(command);
     }
@@ -76,7 +76,7 @@ export class ManifiestoController {
             dto.queda_al_carro,
             dto.a_favor_del_carro,
             dto.porcentaje_conductor,
-            dto.ganacia_conductor,
+            dto.ganancia_conductor,
         );
         return this.commandBus.execute(command);
     }

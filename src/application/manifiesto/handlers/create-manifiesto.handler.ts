@@ -29,7 +29,7 @@ export class CreateManifiestoHandler implements ICommandHandler<CreateManifiesto
         command.queda_al_carro,
         command.a_favor_del_carro,
         command.porcentaje_conductor,
-        command.ganacia_conductor
+        command.ganancia_conductor
       );
       return ResponseUtil.success(manifiesto, 'Manifiesto creado exitosamente', 201);
     } catch (error) {

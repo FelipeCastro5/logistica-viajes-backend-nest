@@ -13,6 +13,6 @@ SET
   queda_al_carro = $11,
   a_favor_del_carro = $12,
   porcentaje_conductor = $13,
-  ganacia_conductor = $14
+  ganancia_conductor = $14
 WHERE id_manifiesto = $15
 RETURNING *;
