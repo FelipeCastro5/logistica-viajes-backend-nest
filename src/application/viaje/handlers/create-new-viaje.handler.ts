@@ -14,6 +14,7 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
 
   async execute(command: CreateNewViajeCommand) {
     try {
+      var estado_viaje = true;
       const viaje = await this.viajeRepository.createNewViaje(
         command.fk_usuario,
         command.fk_cliente,
@@ -21,7 +22,7 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
         command.fk_destino,
         command.codigo,
         command.observaciones,
-        command.estado_viaje,
+        estado_viaje,
         command.producto,
         command.detalle_producto,
         command.direccion_llegada,

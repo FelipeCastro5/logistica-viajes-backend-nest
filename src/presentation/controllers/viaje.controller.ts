@@ -115,7 +115,6 @@ export class ViajeController {
       dto.fk_destino,
       dto.codigo,
       dto.observaciones,
-      dto.estado_viaje,
       dto.producto,
       dto.detalle_producto,
       dto.direccion_llegada,

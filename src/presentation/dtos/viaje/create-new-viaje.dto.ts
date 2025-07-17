@@ -28,9 +28,9 @@ export class CreateNewViajeDto {
   @IsOptional()
   observaciones?: string;
 
-  @ApiProperty({ example: true, description: 'Estado del viaje' })
-  @IsBoolean({ message: 'El estado_viaje debe ser un valor booleano' })
-  estado_viaje: boolean;
+  // @ApiProperty({ example: true, description: 'Estado del viaje' })
+  // @IsBoolean({ message: 'El estado_viaje debe ser un valor booleano' })
+  // estado_viaje: boolean;
 
   @ApiProperty({ example: 'Producto transportado', description: 'Producto' })
   @IsString({ message: 'El producto debe ser una cadena de texto' })

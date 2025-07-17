@@ -6,7 +6,6 @@ export class CreateNewViajeCommand {
     public readonly fk_destino: number,
     public readonly codigo: string,
     public readonly observaciones: string,
-    public readonly estado_viaje: boolean,
     public readonly producto: string,
     public readonly detalle_producto: string,
     public readonly direccion_llegada: string,
