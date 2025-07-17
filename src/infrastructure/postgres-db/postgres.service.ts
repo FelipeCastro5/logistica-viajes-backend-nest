@@ -29,7 +29,7 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
       host: config.host,
       password: config.password,
       ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
-      family: 4,
+      family: 6,
     });
     this.connect();
     this.loadQueries();
