@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IaToolkitService } from '../ia-toolkit.service';
+import { ResponseDto } from 'src/application/utilities/response.dto';
+import { ResponseUtil } from 'src/application/utilities/response.util';
 
 @Injectable()
 export class SqlHandler {
@@ -11,7 +13,7 @@ export class SqlHandler {
     fk_user: number,
     fk_chat: number | null,
     preguntaUsuario: string
-  ): Promise<{ sql: string; datos: any; respuesta: string }> {
+  ): Promise<any> {
     try {
       // 1. Generar SQL basado en la pregunta
       const sql = await this.toolkit.generarSQLDesdePregunta(preguntaUsuario, fk_user);
@@ -36,7 +38,18 @@ export class SqlHandler {
       // 4. Guardar mensaje/respuesta en historial
       await this.toolkit.guardarPreguntaYRespuesta(chatId, preguntaUsuario, respuesta);
 
-      return { sql, datos, respuesta };
+      // 5️⃣ Retornar respuesta estructurada
+      return ResponseUtil.success(
+        {
+          respuesta,
+          otros: {
+            sql,
+            datos,
+            chatId,
+          },
+        },
+        'Consulta SQL procesada correctamente'
+      );
     } catch (error) {
       this.logger.error('❌ Error procesando consulta IA + DB', error);
       throw new Error('Error al procesar la consulta con IA y base de datos');

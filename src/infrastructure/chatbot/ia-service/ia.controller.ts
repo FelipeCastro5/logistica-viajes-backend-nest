@@ -65,16 +65,22 @@ export class IaController {
     return await this.sqlHandler.procesarConsultaDb(fk_user, fk_chat, pregunta);
   }
 
-
   @Get('mixto')
   @ApiOperation({ summary: 'Flujo mixto: historial + IA + base de datos' })
-  @ApiQuery({ name: 'fk_chat', required: true, type: Number })
+  @ApiQuery({ name: 'fk_user', required: true, type: Number })
+  @ApiQuery({
+    name: 'fk_chat',
+    required: false,
+    type: Number,
+    description: 'ID del chat existente o vacío para crear uno nuevo',
+  })
   @ApiQuery({ name: 'pregunta', required: true, type: String })
   @ApiResponse({
     status: 200,
     description: 'Combina contexto del historial y consulta a la base de datos.',
     schema: {
       example: {
+        tipo: 'mixto',
         sql: "SELECT * FROM tareas WHERE estado ILIKE '%pendiente%' AND responsable ILIKE '%Luis%';",
         datos: [
           { id: 12, titulo: 'Enviar informe', estado: 'pendiente', responsable: 'Luis' },
@@ -84,10 +90,12 @@ export class IaController {
     },
   })
   async mixto(
-    @Query('fk_chat') fk_chat: number,
+    @Query('fk_user') fk_user: number,
+    @Query('fk_chat') fk_chatRaw: string,
     @Query('pregunta') pregunta: string,
-  ): Promise<{ sql: string; datos: any; respuesta: string }> {
-    return await this.mixtoHandler.procesarFlujoMixto(fk_chat, pregunta);
+  ): Promise<{ tipo: string; sql: string; datos: any; respuesta: string }> {
+    const fk_chat = fk_chatRaw ? Number(fk_chatRaw) : null;
+    return await this.mixtoHandler.procesarFlujoMixto(fk_user, fk_chat, pregunta);
   }
 
   @Get('inteligente')

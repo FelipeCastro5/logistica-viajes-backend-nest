@@ -19,29 +19,37 @@ export class ClasificacionHandler {
   // las tablas puntuales a las q se consultara informacion
   // en otra consulta, mandar puntualmente esas tablas y pedir la query
 
-  async procesarPreguntaInteligente(fk_user: number, fk_chat: number | null, pregunta: string): Promise<any> {
+  async procesarPreguntaInteligente(
+    fk_user: number,
+    fk_chat: number | null,
+    pregunta: string
+  ): Promise<any> {
     try {
       const tipo = await this.toolkit.clasificarTipoDePregunta(pregunta);
       this.logger.debug(`🤖 Tipo de flujo clasificado: ${tipo}`);
 
-      if (tipo === 'historial') {
-        const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
-        return { tipo, respuesta };
-      }
+      switch (tipo) {
+        case 'historial': {
+          this.logger.log('🔄 Ejecutando handler: HistoryHandler');
+          return await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
+        }
 
-      if (tipo === 'sql') {
-        const resultado = await this.sqlHandler.procesarConsultaDb(fk_user, fk_chat, pregunta);
-        return { tipo, ...resultado };
-      }
+        case 'sql': {
+          this.logger.log('🔄 Ejecutando handler: SqlHandler');
+          return await this.sqlHandler.procesarConsultaDb(fk_user, fk_chat, pregunta);
+        }
 
-      if (tipo === 'mixto') {
-        const resultado = await this.mixtoHandler.procesarFlujoMixto(fk_user, pregunta);
-        return { tipo, ...resultado };
-      }
+        case 'mixto': {
+          this.logger.log('🔄 Ejecutando handler: MixtoHandler');
+          return await this.mixtoHandler.procesarFlujoMixto(fk_user, fk_chat, pregunta);
+        }
 
-      this.logger.warn(`⚠️ Tipo de flujo desconocido: ${tipo}. Ejecutando como historial por defecto.`);
-      const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat,pregunta);
-      return { tipo: 'historial', respuesta };
+        default: {
+          this.logger.warn(`⚠️ Tipo de flujo desconocido: ${tipo}. Ejecutando como historial por defecto.`);
+          this.logger.log('🔄 Ejecutando handler: HistoryHandler (fallback)');
+          return await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
+        }
+      }
     } catch (error) {
       this.logger.error('❌ Error en procesarPreguntaInteligente', error);
       throw new Error('Ocurrió un error al procesar la pregunta con IA.');

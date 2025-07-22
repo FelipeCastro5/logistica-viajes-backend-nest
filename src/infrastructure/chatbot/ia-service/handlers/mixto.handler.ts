@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IaToolkitService } from '../ia-toolkit.service';
+import { ResponseUtil } from 'src/application/utilities/response.util';
+import { ResponseDto } from 'src/application/utilities/response.dto';
 
 @Injectable()
 export class MixtoHandler {
@@ -7,39 +9,66 @@ export class MixtoHandler {
 
   constructor(private readonly toolkit: IaToolkitService) {}
 
-  async procesarFlujoMixto(fk_chat: number, pregunta: string) {
+  async procesarFlujoMixto(
+    fk_user: number,
+    fk_chat: number | null,
+    pregunta: string
+  ): Promise<any> {
     try {
-      const historial = await this.toolkit.obtenerHistorial(fk_chat);
+      let chatId = fk_chat;
+      let respuesta: string;
 
-      const contexto = historial
-        .map(item => `Usuario: ${item.pregunta}\nIA: ${item.respuesta}`)
-        .join('\n\n');
+      // 1️⃣ Generar SQL desde pregunta
+      const sql = await this.toolkit.generarSQLDesdePregunta(pregunta, fk_user);
+      this.logger.debug('🧾 SQL generado:\n' + sql);
 
-      const promptSQL = `Tienes el siguiente contexto de conversación con el usuario:
-
-            ${contexto}
-
-            Y el usuario ahora pregunta: "${pregunta}"
-
-            Con base en esto, genera una consulta SQL que permita responder correctamente.
-            Utiliza ILIKE para búsquedas insensibles a mayúsculas y comodines % para coincidencias parciales.
-
-            Devuelve solo la consulta SQL sin comentarios ni explicaciones.`;
-
-      const sqlRaw = await this.toolkit['geminiService'].preguntarGemini(promptSQL);
-      const sql = sqlRaw.replace(/```sql|```/g, '').trim();
-
-      this.logger.debug(`📌 SQL generado desde flujo mixto:\n${sql}`);
-
+      // 2️⃣ Ejecutar SQL
       const datos = await this.toolkit.ejecutarSQL(sql);
-      const respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(pregunta, datos);
+      this.logger.debug('📦 Datos obtenidos:\n' + JSON.stringify(datos));
 
-      await this.toolkit.guardarPreguntaYRespuesta(fk_chat, pregunta, respuesta);
+      // 3️⃣ Historial si ya hay chat
+      if (fk_chat) {
+        const historial = await this.toolkit.obtenerHistorial(fk_user);
+        const contexto = this.toolkit.generarPromptConHistorial(historial, pregunta);
+        this.logger.debug('📚 Prompt con historial:\n' + contexto);
 
-      return { sql, datos, respuesta };
+        respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(contexto, datos);
+      } else {
+        // 4️⃣ Sin historial, usar pregunta directa
+        respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(pregunta, datos);
+        this.logger.debug('💬 Respuesta sin historial:\n' + respuesta);
+
+        // 5️⃣ Crear nuevo chat
+        const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Consulta Mixta';
+        const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
+        chatId = nuevoChat.id_chat;
+
+        this.logger.log(`🆕 Chat creado: "${titulo}" (ID: ${chatId})`);
+
+        // Opcional: limpiar encabezado
+        respuesta = this.toolkit.removerLineaTitulo(respuesta);
+      }
+
+      // 6️⃣ Guardar interacción
+      await this.toolkit.guardarPreguntaYRespuesta(chatId, pregunta, respuesta);
+
+      // 7️⃣ Respuesta unificada
+      return ResponseUtil.success(
+        {
+          respuesta,
+          otros: {
+            tipo: 'mixto',
+            sql,
+            datos,
+            chatId
+          }
+        },
+        'Consulta mixta procesada correctamente'
+      );
+
     } catch (error) {
-      this.logger.error('❌ Error en procesarFlujoMixto', error);
-      throw new Error('Ocurrió un error al procesar la pregunta con IA.');
+      this.logger.error('❌ Error en flujo mixto', error);
+      throw new Error('Error al procesar el flujo mixto IA + BD');
     }
   }
 }

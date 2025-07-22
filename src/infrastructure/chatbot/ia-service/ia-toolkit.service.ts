@@ -48,7 +48,7 @@ export class IaToolkitService {
   // Prompt con historial de preguntas y respuestas
   public generarPromptConHistorial(historial: any[], pregunta: string): string {
     const contexto = historial
-      .map(item => `Usuario: ${item.question}\nIA: ${item.answer}`)
+      .map(item => `Usuario: ${item.pregunta}\nIA: ${item.respuesta}`)
       .join('\n\n');
 
     return `${contexto}\n\nAhora el usuario pregunta: "${pregunta}"\nResponde de forma clara y en español con un límite de 400 a 500 caracteres.`;
