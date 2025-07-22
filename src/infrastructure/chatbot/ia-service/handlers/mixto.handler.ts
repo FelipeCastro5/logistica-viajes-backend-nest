@@ -7,24 +7,24 @@ export class MixtoHandler {
 
   constructor(private readonly toolkit: IaToolkitService) {}
 
-  async procesarFlujoMixto(fk_user: number, pregunta: string) {
+  async procesarFlujoMixto(fk_chat: number, pregunta: string) {
     try {
-      const historial = await this.toolkit.obtenerHistorial(fk_user);
+      const historial = await this.toolkit.obtenerHistorial(fk_chat);
 
       const contexto = historial
-        .map(item => `Usuario: ${item.question}\nIA: ${item.answer}`)
+        .map(item => `Usuario: ${item.pregunta}\nIA: ${item.respuesta}`)
         .join('\n\n');
 
       const promptSQL = `Tienes el siguiente contexto de conversación con el usuario:
 
-${contexto}
+            ${contexto}
 
-Y el usuario ahora pregunta: "${pregunta}"
+            Y el usuario ahora pregunta: "${pregunta}"
 
-Con base en esto, genera una consulta SQL que permita responder correctamente.
-Utiliza ILIKE para búsquedas insensibles a mayúsculas y comodines % para coincidencias parciales.
+            Con base en esto, genera una consulta SQL que permita responder correctamente.
+            Utiliza ILIKE para búsquedas insensibles a mayúsculas y comodines % para coincidencias parciales.
 
-Devuelve solo la consulta SQL sin comentarios ni explicaciones.`;
+            Devuelve solo la consulta SQL sin comentarios ni explicaciones.`;
 
       const sqlRaw = await this.toolkit['geminiService'].preguntarGemini(promptSQL);
       const sql = sqlRaw.replace(/```sql|```/g, '').trim();
@@ -34,7 +34,7 @@ Devuelve solo la consulta SQL sin comentarios ni explicaciones.`;
       const datos = await this.toolkit.ejecutarSQL(sql);
       const respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(pregunta, datos);
 
-      await this.toolkit.guardarPreguntaYRespuesta(fk_user, pregunta, respuesta);
+      await this.toolkit.guardarPreguntaYRespuesta(fk_chat, pregunta, respuesta);
 
       return { sql, datos, respuesta };
     } catch (error) {

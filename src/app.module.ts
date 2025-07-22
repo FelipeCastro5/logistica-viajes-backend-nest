@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { GoogleDriveModule } from './infrastructure/google-drive-api/google-drive.module';
-import { GeminiModule } from './infrastructure/gemini-ia/gemini.module';
+import { GeminiModule } from './infrastructure/chatbot/gemini-ia/gemini.module';
 import { ConfigModule } from '@nestjs/config';
 import { HistorialModule } from './presentation/modules/historial.module';
-import { iaModule } from './infrastructure/ia-service/ia.module';
+import { iaModule } from './infrastructure/chatbot/ia-service/ia.module';
 import { UsuarioModule } from './presentation/modules/usuario.module';
 import { ClienteModule } from './presentation/modules/cliente.module';
 import { GastoModule } from './presentation/modules/gasto.module';

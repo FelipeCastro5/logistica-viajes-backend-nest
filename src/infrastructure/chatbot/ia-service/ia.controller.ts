@@ -13,11 +13,12 @@ export class IaController {
     private readonly historyHandler: HistoryHandler,
     private readonly sqlHandler: SqlHandler,
     private readonly mixtoHandler: MixtoHandler,
-  ) {}
+  ) { }
 
-  @Get('historial')
+  @Get('conversacion-simple')
   @ApiOperation({ summary: 'Pregunta basada solo en historial de conversación' })
   @ApiQuery({ name: 'fk_user', required: true, type: Number })
+  @ApiQuery({ name: 'fk_chat', required: false, type: Number, description: 'ID del chat existente o vacío para crear uno nuevo' })
   @ApiQuery({ name: 'pregunta', required: true, type: String })
   @ApiResponse({
     status: 200,
@@ -30,15 +31,18 @@ export class IaController {
   })
   async chatHistorial(
     @Query('fk_user') fk_user: number,
+    @Query('fk_chat') fk_chatRaw: string,
     @Query('pregunta') pregunta: string,
   ): Promise<{ respuesta: string }> {
-    const respuesta = await this.historyHandler.procesarChatSimple(fk_user, pregunta);
+    const fk_chat = fk_chatRaw ? Number(fk_chatRaw) : null;
+
+    const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
     return { respuesta };
   }
 
-  @Get('sql')
+  @Get('generar-sql')
   @ApiOperation({ summary: 'Pregunta transformada en SQL y consultada en la base de datos' })
-  @ApiQuery({ name: 'fk_user', required: true, type: Number })
+  @ApiQuery({ name: 'fk_chat', required: true, type: Number })
   @ApiQuery({ name: 'pregunta', required: true, type: String })
   @ApiResponse({
     status: 200,
@@ -52,15 +56,15 @@ export class IaController {
     },
   })
   async consultaSql(
-    @Query('fk_user') fk_user: number,
+    @Query('fk_chat') fk_chat: number,
     @Query('pregunta') pregunta: string,
   ): Promise<{ sql: string; datos: any; respuesta: string }> {
-    return await this.sqlHandler.procesarConsultaDb(fk_user, pregunta);
+    return await this.sqlHandler.procesarConsultaDb(fk_chat, pregunta);
   }
 
   @Get('mixto')
   @ApiOperation({ summary: 'Flujo mixto: historial + IA + base de datos' })
-  @ApiQuery({ name: 'fk_user', required: true, type: Number })
+  @ApiQuery({ name: 'fk_chat', required: true, type: Number })
   @ApiQuery({ name: 'pregunta', required: true, type: String })
   @ApiResponse({
     status: 200,
@@ -76,32 +80,35 @@ export class IaController {
     },
   })
   async mixto(
-    @Query('fk_user') fk_user: number,
+    @Query('fk_chat') fk_chat: number,
     @Query('pregunta') pregunta: string,
   ): Promise<{ sql: string; datos: any; respuesta: string }> {
-    return await this.mixtoHandler.procesarFlujoMixto(fk_user, pregunta);
+    return await this.mixtoHandler.procesarFlujoMixto(fk_chat, pregunta);
   }
 
-  @Get('inteligente')
-  @ApiOperation({ summary: 'Flujo inteligente: IA decide si usar historial, SQL o mixto' })
-  @ApiQuery({ name: 'fk_user', required: true, type: Number })
-  @ApiQuery({ name: 'pregunta', required: true, type: String })
-  @ApiResponse({
-    status: 200,
-    description: 'El sistema decide automáticamente cómo procesar la pregunta.',
-    schema: {
-      example: {
-        tipo: 'mixto',
-        sql: 'SELECT * FROM proyectos WHERE estado ILIKE \'%activo%\'',
-        datos: [{ id: 1, nombre: 'Proyecto A', estado: 'activo' }],
-        respuesta: 'Proyecto A está actualmente activo.',
-      },
+@Get('inteligente')
+@ApiOperation({ summary: 'Flujo inteligente: IA decide si usar historial, SQL o mixto' })
+@ApiQuery({ name: 'fk_user', required: true, type: Number }) // ✅ Agregado
+@ApiQuery({ name: 'fk_chat', required: false, type: Number }) // ✅ Notar: puede ser null
+@ApiQuery({ name: 'pregunta', required: true, type: String })
+@ApiResponse({
+  status: 200,
+  description: 'El sistema decide automáticamente cómo procesar la pregunta.',
+  schema: {
+    example: {
+      tipo: 'mixto',
+      sql: 'SELECT * FROM proyectos WHERE estado ILIKE \'%activo%\'',
+      datos: [{ id: 1, nombre: 'Proyecto A', estado: 'activo' }],
+      respuesta: 'Proyecto A está actualmente activo.',
     },
-  })
-  async clasificacionInteligente(
-    @Query('fk_user') fk_user: number,
-    @Query('pregunta') pregunta: string,
-  ): Promise<any> {
-    return await this.clasificacionHandler.procesarPreguntaInteligente(fk_user, pregunta);
-  }
+  },
+})
+async clasificacionInteligente(
+  @Query('fk_user') fk_user: number,
+  @Query('pregunta') pregunta: string,
+  @Query('fk_chat') fk_chat?: number,
+): Promise<any> {
+  return await this.clasificacionHandler.procesarPreguntaInteligente(fk_user, fk_chat ?? null, pregunta);
+}
+
 }

@@ -5,7 +5,7 @@ import { PostgresService } from '../postgres-db/postgres.service';
 
 @Injectable()
 export class MensajeRepository implements MensajeInterface {
-  constructor(private readonly postgresService: PostgresService) {}
+  constructor(private readonly postgresService: PostgresService) { }
 
   async getAll(): Promise<Mensaje[]> {
     const query = this.postgresService.getQuery('get-all-mensajes');
@@ -34,4 +34,17 @@ export class MensajeRepository implements MensajeInterface {
     const query = this.postgresService.getQuery('delete-mensaje');
     return this.postgresService.query<any[]>(query, [id]);
   }
+
+  async getLastFive(): Promise<Mensaje[]> {
+    const query = this.postgresService.getQuery('get-last-five-mensajes');
+    const result = await this.postgresService.query<Mensaje>(query);
+    return result.rows;
+  }
+
+  async getLastFiveByChat(fk_chat: number): Promise<Mensaje[]> {
+    const query = this.postgresService.getQuery('get-last-five-mensajes-by-chat');
+    const result = await this.postgresService.query<Mensaje>(query, [fk_chat]);
+    return result.rows;
+  }
+
 }

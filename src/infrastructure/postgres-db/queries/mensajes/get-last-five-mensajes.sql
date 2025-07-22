@@ -1,0 +1,4 @@
+SELECT *
+FROM mensajes
+ORDER BY fecha DESC
+LIMIT 5;

@@ -1,9 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GeminiService } from '../gemini-ia/gemini.service';
-import { PostgresService } from '../../infrastructure/postgres-db/postgres.service';
-import { HistorialRepository } from '../repository/historial.repository';
+import { PostgresService } from '../../postgres-db/postgres.service';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Chat } from 'src/domain/chat-domain/chat.entity';
+import { ChatInterface } from 'src/domain/chat-domain/chat.interface';
+import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
 
 @Injectable()
 export class IaToolkitService {
@@ -12,23 +14,39 @@ export class IaToolkitService {
   constructor(
     private readonly geminiService: GeminiService,
     private readonly postgresService: PostgresService,
-    private readonly historialRepository: HistorialRepository,
+    @Inject('ChatInterface')
+    private readonly chatRepository: ChatInterface,
+    @Inject('MensajeInterface')
+    private readonly mensajeRepository: MensajeInterface,
   ) { }
 
-  // 🔹 Obtener historial reciente
-  public async obtenerHistorial(fk_user: number) {
-    return await this.historialRepository.getLastFiveByUser(fk_user);
+  // 🔹 Consultar a Gemini directamente desde IaToolkitService
+  public async preguntarGemini(pregunta: string): Promise<string> {
+    return await this.geminiService.preguntarGemini(pregunta);
   }
 
-  // 🔹 Generar prompt desde historial
-  public generarPromptDesdeHistorial(historial: any[], pregunta: string): string {
-    if (historial.length === 0) {
-      return `El usuario pregunta: "${pregunta}". 
-        Responde de forma clara y en español en un máximo de 400 a 500 caracteres. 
-        Además, sugiere un título breve (máximo 80 caracteres) que resuma la conversación. 
-        Incluye el título iniciando una línea con: "Título: ..."`;
-    }
+  // 🔹 Crear un nuevo chat
+  public async crearNuevoChat(fk_usuario: number, nombre_chat: string): Promise<Chat> {
+    const nuevoChat = await this.chatRepository.createChat(fk_usuario, nombre_chat);
+    this.logger.log(`🆕 Chat creado: [ID ${nuevoChat.id_chat}] "${nuevoChat.nombre_chat}" para usuario ${fk_usuario}`);
+    return nuevoChat;
+  }
 
+  // 🔹 Obtener historial reciente
+  public async obtenerHistorial(fk_chat: number) {
+    return await this.mensajeRepository.getLastFiveByChat(fk_chat);
+  }
+
+  // Prompt sin historial (primer mensaje del chat)
+  public generarPromptSinHistorial(pregunta: string): string {
+    return `El usuario pregunta: "${pregunta}". 
+            Responde de forma clara y en español en un máximo de 400 a 500 caracteres. 
+            Además, sugiere un título breve (máximo 80 caracteres) que resuma la conversación. 
+            Incluye el título iniciando una línea con: "Título: ..."`;
+  }
+
+  // Prompt con historial de preguntas y respuestas
+  public generarPromptConHistorial(historial: any[], pregunta: string): string {
     const contexto = historial
       .map(item => `Usuario: ${item.question}\nIA: ${item.answer}`)
       .join('\n\n');
@@ -36,9 +54,10 @@ export class IaToolkitService {
     return `${contexto}\n\nAhora el usuario pregunta: "${pregunta}"\nResponde de forma clara y en español con un límite de 400 a 500 caracteres.`;
   }
 
+
   // 🔹 Guardar en historial
-  public async guardarPreguntaYRespuesta(fk_user: number, pregunta: string, respuesta: string) {
-    await this.historialRepository.insertHistorial(fk_user, pregunta, respuesta.trim());
+  public async guardarPreguntaYRespuesta(fk_chat: number, pregunta: string, respuesta: string) {
+    await this.mensajeRepository.createMensaje(fk_chat, pregunta, respuesta.trim());
   }
 
   // 🔹 Generar SQL a partir de pregunta
@@ -48,11 +67,11 @@ export class IaToolkitService {
 
     const promptSQL = `Tienes la siguiente estructura de base de datos:
   
-${estructuraSQL}
+    ${estructuraSQL}
 
-Genera una consulta SQL para responder esta pregunta del usuario: "${preguntaUsuario}"
-Cuando compares columnas de texto con valores proporcionados por el usuario, utiliza siempre ILIKE (insensible a mayúsculas) y asegúrate de permitir coincidencias parciales utilizando comodines % cuando sea apropiado.
-Devuelve solo la consulta SQL, sin explicaciones ni comentarios.`;
+    Genera una consulta SQL para responder esta pregunta del usuario: "${preguntaUsuario}"
+    Cuando compares columnas de texto con valores proporcionados por el usuario, utiliza siempre ILIKE (insensible a mayúsculas) y asegúrate de permitir coincidencias parciales utilizando comodines % cuando sea apropiado.
+    Devuelve solo la consulta SQL, sin explicaciones ni comentarios.`;
 
     const sqlGeneradoRaw = await this.geminiService.preguntarGemini(promptSQL);
     const sqlLimpio = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
@@ -102,9 +121,9 @@ Devuelve solo una palabra: sql, historial o mixto.`;
     return 'historial';
   }
 
-// function extraerTituloDeRespuesta(respuesta: string): string | null {
-//   const match = respuesta.match(/Título:\s*(.+)/i);
-//   return match ? match[1].trim() : null;
-// }
+  // function extraerTituloDeRespuesta(respuesta: string): string | null {
+  //   const match = respuesta.match(/Título:\s*(.+)/i);
+  //   return match ? match[1].trim() : null;
+  // }
 
 }

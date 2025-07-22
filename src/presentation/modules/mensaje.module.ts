@@ -24,5 +24,6 @@ import { GetMensajeByIdHandler } from '../../application/mensaje/handlers/get-me
     GetMensajeByIdHandler,
   ],
   controllers: [MensajeController],
+  exports: ['MensajeInterface'],
 })
 export class MensajeModule {}

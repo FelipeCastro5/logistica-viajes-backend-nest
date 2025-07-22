@@ -15,24 +15,17 @@ export class ClasificacionHandler {
     private readonly mixtoHandler: MixtoHandler,
   ) {}
 
-
-
   // idea, en lugar de cargar toda la db, si cargarlo, pero solo para pedir 
   // las tablas puntuales a las q se consultara informacion
   // en otra consulta, mandar puntualmente esas tablas y pedir la query
 
-
-
-
-
-
-  async procesarPreguntaInteligente(fk_user: number, pregunta: string): Promise<any> {
+  async procesarPreguntaInteligente(fk_user: number, fk_chat: number | null, pregunta: string): Promise<any> {
     try {
       const tipo = await this.toolkit.clasificarTipoDePregunta(pregunta);
       this.logger.debug(`🤖 Tipo de flujo clasificado: ${tipo}`);
 
       if (tipo === 'historial') {
-        const respuesta = await this.historyHandler.procesarChatSimple(fk_user, pregunta);
+        const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
         return { tipo, respuesta };
       }
 
@@ -47,7 +40,7 @@ export class ClasificacionHandler {
       }
 
       this.logger.warn(`⚠️ Tipo de flujo desconocido: ${tipo}. Ejecutando como historial por defecto.`);
-      const respuesta = await this.historyHandler.procesarChatSimple(fk_user, pregunta);
+      const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat,pregunta);
       return { tipo: 'historial', respuesta };
     } catch (error) {
       this.logger.error('❌ Error en procesarPreguntaInteligente', error);

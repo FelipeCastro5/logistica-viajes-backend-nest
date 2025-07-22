@@ -24,5 +24,6 @@ import { GetChatByIdHandler } from '../../application/chat/handlers/get-chat-by-
     GetChatByIdHandler,
   ],
   controllers: [ChatController],
+  exports: ['ChatInterface'],
 })
 export class ChatModule {}
