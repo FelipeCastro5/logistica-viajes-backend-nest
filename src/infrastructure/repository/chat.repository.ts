@@ -16,7 +16,7 @@ export class ChatRepository implements ChatInterface {
   async getById(id: number): Promise<Chat | null> {
     const query = this.postgresService.getQuery('get-chat');
     const result = await this.postgresService.query<Chat>(query, [id]);
-    return result.rows[0] || null;
+    return result.rows || null;
   }
 
   async createChat(fk_usuario: number, nombre_chat: string): Promise<Chat> {

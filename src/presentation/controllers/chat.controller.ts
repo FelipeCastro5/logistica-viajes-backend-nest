@@ -26,10 +26,10 @@ export class ChatController {
     return this.queryBus.execute(new GetAllChatsCommand());
   }
 
-  @Get('getById')
+  @Get('getByUsuario')
   @ApiOperation({ summary: 'Obtener chat por ID' })
-  @ApiResponse({ status: 200, description: 'Chat encontrado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Chat no encontrado' })
+  @ApiResponse({ status: 200, description: 'Chats encontrado exitosamente' })
+  @ApiResponse({ status: 404, description: 'Chats no encontrado' })
   async getChatById(@Query('id') id: number) {
     return this.queryBus.execute(new GetChatByIdCommand(id));
   }

@@ -15,7 +15,7 @@ export class GetChatByIdHandler implements IQueryHandler<GetChatByIdCommand> {
   async execute(command: GetChatByIdCommand) {
     try {
       const chat = await this.chatRepository.getById(command.id);
-      if (!chat) {
+      if (chat == null) {
         return ResponseUtil.error('Chat no encontrado', 404);
       }
       return ResponseUtil.success(chat, 'Chat encontrado exitosamente');
