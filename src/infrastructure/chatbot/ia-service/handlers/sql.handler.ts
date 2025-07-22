@@ -7,12 +7,35 @@ export class SqlHandler {
 
   constructor(private readonly toolkit: IaToolkitService) {}
 
-  async procesarConsultaDb(fk_chat: number, preguntaUsuario: string): Promise<{ sql: string; datos: any; respuesta: string }> {
+  async procesarConsultaDb(
+    fk_user: number,
+    fk_chat: number | null,
+    preguntaUsuario: string
+  ): Promise<{ sql: string; datos: any; respuesta: string }> {
     try {
-      const sql = await this.toolkit.generarSQLDesdePregunta(preguntaUsuario);
+      // 1. Generar SQL basado en la pregunta
+      const sql = await this.toolkit.generarSQLDesdePregunta(preguntaUsuario, fk_user);
       const datos = await this.toolkit.ejecutarSQL(sql);
-      const respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(preguntaUsuario, datos);
-      await this.toolkit.guardarPreguntaYRespuesta(fk_chat, preguntaUsuario, respuesta);
+
+      // 2. Generar respuesta en lenguaje natural
+      let respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(preguntaUsuario, datos);
+      let chatId = fk_chat;
+
+      // 3. Verificar si el chat existe o hay que crearlo
+      if (!fk_chat) {
+        const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Consulta SQL';
+        const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
+        chatId = nuevoChat.id_chat;
+
+        this.logger.log(`🆕 Chat creado automáticamente: "${titulo}" (ID: ${chatId})`);
+
+        // 🔹 Limpiar respuesta quitando el título
+        respuesta = this.toolkit.removerLineaTitulo(respuesta);
+      }
+
+      // 4. Guardar mensaje/respuesta en historial
+      await this.toolkit.guardarPreguntaYRespuesta(chatId, preguntaUsuario, respuesta);
+
       return { sql, datos, respuesta };
     } catch (error) {
       this.logger.error('❌ Error procesando consulta IA + DB', error);

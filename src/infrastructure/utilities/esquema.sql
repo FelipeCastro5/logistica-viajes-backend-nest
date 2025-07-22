@@ -85,25 +85,3 @@ create table gastosxviaje (
   valor decimal(15,5),
   detalles varchar(250)
 );
-
-alter table cliente add foreign key (fk_usuario) references usuario(id_usuario) on delete cascade;
-
-alter table usuario add foreign key (fk_rol) references rol (id_rol) on delete restrict;
-
-alter table usuario add foreign key (fk_contador) references usuario (id_usuario) on delete set null;
-
-alter table usuario add foreign key (fk_tipodoc) references tipodoc (id_tipodoc) on delete restrict;
-
-alter table viaje add foreign key (fk_usuario) references usuario (id_usuario) on delete cascade;
-
-alter table viaje add foreign key (fk_manifiesto) references manifiesto (id_manifiesto) on delete set null;
-
-alter table viaje add foreign key (fk_cliente) references cliente (id_cliente) on delete set null;
-
-alter table viaje add foreign key (fk_origen) references lugar (id_lugar) on delete set null;
-
-alter table viaje add foreign key (fk_destino) references lugar (id_lugar) on delete set null;
-
-alter table gastosxviaje add foreign key (fk_viaje) references viaje (id_viaje) on delete cascade;
-
-alter table gastosxviaje add foreign key (fk_gasto) references gasto (id_gasto) on delete restrict;

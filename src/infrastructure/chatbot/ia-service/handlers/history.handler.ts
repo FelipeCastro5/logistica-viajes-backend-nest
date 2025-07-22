@@ -32,13 +32,13 @@ export class HistoryHandler {
       respuesta = await this.toolkit.preguntarGemini(contexto);
       this.logger.debug('🧠 Respuesta de Gemini (nuevo chat):\n' + respuesta);
 
-      const titulo = this.extraerTituloDeRespuesta(respuesta) || 'Nuevo chat';
+      const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Nuevo chat';
       const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
       chatId = nuevoChat.id_chat;
 
       this.logger.log(`📌 Chat creado con título: "${titulo}" y ID: ${chatId}`);
       // 🔸 Limpiar la respuesta eliminando el título
-      respuesta = this.removerLineaTitulo(respuesta);
+      respuesta = this.toolkit.removerLineaTitulo(respuesta);
     }
 
     // 🔹 Guardar mensaje y respuesta
@@ -47,16 +47,4 @@ export class HistoryHandler {
     return respuesta;
   }
 
-  private extraerTituloDeRespuesta(respuesta: string): string | null {
-    const match = respuesta.match(/Título:\s*(.+)/i);
-    return match ? match[1].trim() : null;
-  }
-
-  private removerLineaTitulo(respuesta: string): string {
-    return respuesta
-      .split('\n')
-      .filter(linea => !/^título:/i.test(linea.trim()))
-      .join('\n')
-      .trim();
-  }
 }

@@ -30,7 +30,7 @@ export class ClasificacionHandler {
       }
 
       if (tipo === 'sql') {
-        const resultado = await this.sqlHandler.procesarConsultaDb(fk_user, pregunta);
+        const resultado = await this.sqlHandler.procesarConsultaDb(fk_user, fk_chat, pregunta);
         return { tipo, ...resultado };
       }
 

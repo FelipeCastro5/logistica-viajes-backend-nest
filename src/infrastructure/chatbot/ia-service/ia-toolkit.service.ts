@@ -54,24 +54,27 @@ export class IaToolkitService {
     return `${contexto}\n\nAhora el usuario pregunta: "${pregunta}"\nResponde de forma clara y en español con un límite de 400 a 500 caracteres.`;
   }
 
-
   // 🔹 Guardar en historial
   public async guardarPreguntaYRespuesta(fk_chat: number, pregunta: string, respuesta: string) {
     await this.mensajeRepository.createMensaje(fk_chat, pregunta, respuesta.trim());
   }
 
   // 🔹 Generar SQL a partir de pregunta
-  public async generarSQLDesdePregunta(preguntaUsuario: string): Promise<string> {
-    const esquemaPath = path.join(process.cwd(), 'src', 'infrastructure', 'utilities', 'db.sql');
+  public async generarSQLDesdePregunta(preguntaUsuario: string, fk_user: number): Promise<string> {
+    const esquemaPath = path.join(process.cwd(), 'src', 'infrastructure', 'utilities', 'esquema.sql');
     const estructuraSQL = fs.readFileSync(esquemaPath, 'utf8');
 
     const promptSQL = `Tienes la siguiente estructura de base de datos:
-  
-    ${estructuraSQL}
 
-    Genera una consulta SQL para responder esta pregunta del usuario: "${preguntaUsuario}"
-    Cuando compares columnas de texto con valores proporcionados por el usuario, utiliza siempre ILIKE (insensible a mayúsculas) y asegúrate de permitir coincidencias parciales utilizando comodines % cuando sea apropiado.
-    Devuelve solo la consulta SQL, sin explicaciones ni comentarios.`;
+${estructuraSQL}
+
+Genera una consulta SQL para responder esta pregunta del usuario: "${preguntaUsuario}"
+
+🟡 Importante:
+- Asegúrate de **incluir una cláusula WHERE fk_user = ${fk_user}** en la consulta si la tabla contiene esa columna.
+- Usa ILIKE (insensible a mayúsculas) para comparar textos.
+- Usa comodines % cuando tenga sentido.
+- Devuelve **solo la SQL**, sin comentarios ni explicaciones.`;
 
     const sqlGeneradoRaw = await this.geminiService.preguntarGemini(promptSQL);
     const sqlLimpio = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
@@ -79,6 +82,7 @@ export class IaToolkitService {
     this.logger.debug(`🔍 SQL generado:\n${sqlLimpio}`);
     return sqlLimpio;
   }
+
 
   // 🔹 Ejecutar SQL
   public async ejecutarSQL(sql: string): Promise<any[]> {
@@ -102,12 +106,12 @@ Redacta una respuesta clara en español explicando estos resultados.`;
   // 🔹 Clasificar tipo de pregunta
   public async clasificarTipoDePregunta(pregunta: string): Promise<'sql' | 'historial' | 'mixto'> {
     const promptClasificacion = `Clasifica la siguiente pregunta en una de las siguientes categorías:
-- "sql": si se refiere directamente a obtener datos de una base de datos.
-- "historial": si es una conversación general que no requiere acceso a la base de datos.
-- "mixto": si requiere tanto contexto conversacional como acceso a datos.
+        - "sql": si se refiere directamente a obtener datos de una base de datos.
+        - "historial": si es una conversación general que no requiere acceso a la base de datos.
+        - "mixto": si requiere tanto contexto conversacional como acceso a datos.
 
-Pregunta: "${pregunta}"
-Devuelve solo una palabra: sql, historial o mixto.`;
+        Pregunta: "${pregunta}"
+        Devuelve solo una palabra: sql, historial o mixto.`;
 
     const respuesta = await this.geminiService.preguntarGemini(promptClasificacion);
     const tipo = respuesta.trim().toLowerCase();
@@ -121,9 +125,16 @@ Devuelve solo una palabra: sql, historial o mixto.`;
     return 'historial';
   }
 
-  // function extraerTituloDeRespuesta(respuesta: string): string | null {
-  //   const match = respuesta.match(/Título:\s*(.+)/i);
-  //   return match ? match[1].trim() : null;
-  // }
+  public extraerTituloDeRespuesta(respuesta: string): string | null {
+    const match = respuesta.match(/Título:\s*(.+)/i);
+    return match ? match[1].trim() : null;
+  }
 
+  public removerLineaTitulo(respuesta: string): string {
+    return respuesta
+      .split('\n')
+      .filter(linea => !/^título:/i.test(linea.trim()))
+      .join('\n')
+      .trim();
+  }
 }
