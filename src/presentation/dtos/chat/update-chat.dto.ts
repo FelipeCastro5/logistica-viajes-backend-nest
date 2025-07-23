@@ -5,7 +5,7 @@ export class UpdateChatDto {
   @ApiProperty({ example: 1, description: 'ID del chat a actualizar' })
   @IsInt({ message: 'El campo id debe ser un número entero' })
   @Min(1, { message: 'El campo id debe ser mayor que 0' })
-  id: number;
+  id_chat: number;
 
   @ApiProperty({ example: 1, description: 'ID del usuario dueño del chat' })
   @IsInt({ message: 'El campo fk_usuario debe ser un número entero' })

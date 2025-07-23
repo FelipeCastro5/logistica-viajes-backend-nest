@@ -5,5 +5,5 @@ export interface ChatInterface {
   getById(id: number): Promise<Chat | null>;
   createChat(fk_usuario: number, nombre_chat: string): Promise<Chat>;
   updateChat(id: number, fk_usuario: number, nombre_chat: string): Promise<any>;
-  deleteChat(id: number): Promise<any>;
+  deleteChat(id_chat: number): Promise<any>;
 }

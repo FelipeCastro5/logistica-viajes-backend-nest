@@ -35,9 +35,7 @@ export class IaController {
     @Query('pregunta') pregunta: string,
   ): Promise<{ respuesta: string }> {
     const fk_chat = fk_chatRaw ? Number(fk_chatRaw) : null;
-
-    const respuesta = await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
-    return { respuesta };
+    return await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
   }
 
   @Get('generar-sql')

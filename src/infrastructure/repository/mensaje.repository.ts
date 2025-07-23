@@ -16,7 +16,7 @@ export class MensajeRepository implements MensajeInterface {
   async getById(id: number): Promise<Mensaje | null> {
     const query = this.postgresService.getQuery('get-mensaje');
     const result = await this.postgresService.query<Mensaje>(query, [id]);
-    return result.rows[0] || null;
+    return result.rows || null;
   }
 
   async createMensaje(fk_chat: number, pregunta: string, respuesta: string): Promise<Mensaje> {

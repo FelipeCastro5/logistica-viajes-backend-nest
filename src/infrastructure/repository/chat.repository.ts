@@ -31,9 +31,9 @@ export class ChatRepository implements ChatInterface {
     return result;
   }
 
-  async deleteChat(id: number): Promise<any> {
+  async deleteChat(id_chat: number): Promise<any> {
     const query = this.postgresService.getQuery('delete-chat');
-    const result = await this.postgresService.query<any[]>(query, [id]);
+    const result = await this.postgresService.query<any[]>(query, [id_chat]);
     return result;
   }
 }

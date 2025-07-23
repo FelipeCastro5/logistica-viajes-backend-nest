@@ -14,7 +14,7 @@ export class DeleteChatHandler implements ICommandHandler<DeleteChatCommand> {
 
   async execute(command: DeleteChatCommand) {
     try {
-      const result = await this.chatRepository.deleteChat(command.id);
+      const result = await this.chatRepository.deleteChat(command.id_chat);
       if (!result?.rowCount) {
         return ResponseUtil.error('Chat no encontrado', 404);
       }

@@ -26,10 +26,10 @@ export class MensajeController {
     return this.queryBus.execute(new GetAllMensajesCommand());
   }
 
-  @Get('getById')
+  @Get('getByChat')
   @ApiOperation({ summary: 'Obtener mensaje por ID' })
-  @ApiResponse({ status: 200, description: 'Mensaje encontrado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Mensaje no encontrado' })
+  @ApiResponse({ status: 200, description: 'Mensajes encontrado exitosamente' })
+  @ApiResponse({ status: 404, description: 'Mensajes no encontrado' })
   async getMensajeById(@Query('id') id: number) {
     return this.queryBus.execute(new GetMensajeByIdCommand(id));
   }

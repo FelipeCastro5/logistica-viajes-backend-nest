@@ -51,7 +51,7 @@ export class ChatController {
   @ApiResponse({ status: 404, description: 'Chat no encontrado' })
   async updateChat(@Body() dto: UpdateChatDto) {
     const command = new UpdateChatCommand(
-      dto.id,
+      dto.id_chat,
       dto.fk_usuario,
       dto.nombre_chat,
     );
@@ -62,7 +62,7 @@ export class ChatController {
   @ApiOperation({ summary: 'Eliminar un chat por ID' })
   @ApiResponse({ status: 200, description: 'Chat eliminado exitosamente' })
   @ApiResponse({ status: 404, description: 'Chat no encontrado' })
-  async deleteChat(@Query('id') id: number) {
-    return this.commandBus.execute(new DeleteChatCommand(id));
+  async deleteChat(@Query('id_chat') id_chat: number) {
+    return this.commandBus.execute(new DeleteChatCommand(id_chat));
   }
 }

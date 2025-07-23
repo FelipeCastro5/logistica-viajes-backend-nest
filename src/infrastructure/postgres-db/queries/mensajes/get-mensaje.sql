@@ -1,1 +1,1 @@
-SELECT * FROM mensajes WHERE id_mensaje = $1;
+SELECT * FROM mensajes WHERE fk_chat = $1;
