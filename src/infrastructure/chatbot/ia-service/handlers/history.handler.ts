@@ -7,7 +7,7 @@ import { ResponseUtil } from 'src/application/utilities/response.util';
 export class HistoryHandler {
   private readonly logger = new Logger(HistoryHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) {}
+  constructor(private readonly toolkit: IaToolkitService) { }
 
   async procesarChatSimple(
     fk_user: number,
@@ -18,6 +18,7 @@ export class HistoryHandler {
     let contexto: string;
     let respuesta: string;
     let chatId = fk_chat;
+    let nuevoTitulo: string | undefined;
 
     if (fk_chat) {
       // 🔹 Chat existente
@@ -35,6 +36,8 @@ export class HistoryHandler {
       this.logger.debug('🧠 Respuesta de Gemini (nuevo chat):\n' + respuesta);
 
       const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Nuevo chat';
+      nuevoTitulo = titulo;
+
       const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
       chatId = nuevoChat.id_chat;
 
@@ -48,10 +51,12 @@ export class HistoryHandler {
     return ResponseUtil.success(
       {
         respuesta,
-        otros: {
-          chatId,
-          historial: historial.length ? historial : undefined,
-        },
+        chatId,
+        ...(nuevoTitulo && { titulo: nuevoTitulo }), // Solo incluye si se creó uno nuevo
+        // otros: {
+        //   chatId,
+        //   historial: historial.length ? historial : undefined,
+        // },
       },
       'Respuesta generada exitosamente'
     );
