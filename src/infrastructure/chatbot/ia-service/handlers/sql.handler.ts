@@ -7,7 +7,7 @@ import { ResponseUtil } from 'src/application/utilities/response.util';
 export class SqlHandler {
   private readonly logger = new Logger(SqlHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) {}
+  constructor(private readonly toolkit: IaToolkitService) { }
 
   async procesarConsultaDb(
     fk_user: number,
@@ -22,12 +22,14 @@ export class SqlHandler {
       // 2. Generar respuesta en lenguaje natural
       let respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(preguntaUsuario, datos);
       let chatId = fk_chat;
+      let nuevoTitulo: string | undefined;
 
       // 3. Verificar si el chat existe o hay que crearlo
       if (!fk_chat) {
         const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Consulta SQL';
         const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
         chatId = nuevoChat.id_chat;
+        nuevoTitulo = titulo;
 
         this.logger.log(`🆕 Chat creado automáticamente: "${titulo}" (ID: ${chatId})`);
 
@@ -42,11 +44,13 @@ export class SqlHandler {
       return ResponseUtil.success(
         {
           respuesta,
-          otros: {
-            sql,
-            datos,
-            chatId,
-          },
+          chatId,
+          ...(nuevoTitulo && { titulo: nuevoTitulo }),
+          // otros: {
+          //   sql,
+          //   datos,
+          //   chatId,
+          // },
         },
         'Consulta SQL procesada correctamente'
       );

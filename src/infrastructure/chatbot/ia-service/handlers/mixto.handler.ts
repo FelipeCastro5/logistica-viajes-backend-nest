@@ -17,6 +17,8 @@ export class MixtoHandler {
     try {
       let chatId = fk_chat;
       let respuesta: string;
+      let nuevoTitulo: string | undefined;
+      let contexto: string;
 
       // 1️⃣ Generar SQL desde pregunta
       const sql = await this.toolkit.generarSQLDesdePregunta(pregunta, fk_user);
@@ -26,42 +28,40 @@ export class MixtoHandler {
       const datos = await this.toolkit.ejecutarSQL(sql);
       this.logger.debug('📦 Datos obtenidos:\n' + JSON.stringify(datos));
 
-      // 3️⃣ Historial si ya hay chat
+      // 3️⃣ Preparar el contexto
       if (fk_chat) {
-        const historial = await this.toolkit.obtenerHistorial(fk_user);
-        const contexto = this.toolkit.generarPromptConHistorial(historial, pregunta);
-        this.logger.debug('📚 Prompt con historial:\n' + contexto);
-
-        respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(contexto, datos);
+        const historial = await this.toolkit.obtenerHistorial(fk_chat);
+        contexto = this.toolkit.generarPromptConHistorial(historial, pregunta);
+        this.logger.debug('📚 Contexto con historial:\n' + contexto);
       } else {
-        // 4️⃣ Sin historial, usar pregunta directa
-        respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(pregunta, datos);
-        this.logger.debug('💬 Respuesta sin historial:\n' + respuesta);
+        contexto = pregunta; // se usa pregunta directa
+      }
 
-        // 5️⃣ Crear nuevo chat
+      // 4️⃣ Generar respuesta natural al final
+      respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(contexto, datos);
+      this.logger.debug('💬 Respuesta generada:\n' + respuesta);
+
+      // 5️⃣ Crear chat si no existe
+      if (!chatId) {
         const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Consulta Mixta';
+        nuevoTitulo = titulo;
+
         const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
         chatId = nuevoChat.id_chat;
 
-        this.logger.log(`🆕 Chat creado: "${titulo}" (ID: ${chatId})`);
-
-        // Opcional: limpiar encabezado
+        this.logger.log(`📌 Chat creado con título: "${titulo}" y ID: ${chatId}`);
         respuesta = this.toolkit.removerLineaTitulo(respuesta);
       }
 
-      // 6️⃣ Guardar interacción
+      // 6️⃣ Guardar mensaje y respuesta
       await this.toolkit.guardarPreguntaYRespuesta(chatId, pregunta, respuesta);
 
-      // 7️⃣ Respuesta unificada
+      // 7️⃣ Respuesta estructurada
       return ResponseUtil.success(
         {
           respuesta,
-          otros: {
-            tipo: 'mixto',
-            sql,
-            datos,
-            chatId
-          }
+          chatId,
+          ...(nuevoTitulo && { titulo: nuevoTitulo }),
         },
         'Consulta mixta procesada correctamente'
       );

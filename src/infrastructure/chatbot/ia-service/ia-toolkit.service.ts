@@ -64,22 +64,28 @@ export class IaToolkitService {
     const esquemaPath = path.join(process.cwd(), 'src', 'infrastructure', 'utilities', 'esquema.sql');
     const estructuraSQL = fs.readFileSync(esquemaPath, 'utf8');
 
-    const promptSQL = `Tienes la siguiente estructura de base de datos:
+    const promptSQL = `Eres un asistente experto en SQL y tienes acceso a esta estructura de base de datos:
 
 ${estructuraSQL}
 
-Genera una consulta SQL para responder esta pregunta del usuario: "${preguntaUsuario}"
+Responde la siguiente pregunta del usuario con una consulta SQL válida:
+"${preguntaUsuario}"
 
-🟡 Importante:
-- Asegúrate de **incluir una cláusula WHERE fk_user = ${fk_user}** en la consulta si la tabla contiene esa columna.
-- Usa ILIKE (insensible a mayúsculas) para comparar textos.
-- Usa comodines % cuando tenga sentido.
-- Devuelve **solo la SQL**, sin comentarios ni explicaciones.`;
+🟡 Instrucciones importantes:
+1. Si necesitas aplicar funciones de agregación como SUM, COUNT o AVG, **evita usar ORDER BY directamente a menos que agrupes correctamente o uses una subconsulta**.
+2. Prefiere subconsultas para operaciones como "el último registro", "el total de X del último viaje", etc.
+3. Si es necesario filtrar por usuario, incluye **WHERE fk_usuario = ${fk_user}** o la columna equivalente, si existe.
+4. Para coincidencias de texto, usa ILIKE con comodines '%', por ejemplo: ILIKE '%valor%'.
+5. No incluyas comentarios, explicaciones ni bloques de código. Devuelve **solo la SQL** en una sola línea si es posible.
+
+Asegúrate de que la consulta sea ejecutable y no genere errores SQL de agregación.`;
 
     const sqlGeneradoRaw = await this.geminiService.preguntarGemini(promptSQL);
-    const sqlLimpio = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
+
+    const sqlLimpio: string = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
 
     this.logger.debug(`🔍 SQL generado:\n${sqlLimpio}`);
+
     return sqlLimpio;
   }
 
