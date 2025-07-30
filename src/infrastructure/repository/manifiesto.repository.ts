@@ -5,7 +5,7 @@ import { PostgresService } from '../postgres-db/postgres.service';
 
 @Injectable()
 export class ManifiestoRepository implements ManifiestoInterface {
-  constructor(private readonly postgresService: PostgresService) {}
+  constructor(private readonly postgresService: PostgresService) { }
 
   async getAll(): Promise<Manifiesto[]> {
     const query = this.postgresService.getQuery('get-all-manifiestos');
@@ -97,5 +97,24 @@ export class ManifiestoRepository implements ManifiestoInterface {
   async deleteManifiesto(id: number): Promise<any> {
     const query = this.postgresService.getQuery('delete-manifiesto');
     return this.postgresService.query<any[]>(query, [id]);
+  }
+
+  async updateTotalGastosManifiesto(fk_viaje: number): Promise<any> {
+    const query = this.postgresService.getQuery('update-total-gastos');
+    const params = [fk_viaje];
+    return this.postgresService.query<any[]>(query, params);
+  }
+  // NUEVO: Obtener total de gastos por manifiesto
+  async getTotalGastosByManifiesto(manifiestoId: number): Promise<number> {
+    const query = this.postgresService.getQuery('get-total-gastos-from-manifiesto');
+    const result = await this.postgresService.query<{ total_gastos: number }[]>(query, [manifiestoId]);
+    return result[0]?.total_gastos ?? 0;
+  }
+
+  // NUEVO: Actualizar el total_gastos del manifiesto directamente
+  async updateTotalGastosByManifiesto(manifiestoId: number, totalGastos: number): Promise<any> {
+    const query = this.postgresService.getQuery('update-total-gastos-manifiesto');
+    const params = [manifiestoId, totalGastos];
+    return this.postgresService.query<any[]>(query, params);
   }
 }

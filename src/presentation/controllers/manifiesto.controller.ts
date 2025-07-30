@@ -10,6 +10,7 @@ import { GetManifiestoByIdCommand } from '../../application/manifiesto/commands/
 
 import { CreateManifiestoDto } from '../dtos/manifiesto/create-manifiesto.dto';
 import { UpdateManifiestoDto } from '../dtos/manifiesto/update-manifiesto.dto';
+import { UpdateTotalGastosCommand } from 'src/application/manifiesto/commands/update-total-gastos.command';
 
 @ApiTags('Manifiestos')
 @Controller('manifiestos')
@@ -88,4 +89,13 @@ export class ManifiestoController {
     async delete(@Query('id') id: number) {
         return this.commandBus.execute(new DeleteManifiestoCommand(id));
     }
+
+    @Put('update-total-gastos')
+    @ApiOperation({ summary: 'Actualizar el total de gastos en el manifiesto asociado a un viaje' })
+    @ApiResponse({ status: 200, description: 'Total de gastos actualizado correctamente' })
+    @ApiResponse({ status: 404, description: 'Viaje o manifiesto no encontrado' })
+    async updateTotalGastos(@Query('fk_viaje') fk_viaje: number) {
+        return this.commandBus.execute(new UpdateTotalGastosCommand(fk_viaje));
+    }
+
 }

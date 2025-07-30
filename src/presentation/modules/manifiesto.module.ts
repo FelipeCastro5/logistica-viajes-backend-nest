@@ -9,6 +9,7 @@ import { UpdateManifiestoHandler } from '../../application/manifiesto/handlers/u
 import { DeleteManifiestoHandler } from '../../application/manifiesto/handlers/delete-manifiesto.handler';
 import { GetAllManifiestosHandler } from '../../application/manifiesto/handlers/get-all-manifiestos.handler';
 import { GetManifiestoByIdHandler } from '../../application/manifiesto/handlers/get-manifiesto-by-id.handler';
+import { UpdateTotalGastosHandler } from 'src/application/manifiesto/handlers/update-total-gastos.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule],
@@ -22,6 +23,7 @@ import { GetManifiestoByIdHandler } from '../../application/manifiesto/handlers/
     DeleteManifiestoHandler,
     GetAllManifiestosHandler,
     GetManifiestoByIdHandler,
+    UpdateTotalGastosHandler,
   ],
   controllers: [ManifiestoController],
 })
