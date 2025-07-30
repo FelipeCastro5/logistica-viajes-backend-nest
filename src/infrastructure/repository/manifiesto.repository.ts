@@ -104,17 +104,11 @@ export class ManifiestoRepository implements ManifiestoInterface {
     const params = [fk_viaje];
     return this.postgresService.query<any[]>(query, params);
   }
-  // NUEVO: Obtener total de gastos por manifiesto
-  async getTotalGastosByManifiesto(manifiestoId: number): Promise<number> {
-    const query = this.postgresService.getQuery('get-total-gastos-from-manifiesto');
-    const result = await this.postgresService.query<{ total_gastos: number }[]>(query, [manifiestoId]);
-    return result[0]?.total_gastos ?? 0;
-  }
 
-  // NUEVO: Actualizar el total_gastos del manifiesto directamente
-  async updateTotalGastosByManifiesto(manifiestoId: number, totalGastos: number): Promise<any> {
-    const query = this.postgresService.getQuery('update-total-gastos-manifiesto');
-    const params = [manifiestoId, totalGastos];
-    return this.postgresService.query<any[]>(query, params);
+  async getTotalGastosByViajeId(id_viaje: number): Promise<number> {
+    const query = this.postgresService.getQuery('get-total-gastos-from-viaje');
+    const params = [id_viaje];
+    const result = await this.postgresService.query<{ total_gastos: number }[]>(query, params);
+    return result.rows[0]?.total_gastos ?? 0;
   }
 }

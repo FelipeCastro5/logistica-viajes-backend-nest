@@ -39,6 +39,5 @@ export interface ManifiestoInterface {
   deleteManifiesto(id: number): Promise<any>;
   updateTotalGastosManifiesto(fk_viaje: number): Promise<any>;
   
-  getTotalGastosByManifiesto(manifiestoId: number): Promise<number>;
-  updateTotalGastosByManifiesto(manifiestoId: number, totalGastos: number): Promise<any>;
+  getTotalGastosByViajeId(manifiestoId: number): Promise<number>;
 }
