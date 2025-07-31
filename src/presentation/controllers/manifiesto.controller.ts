@@ -90,7 +90,7 @@ export class ManifiestoController {
         return this.commandBus.execute(new DeleteManifiestoCommand(id));
     }
 
-    @Put('update-total-gastos')
+    @Put('updateTotalGastos')
     @ApiOperation({ summary: 'Actualizar el total de gastos en el manifiesto asociado a un viaje' })
     @ApiResponse({ status: 200, description: 'Total de gastos actualizado correctamente' })
     @ApiResponse({ status: 404, description: 'Viaje o manifiesto no encontrado' })

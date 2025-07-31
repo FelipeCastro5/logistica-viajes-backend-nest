@@ -99,16 +99,16 @@ export class ManifiestoRepository implements ManifiestoInterface {
     return this.postgresService.query<any[]>(query, [id]);
   }
 
-  async updateTotalGastosManifiesto(fk_viaje: number): Promise<any> {
+  async updateTotalGastosManifiesto(fk_viaje: number, totalGastos: number): Promise<any> {
     const query = this.postgresService.getQuery('update-total-gastos');
-    const params = [fk_viaje];
+    const params = [fk_viaje, totalGastos];
     return this.postgresService.query<any[]>(query, params);
   }
 
   async getTotalGastosByViajeId(id_viaje: number): Promise<number> {
     const query = this.postgresService.getQuery('get-total-gastos-from-viaje');
     const params = [id_viaje];
-    const result = await this.postgresService.query<{ total_gastos: number }[]>(query, params);
+    const result = await this.postgresService.query<any[]>(query, params);
     return result.rows[0]?.total_gastos ?? 0;
   }
 }

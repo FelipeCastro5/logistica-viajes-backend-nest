@@ -16,12 +16,13 @@ export class UpdateTotalGastosHandler implements ICommandHandler<UpdateTotalGast
     const { fk_viaje } = command;
 
     try {
-      const result = await this.manifiestoRepository.updateTotalGastosManifiesto(fk_viaje);
+      // Obtener total de gastos según el viaje
+      const totalGastos = await this.manifiestoRepository.getTotalGastosByViajeId(fk_viaje);
+
+      // Actualizar el manifiesto usando ese total
+      const result = await this.manifiestoRepository.updateTotalGastosManifiesto(fk_viaje, totalGastos);
 
       if (result?.rowCount === 1) {
-        // Obtener total actualizado desde el viaje
-        const totalGastos = await this.manifiestoRepository.getTotalGastosByViajeId(fk_viaje);
-
         return ResponseUtil.success(
           { updated: true, total_gastos: totalGastos },
           'Total de gastos actualizado correctamente'
