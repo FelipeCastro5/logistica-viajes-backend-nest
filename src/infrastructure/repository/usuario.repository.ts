@@ -74,4 +74,21 @@ export class UsuarioRepository implements UsuarioInterface {
     const result = await this.postgresService.query<any>(query, [correo]);
     return result.rows[0] || null;
   }
+
+  async findConductorByFilter(filter: string, limit: number, offset: number): Promise<{ data: any[]; total: number }> {
+    const findQuery = this.postgresService.getQuery('conductores-find-by-filter');
+    const countQuery = this.postgresService.getQuery('conductores-count-by-filter');
+
+    type CountResult = { total: string };
+
+    const [dataResult, countResult] = await Promise.all([
+      this.postgresService.query(findQuery, [`%${filter}%`, limit, offset]),
+      this.postgresService.query<CountResult>(countQuery, [`%${filter}%`]),
+    ]);
+
+    const data = dataResult.rows;
+    const total = parseInt(countResult.rows[0]?.total || '0', 10);
+
+    return { data, total };
+  }
 }

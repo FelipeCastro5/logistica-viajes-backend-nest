@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Put, Query, } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 import { CreateUsuarioCommand } from '../../application/usuario/commands/create-usuario.command';
@@ -10,6 +10,8 @@ import { GetUsuarioByIdCommand } from '../../application/usuario/commands/get-us
 
 import { CreateUsuarioDto } from '../dtos/usuario/create-usuario.dto';
 import { UpdateUsuarioDto } from '../dtos/usuario/update-usuario.dto';
+import { ResponseDto } from 'src/application/utilities/response.dto';
+import { GetConductoresByFilterCommand } from 'src/application/usuario/commands/get-conductores-by-filter.command';
 
 @ApiTags('Usuarios')
 @Controller('usuarios')
@@ -39,17 +41,8 @@ export class UsuarioController {
   @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
   async createUsuario(@Body() dto: CreateUsuarioDto) {
     const command = new CreateUsuarioCommand(
-      dto.fk_tipodoc,
-      dto.num_doc,
-      dto.fk_rol,
-      dto.fk_contador,
-      dto.p_nombre,
-      dto.s_nombre,
-      dto.p_apellido,
-      dto.s_apellido,
-      dto.telefono,
-      dto.correo,
-      dto.contrasena,
+      dto.fk_tipodoc, dto.num_doc, dto.fk_rol, dto.fk_contador, dto.p_nombre, dto.s_nombre,
+      dto.p_apellido, dto.s_apellido, dto.telefono, dto.correo, dto.contrasena,
     );
     return this.commandBus.execute(command);
   }
@@ -82,4 +75,21 @@ export class UsuarioController {
     return this.commandBus.execute(new DeleteUsuarioCommand(id));
   }
 
+
+  @Get('getUsuariosByFilter')
+  @ApiOperation({ summary: 'Obtener usuarios filtrados con paginación' })
+  @ApiQuery({ name: 'filter', required: false, description: 'Texto a buscar en nombres, documento o correo' })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiResponse({ status: 200, description: 'Usuarios obtenidos exitosamente' })
+  @ApiResponse({ status: 500, description: 'Error interno del servidor' })
+  async getUsuariosByFilter(
+    @Query('filter') filter = '',
+    @Query('limit') limit = 10,
+    @Query('page') page = 1
+  ): Promise<ResponseDto> {
+    return this.queryBus.execute(
+      new GetConductoresByFilterCommand(filter, Number(limit), Number(page))
+    );
+  }
 }

@@ -10,6 +10,7 @@ import { DeleteUsuarioHandler } from '../../application/usuario/handlers/delete-
 import { GetAllUsuariosHandler } from '../../application/usuario/handlers/get-all-usuarios.handler';
 import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-usuario-by-id.handler';
 import { JwtCustomModule } from '../../infrastructure/jwt/jwt.module';
+import { GetConductoresByFilterHandler } from 'src/application/usuario/handlers/get-conductores-by-filter.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule, JwtCustomModule],
@@ -23,6 +24,7 @@ import { JwtCustomModule } from '../../infrastructure/jwt/jwt.module';
     DeleteUsuarioHandler,
     GetAllUsuariosHandler,
     GetUsuarioByIdHandler,
+    GetConductoresByFilterHandler,
   ],
   controllers: [UsuarioController],
 })
