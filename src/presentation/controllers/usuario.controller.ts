@@ -76,7 +76,7 @@ export class UsuarioController {
   }
 
 
-  @Get('getUsuariosByFilter')
+  @Get('getConductoresByFilter')
   @ApiOperation({ summary: 'Obtener usuarios filtrados con paginación' })
   @ApiQuery({ name: 'filter', required: false, description: 'Texto a buscar en nombres, documento o correo' })
   @ApiQuery({ name: 'limit', required: false, example: 10 })

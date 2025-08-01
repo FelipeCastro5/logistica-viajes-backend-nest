@@ -14,12 +14,14 @@ SELECT
 FROM usuario u
 LEFT JOIN tipodoc td ON u.fk_tipodoc = td.id_tipodoc
 LEFT JOIN rol r ON u.fk_rol = r.id_rol
-WHERE
-  u.p_nombre ILIKE $1 OR
-  u.s_nombre ILIKE $1 OR
-  u.p_apellido ILIKE $1 OR
-  u.s_apellido ILIKE $1 OR
-  u.num_doc ILIKE $1 OR
-  u.correo ILIKE $1
+WHERE (
+    u.p_nombre ILIKE $1 OR
+    u.s_nombre ILIKE $1 OR
+    u.p_apellido ILIKE $1 OR
+    u.s_apellido ILIKE $1 OR
+    u.num_doc ILIKE $1 OR
+    u.correo ILIKE $1
+  )
+  AND u.fk_contador IS NOT NULL
 ORDER BY u.p_nombre, u.p_apellido
 LIMIT $2 OFFSET $3;
