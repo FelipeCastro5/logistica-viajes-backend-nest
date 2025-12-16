@@ -13,7 +13,7 @@ export class GeminiService {
 
   async preguntarGemini(pregunta: string): Promise<string> {
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
       const result = await model.generateContent(pregunta);
       const response = await result.response;
