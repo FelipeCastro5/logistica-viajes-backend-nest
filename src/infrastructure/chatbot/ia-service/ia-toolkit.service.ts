@@ -22,14 +22,33 @@ export class IaToolkitService {
     private readonly mensajeRepository: MensajeInterface,
   ) { }
 
+    // fallback automático entre modelos de IA
   private async preguntarIA(prompt: string): Promise<string> {
-    return await this.openRouterService.preguntar(prompt);
+    // 1️⃣ Intentar Gemini primero
+    try {
+      this.logger.log('🤖 Consultando Gemini...');
+      return await this.geminiService.preguntarGemini(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando Gemini. Se usará OpenRouter como fallback.',
+        error instanceof Error ? error.stack : error,
+      );
+    }
 
-    // 🔁 Si algún día quieres volver a Gemini:
-    // return await this.geminiService.preguntarGemini(prompt);
+    // 2️⃣ Fallback a OpenRouter (Devstral)
+    try {
+      this.logger.log('🤖 Consultando OpenRouter (Devstral)...');
+      return await this.openRouterService.preguntar(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando OpenRouter.',
+        error instanceof Error ? error.stack : error,
+      );
+      throw new Error('Ningún proveedor de IA pudo responder');
+    }
   }
 
-  // 🔹 Consultar a Gemini directamente desde IaToolkitService
+  // 🔹 Consultar al cliente IA directamente desde IaToolkitService
   public async preguntarIACliente(pregunta: string): Promise<string> {
     return await this.preguntarIA(pregunta);
   }
