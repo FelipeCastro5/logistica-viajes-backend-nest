@@ -10,8 +10,9 @@ import { IaController } from "./ia.controller";
 import { MensajeRepository } from "../../repository/mensaje.repository";
 import { ChatModule } from "src/presentation/modules/chat.module";
 import { MensajeModule } from "src/presentation/modules/mensaje.module";
+import { OpenRouterModule } from "../openrouter-ia/openrouter.module";
 @Module({
-  imports: [ChatModule, MensajeModule], 
+  imports: [ChatModule, MensajeModule, OpenRouterModule], 
   providers: [
     GeminiService,
     PostgresService,

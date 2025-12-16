@@ -6,6 +6,7 @@ import * as path from 'path';
 import { Chat } from 'src/domain/chat-domain/chat.entity';
 import { ChatInterface } from 'src/domain/chat-domain/chat.interface';
 import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
+import { OpenRouterService } from '../openrouter-ia/openrouter.service';
 
 @Injectable()
 export class IaToolkitService {
@@ -13,6 +14,7 @@ export class IaToolkitService {
 
   constructor(
     private readonly geminiService: GeminiService,
+    private readonly openRouterService: OpenRouterService,
     private readonly postgresService: PostgresService,
     @Inject('ChatInterface')
     private readonly chatRepository: ChatInterface,
@@ -20,9 +22,16 @@ export class IaToolkitService {
     private readonly mensajeRepository: MensajeInterface,
   ) { }
 
+  private async preguntarIA(prompt: string): Promise<string> {
+    return await this.openRouterService.preguntar(prompt);
+
+    // 🔁 Si algún día quieres volver a Gemini:
+    // return await this.geminiService.preguntarGemini(prompt);
+  }
+
   // 🔹 Consultar a Gemini directamente desde IaToolkitService
-  public async preguntarGemini(pregunta: string): Promise<string> {
-    return await this.geminiService.preguntarGemini(pregunta);
+  public async preguntarIACliente(pregunta: string): Promise<string> {
+    return await this.preguntarIA(pregunta);
   }
 
   // 🔹 Crear un nuevo chat
@@ -80,7 +89,7 @@ Responde la siguiente pregunta del usuario con una consulta SQL válida:
 
 Asegúrate de que la consulta sea ejecutable y no genere errores SQL de agregación.`;
 
-    const sqlGeneradoRaw = await this.geminiService.preguntarGemini(promptSQL);
+    const sqlGeneradoRaw = await this.preguntarIA(promptSQL);
 
     const sqlLimpio: string = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
 
@@ -105,7 +114,7 @@ ${JSON.stringify(datos)}
 
 Redacta una respuesta clara en español explicando estos resultados.`;
 
-    const respuesta = await this.geminiService.preguntarGemini(promptConclusion);
+    const respuesta = await this.preguntarIA(promptConclusion);
     return respuesta.trim();
   }
 
@@ -119,7 +128,7 @@ Redacta una respuesta clara en español explicando estos resultados.`;
         Pregunta: "${pregunta}"
         Devuelve solo una palabra: sql, historial o mixto.`;
 
-    const respuesta = await this.geminiService.preguntarGemini(promptClasificacion);
+    const respuesta = await this.preguntarIA(promptClasificacion);
     const tipo = respuesta.trim().toLowerCase();
 
     this.logger.debug(`🧠 Clasificación de la pregunta: ${tipo}`);

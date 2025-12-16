@@ -17,6 +17,8 @@ import { MensajeModule } from './presentation/modules/mensaje.module';
 import { ChatModule } from './presentation/modules/chat.module';
 import { EmailModule } from './infrastructure/email-service/email-service.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
+import { OpenAIModule } from './infrastructure/chatbot/openai-ia/openai.module';
+import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrouter.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { AuthModule } from './infrastructure/auth/auth.module';
     GeminiModule,
     EmailModule,
     AuthModule,
+    OpenAIModule,
+    OpenRouterModule,
     //Entidades
     UsuarioModule,
     ClienteModule,

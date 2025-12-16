@@ -26,13 +26,13 @@ export class HistoryHandler {
       contexto = this.toolkit.generarPromptConHistorial(historial, nuevaPregunta);
       this.logger.debug('🧠 Prompt enviado a Gemini (chat existente):\n' + contexto);
 
-      respuesta = await this.toolkit.preguntarGemini(contexto);
+      respuesta = await this.toolkit.preguntarIACliente(contexto);
     } else {
       // 🔹 Chat nuevo
       contexto = this.toolkit.generarPromptSinHistorial(nuevaPregunta);
       this.logger.debug('🧠 Prompt enviado a Gemini (nuevo chat):\n' + contexto);
 
-      respuesta = await this.toolkit.preguntarGemini(contexto);
+      respuesta = await this.toolkit.preguntarIACliente(contexto);
       this.logger.debug('🧠 Respuesta de Gemini (nuevo chat):\n' + respuesta);
 
       const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Nuevo chat';
