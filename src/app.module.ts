@@ -21,6 +21,7 @@ import { OpenAIModule } from './infrastructure/chatbot/openai-ia/openai.module';
 import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrouter.module';
 import { VehiculoModule } from './presentation/modules/vehiculo.module';
 import { SeguroModule } from './presentation/modules/seguro.module';
+import { RemesaModule } from './presentation/modules/remesa.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { SeguroModule } from './presentation/modules/seguro.module';
     ChatModule,
     VehiculoModule,
     SeguroModule,
+    RemesaModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
