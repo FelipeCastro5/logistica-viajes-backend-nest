@@ -22,6 +22,7 @@ import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrou
 import { VehiculoModule } from './presentation/modules/vehiculo.module';
 import { SeguroModule } from './presentation/modules/seguro.module';
 import { RemesaModule } from './presentation/modules/remesa.module';
+import { MercanciaPeligrosaModule } from './presentation/modules/mercancia-peligrosa.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { RemesaModule } from './presentation/modules/remesa.module';
     VehiculoModule,
     SeguroModule,
     RemesaModule,
+    MercanciaPeligrosaModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
