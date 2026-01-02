@@ -23,6 +23,7 @@ import { VehiculoModule } from './presentation/modules/vehiculo.module';
 import { SeguroModule } from './presentation/modules/seguro.module';
 import { RemesaModule } from './presentation/modules/remesa.module';
 import { MercanciaPeligrosaModule } from './presentation/modules/mercancia-peligrosa.module';
+import { FirmaModule } from './presentation/modules/firma.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { MercanciaPeligrosaModule } from './presentation/modules/mercancia-pelig
     SeguroModule,
     RemesaModule,
     MercanciaPeligrosaModule,
+    FirmaModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
