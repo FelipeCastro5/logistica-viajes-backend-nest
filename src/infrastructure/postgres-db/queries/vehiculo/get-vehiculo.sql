@@ -1,0 +1,1 @@
+SELECT * FROM vehiculo WHERE id_vehiculo = $1;

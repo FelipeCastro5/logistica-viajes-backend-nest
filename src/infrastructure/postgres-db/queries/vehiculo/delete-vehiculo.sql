@@ -1,0 +1,1 @@
+DELETE FROM vehiculo WHERE id_vehiculo = $1;

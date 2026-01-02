@@ -19,6 +19,7 @@ import { EmailModule } from './infrastructure/email-service/email-service.module
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { OpenAIModule } from './infrastructure/chatbot/openai-ia/openai.module';
 import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrouter.module';
+import { VehiculoModule } from './presentation/modules/vehiculo.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrou
     GastoxviajeModule,
     MensajeModule,
     ChatModule,
+    VehiculoModule,
   ],
   //controllers: [AppController],
   //providers: [AppService],
