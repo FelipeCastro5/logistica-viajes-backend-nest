@@ -55,6 +55,42 @@ export class CreateNewViajeDto {
   @IsDateString({}, { message: 'La fecha_llegada debe ser una fecha válida' })
   fecha_llegada: Date;
 
+  @ApiProperty()
+  @IsNumber()
+  latitud_origen: number;
+
+  @ApiProperty()
+  @IsNumber()
+  longitud_origen: number;
+
+  @ApiProperty()
+  @IsNumber()
+  latitud_destino: number;
+
+  @ApiProperty()
+  @IsNumber()
+  longitud_destino: number;
+
+  @ApiProperty()
+  @IsDateString()
+  fecha_hora_salida: Date;
+
+  @ApiProperty()
+  @IsDateString()
+  fecha_hora_llegada: Date;
+
+  @ApiProperty()
+  @IsNumber()
+  horas_pactadas_cargue: number;
+
+  @ApiProperty()
+  @IsNumber()
+  horas_pactadas_descargue: number;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  exoneracion_legal?: string;
 
   @ApiProperty() @IsNumber({ maxDecimalPlaces: 5 }, { message: 'Flete total debe ser un número decimal válido' }) flete_total: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje retención fuente debe ser un número válido' }) porcentaje_retencion_fuente: number;

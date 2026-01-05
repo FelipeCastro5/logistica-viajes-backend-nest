@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateViajeDto {
   @ApiProperty({ example: 1, description: 'ID del usuario' })
@@ -58,4 +58,14 @@ export class CreateViajeDto {
   @ApiProperty({ example: '2025-07-09T18:00:00Z', description: 'Fecha de llegada' })
   @IsDateString({}, { message: 'La fecha_llegada debe ser una fecha válida' })
   fecha_llegada: Date;
+
+  @ApiProperty() @IsNumber() latitud_origen: number;
+  @ApiProperty() @IsNumber() longitud_origen: number;
+  @ApiProperty() @IsNumber() latitud_destino: number;
+  @ApiProperty() @IsNumber() longitud_destino: number;
+  @ApiProperty() @IsDateString() fecha_hora_salida: Date;
+  @ApiProperty() @IsDateString() fecha_hora_llegada: Date;
+  @ApiProperty() @IsNumber() horas_pactadas_cargue: number;
+  @ApiProperty() @IsNumber() horas_pactadas_descargue: number;
+  @ApiProperty({ required: false }) @IsOptional() @IsString() exoneracion_legal?: string;
 }
