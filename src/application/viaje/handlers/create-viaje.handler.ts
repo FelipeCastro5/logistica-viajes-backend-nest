@@ -10,7 +10,7 @@ export class CreateViajeHandler implements ICommandHandler<CreateViajeCommand> {
   constructor(
     @Inject('ViajeInterface')
     private readonly viajeRepository: ViajeInterface,
-  ) {}
+  ) { }
 
   async execute(command: CreateViajeCommand) {
     try {
@@ -27,7 +27,16 @@ export class CreateViajeHandler implements ICommandHandler<CreateViajeCommand> {
         command.detalle_producto,
         command.direccion_llegada,
         command.fecha_salida,
-        command.fecha_llegada
+        command.fecha_llegada,
+        command.latitud_origen,
+        command.longitud_origen,
+        command.latitud_destino,
+        command.longitud_destino,
+        command.fecha_hora_salida,
+        command.fecha_hora_llegada,
+        command.horas_pactadas_cargue,
+        command.horas_pactadas_descargue,
+        command.exoneracion_legal
       );
       return ResponseUtil.success(viaje, 'Viaje creado exitosamente', 201);
     } catch (error) {

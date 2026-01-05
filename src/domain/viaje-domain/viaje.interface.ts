@@ -16,8 +16,18 @@ export interface ViajeInterface {
     detalle_producto: string,
     direccion_llegada: string,
     fecha_salida: Date,
-    fecha_llegada: Date
+    fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string
   ): Promise<Viaje>;
+
   updateViaje(
     id: number,
     fk_usuario: number,
@@ -32,10 +42,19 @@ export interface ViajeInterface {
     detalle_producto: string,
     direccion_llegada: string,
     fecha_salida: Date,
-    fecha_llegada: Date
+    fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string
   ): Promise<any>;
   deleteViaje(id: number): Promise<any>;
-  getViajesPaginatedByUsuario(id: number, limit: number,offset: number): Promise<any>;
+  getViajesPaginatedByUsuario(id: number, limit: number, offset: number): Promise<any>;
   countViajesByUsuario(id: number): Promise<any>;
   createNewViaje(
     fk_usuario: number,
@@ -50,6 +69,15 @@ export interface ViajeInterface {
     direccion_llegada: string,
     fecha_salida: Date,
     fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string,
     //Manifiesto
     flete_total: number,
     porcentaje_retencion_fuente: number,

@@ -10,7 +10,7 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
   constructor(
     @Inject('ViajeInterface')
     private readonly viajeRepository: ViajeInterface,
-  ) {}
+  ) { }
 
   async execute(command: CreateNewViajeCommand) {
     try {
@@ -28,6 +28,15 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
         command.direccion_llegada,
         command.fecha_salida,
         command.fecha_llegada,
+        command.latitud_origen,
+        command.longitud_origen,
+        command.latitud_destino,
+        command.longitud_destino,
+        command.fecha_hora_salida,
+        command.fecha_hora_llegada,
+        command.horas_pactadas_cargue,
+        command.horas_pactadas_descargue,
+        command.exoneracion_legal,
         //manifiesto
         command.flete_total,
         command.porcentaje_retencion_fuente,

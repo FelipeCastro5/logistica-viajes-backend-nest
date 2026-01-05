@@ -11,6 +11,15 @@ export class CreateNewViajeCommand {
     public readonly direccion_llegada: string,
     public readonly fecha_salida: Date,
     public readonly fecha_llegada: Date,
+    public readonly latitud_origen: number,
+    public readonly longitud_origen: number,
+    public readonly latitud_destino: number,
+    public readonly longitud_destino: number,
+    public readonly fecha_hora_salida: Date,
+    public readonly fecha_hora_llegada: Date,
+    public readonly horas_pactadas_cargue: number,
+    public readonly horas_pactadas_descargue: number,
+    public readonly exoneracion_legal: string,
     // Manifiesto
     public readonly flete_total: number,
     public readonly porcentaje_retencion_fuente: number,
@@ -26,5 +35,5 @@ export class CreateNewViajeCommand {
     public readonly a_favor_del_carro: number,
     public readonly porcentaje_conductor: number,
     public readonly ganancia_conductor: number,
-  ) {}
+  ) { }
 }

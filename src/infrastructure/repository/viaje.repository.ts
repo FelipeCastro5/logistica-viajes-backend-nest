@@ -32,13 +32,33 @@ export class ViajeRepository implements ViajeInterface {
     detalle_producto: string,
     direccion_llegada: string,
     fecha_salida: Date,
-    fecha_llegada: Date
+    fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string
   ): Promise<Viaje> {
     const query = this.postgresService.getQuery('insert-viaje');
     const params = [
       fk_usuario, fk_manifiesto, fk_cliente, fk_origen, fk_destino,
       codigo, observaciones, estado_viaje, producto, detalle_producto,
-      direccion_llegada, fecha_salida, fecha_llegada
+      direccion_llegada, fecha_salida, fecha_llegada,
+      fecha_salida,
+      fecha_llegada,
+      latitud_origen,
+      longitud_origen,
+      latitud_destino,
+      longitud_destino,
+      fecha_hora_salida,
+      fecha_hora_llegada,
+      horas_pactadas_cargue,
+      horas_pactadas_descargue,
+      exoneracion_legal,
     ];
     const result = await this.postgresService.query<Viaje>(query, params);
     return result.rows[0];
@@ -58,14 +78,34 @@ export class ViajeRepository implements ViajeInterface {
     detalle_producto: string,
     direccion_llegada: string,
     fecha_salida: Date,
-    fecha_llegada: Date
+    fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string
   ): Promise<any> {
     const query = this.postgresService.getQuery('update-viaje');
     const params = [
       fk_usuario, fk_manifiesto, fk_cliente, fk_origen, fk_destino,
       codigo, observaciones, estado_viaje, producto, detalle_producto,
       direccion_llegada, fecha_salida, fecha_llegada,
-      id
+      id,
+      fecha_salida,
+      fecha_llegada,
+      latitud_origen,
+      longitud_origen,
+      latitud_destino,
+      longitud_destino,
+      fecha_hora_salida,
+      fecha_hora_llegada,
+      horas_pactadas_cargue,
+      horas_pactadas_descargue,
+      exoneracion_legal,
     ];
     return this.postgresService.query<any[]>(query, params);
   }
@@ -91,6 +131,15 @@ export class ViajeRepository implements ViajeInterface {
     fk_usuario: number, fk_cliente: number, fk_origen: number, fk_destino: number, codigo: string,
     observaciones: string, estado_viaje: boolean, producto: string, detalle_producto: string,
     direccion_llegada: string, fecha_salida: Date, fecha_llegada: Date,
+    latitud_origen: number,
+    longitud_origen: number,
+    latitud_destino: number,
+    longitud_destino: number,
+    fecha_hora_salida: Date,
+    fecha_hora_llegada: Date,
+    horas_pactadas_cargue: number,
+    horas_pactadas_descargue: number,
+    exoneracion_legal: string,
     //Manifiesto
     flete_total: number, porcentaje_retencion_fuente: number, valor_retencion_fuente: number,
     porcentaje_ica: number, valor_ica: number, deduccion_fiscal: number, neto_a_pagar: number, anticipo: number,
@@ -118,6 +167,17 @@ export class ViajeRepository implements ViajeInterface {
           return [
             fk_usuario, manifiestoId, fk_cliente, fk_origen, fk_destino, codigo, observaciones, estado_viaje,
             producto, detalle_producto, direccion_llegada, fecha_salida, fecha_llegada,
+            fecha_salida,
+            fecha_llegada,
+            latitud_origen,
+            longitud_origen,
+            latitud_destino,
+            longitud_destino,
+            fecha_hora_salida,
+            fecha_hora_llegada,
+            horas_pactadas_cargue,
+            horas_pactadas_descargue,
+            exoneracion_legal,
           ];
         },
       },

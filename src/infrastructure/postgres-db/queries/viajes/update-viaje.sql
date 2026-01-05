@@ -1,5 +1,4 @@
-UPDATE viaje
-SET
+UPDATE viaje SET
   fk_usuario = $1,
   fk_manifiesto = $2,
   fk_cliente = $3,
@@ -12,6 +11,15 @@ SET
   detalle_producto = $10,
   direccion_llegada = $11,
   fecha_salida = $12,
-  fecha_llegada = $13
-WHERE id_viaje = $14
+  fecha_llegada = $13,
+  latitud_origen = $14,
+  longitud_origen = $15,
+  latitud_destino = $16,
+  longitud_destino = $17,
+  fecha_hora_salida = $18,
+  fecha_hora_llegada = $19,
+  horas_pactadas_cargue = $20,
+  horas_pactadas_descargue = $21,
+  exoneracion_legal = $22
+WHERE id_viaje = $23
 RETURNING *;

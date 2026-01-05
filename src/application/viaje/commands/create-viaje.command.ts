@@ -13,5 +13,14 @@ export class CreateViajeCommand {
     public readonly direccion_llegada: string,
     public readonly fecha_salida: Date,
     public readonly fecha_llegada: Date,
-  ) {}
+    public readonly latitud_origen: number,
+    public readonly longitud_origen: number,
+    public readonly latitud_destino: number,
+    public readonly longitud_destino: number,
+    public readonly fecha_hora_salida: Date,
+    public readonly fecha_hora_llegada: Date,
+    public readonly horas_pactadas_cargue: number,
+    public readonly horas_pactadas_descargue: number,
+    public readonly exoneracion_legal: string,
+  ) { }
 }
