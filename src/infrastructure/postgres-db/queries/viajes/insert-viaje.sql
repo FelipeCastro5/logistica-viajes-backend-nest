@@ -4,7 +4,7 @@ INSERT INTO viaje (
   direccion_llegada, fecha_salida, fecha_llegada,
   latitud_origen, longitud_origen,
   latitud_destino, longitud_destino,
-  fecha_hora_salida, fecha_hora_llegada,
+  hora_salida, hora_llegada,
   horas_pactadas_cargue, horas_pactadas_descargue,
   exoneracion_legal
 )
@@ -14,7 +14,8 @@ VALUES (
   $11,$12,$13,
   $14,$15,
   $16,$17,
-  $18,$19,
+  $18::timestamp,
+  $19::timestamp,
   $20,$21,
   $22
 )

@@ -16,8 +16,8 @@ UPDATE viaje SET
   longitud_origen = $15,
   latitud_destino = $16,
   longitud_destino = $17,
-  fecha_hora_salida = $18,
-  fecha_hora_llegada = $19,
+  hora_salida = $18::timestamp,
+  hora_llegada = $19::timestamp,
   horas_pactadas_cargue = $20,
   horas_pactadas_descargue = $21,
   exoneracion_legal = $22

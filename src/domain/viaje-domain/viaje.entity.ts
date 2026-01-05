@@ -19,8 +19,8 @@ export class Viaje {
   latitud_destino: number;
   longitud_destino: number;
 
-  fecha_hora_salida: Date;
-  fecha_hora_llegada: Date;
+  hora_salida: Date;
+  hora_llegada: Date;
 
   horas_pactadas_cargue: number;
   horas_pactadas_descargue: number;

@@ -73,11 +73,11 @@ export class CreateNewViajeDto {
 
   @ApiProperty()
   @IsDateString()
-  fecha_hora_salida: Date;
+  hora_salida: Date;
 
   @ApiProperty()
   @IsDateString()
-  fecha_hora_llegada: Date;
+  hora_llegada: Date;
 
   @ApiProperty()
   @IsNumber()

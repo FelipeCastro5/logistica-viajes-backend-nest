@@ -67,8 +67,8 @@ export class UpdateViajeDto {
   @ApiProperty() @IsNumber() longitud_origen: number;
   @ApiProperty() @IsNumber() latitud_destino: number;
   @ApiProperty() @IsNumber() longitud_destino: number;
-  @ApiProperty() @IsDateString() fecha_hora_salida: Date;
-  @ApiProperty() @IsDateString() fecha_hora_llegada: Date;
+  @ApiProperty() @IsDateString() hora_salida: Date;
+  @ApiProperty() @IsDateString() hora_llegada: Date;
   @ApiProperty() @IsNumber() horas_pactadas_cargue: number;
   @ApiProperty() @IsNumber() horas_pactadas_descargue: number;
   @ApiProperty({ required: false }) @IsOptional() @IsString() exoneracion_legal?: string;

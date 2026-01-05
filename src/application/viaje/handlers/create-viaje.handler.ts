@@ -32,8 +32,8 @@ export class CreateViajeHandler implements ICommandHandler<CreateViajeCommand> {
         command.longitud_origen,
         command.latitud_destino,
         command.longitud_destino,
-        command.fecha_hora_salida,
-        command.fecha_hora_llegada,
+        command.hora_salida,
+        command.hora_llegada,
         command.horas_pactadas_cargue,
         command.horas_pactadas_descargue,
         command.exoneracion_legal
