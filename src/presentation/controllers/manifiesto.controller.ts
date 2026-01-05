@@ -40,6 +40,7 @@ export class ManifiestoController {
     @ApiResponse({ status: 201, description: 'Manifiesto creado exitosamente' })
     async createManifiesto(@Body() dto: CreateManifiestoDto) {
         const command = new CreateManifiestoCommand(
+            dto.fk_vehiculo,
             dto.flete_total,
             dto.porcentaje_retencion_fuente,
             dto.valor_retencion_fuente,
@@ -64,6 +65,7 @@ export class ManifiestoController {
     async updateManifiesto(@Body() dto: UpdateManifiestoDto) {
         const command = new UpdateManifiestoCommand(
             dto.id_manifiesto,
+            dto.fk_vehiculo,
             dto.flete_total,
             dto.porcentaje_retencion_fuente,
             dto.valor_retencion_fuente,

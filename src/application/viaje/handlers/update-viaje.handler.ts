@@ -10,7 +10,7 @@ export class UpdateViajeHandler implements ICommandHandler<UpdateViajeCommand> {
   constructor(
     @Inject('ViajeInterface')
     private readonly viajeRepository: ViajeInterface,
-  ) {}
+  ) { }
 
   async execute(command: UpdateViajeCommand) {
     try {
@@ -28,7 +28,16 @@ export class UpdateViajeHandler implements ICommandHandler<UpdateViajeCommand> {
         command.detalle_producto,
         command.direccion_llegada,
         command.fecha_salida,
-        command.fecha_llegada
+        command.fecha_llegada,
+        command.latitud_origen,
+        command.longitud_origen,
+        command.latitud_destino,
+        command.longitud_destino,
+        command.fecha_hora_salida,
+        command.fecha_hora_llegada,
+        command.horas_pactadas_cargue,
+        command.horas_pactadas_descargue,
+        command.exoneracion_legal,
       );
       if (!result?.rowCount) {
         return ResponseUtil.error('Viaje no encontrado', 404);

@@ -55,6 +55,15 @@ export class ViajeController {
       dto.direccion_llegada,
       dto.fecha_salida,
       dto.fecha_llegada,
+      dto.latitud_origen,
+      dto.longitud_origen,
+      dto.latitud_destino,
+      dto.longitud_destino,
+      dto.fecha_hora_salida,
+      dto.fecha_hora_llegada,
+      dto.horas_pactadas_cargue,
+      dto.horas_pactadas_descargue,
+      dto.exoneracion_legal,
     );
     return this.commandBus.execute(command);
   }
@@ -79,6 +88,15 @@ export class ViajeController {
       dto.direccion_llegada,
       dto.fecha_salida,
       dto.fecha_llegada,
+      dto.latitud_origen,
+      dto.longitud_origen,
+      dto.latitud_destino,
+      dto.longitud_destino,
+      dto.fecha_hora_salida,
+      dto.fecha_hora_llegada,
+      dto.horas_pactadas_cargue,
+      dto.horas_pactadas_descargue,
+      dto.exoneracion_legal,
     );
     return this.commandBus.execute(command);
   }
@@ -120,7 +138,17 @@ export class ViajeController {
       dto.direccion_llegada,
       dto.fecha_salida,
       dto.fecha_llegada,
+      dto.latitud_origen,
+      dto.longitud_origen,
+      dto.latitud_destino,
+      dto.longitud_destino,
+      dto.fecha_hora_salida,
+      dto.fecha_hora_llegada,
+      dto.horas_pactadas_cargue,
+      dto.horas_pactadas_descargue,
+      dto.exoneracion_legal,
       // manifiesto
+      dto.fk_vehiculo,
       dto.flete_total,
       dto.porcentaje_retencion_fuente,
       dto.valor_retencion_fuente,

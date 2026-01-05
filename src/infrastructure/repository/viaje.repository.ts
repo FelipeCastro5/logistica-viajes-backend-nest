@@ -48,8 +48,6 @@ export class ViajeRepository implements ViajeInterface {
       fk_usuario, fk_manifiesto, fk_cliente, fk_origen, fk_destino,
       codigo, observaciones, estado_viaje, producto, detalle_producto,
       direccion_llegada, fecha_salida, fecha_llegada,
-      fecha_salida,
-      fecha_llegada,
       latitud_origen,
       longitud_origen,
       latitud_destino,
@@ -94,9 +92,6 @@ export class ViajeRepository implements ViajeInterface {
       fk_usuario, fk_manifiesto, fk_cliente, fk_origen, fk_destino,
       codigo, observaciones, estado_viaje, producto, detalle_producto,
       direccion_llegada, fecha_salida, fecha_llegada,
-      id,
-      fecha_salida,
-      fecha_llegada,
       latitud_origen,
       longitud_origen,
       latitud_destino,
@@ -106,6 +101,7 @@ export class ViajeRepository implements ViajeInterface {
       horas_pactadas_cargue,
       horas_pactadas_descargue,
       exoneracion_legal,
+      id,
     ];
     return this.postgresService.query<any[]>(query, params);
   }
@@ -169,8 +165,6 @@ export class ViajeRepository implements ViajeInterface {
           return [
             fk_usuario, manifiestoId, fk_cliente, fk_origen, fk_destino, codigo, observaciones, estado_viaje,
             producto, detalle_producto, direccion_llegada, fecha_salida, fecha_llegada,
-            fecha_salida,
-            fecha_llegada,
             latitud_origen,
             longitud_origen,
             latitud_destino,
