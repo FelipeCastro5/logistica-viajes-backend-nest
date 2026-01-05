@@ -141,6 +141,7 @@ export class ViajeRepository implements ViajeInterface {
     horas_pactadas_descargue: number,
     exoneracion_legal: string,
     //Manifiesto
+    fk_vehiculo: number,
     flete_total: number, porcentaje_retencion_fuente: number, valor_retencion_fuente: number,
     porcentaje_ica: number, valor_ica: number, deduccion_fiscal: number, neto_a_pagar: number, anticipo: number,
     saldo_a_pagar: number, total_gastos: number, queda_al_carro: number, a_favor_del_carro: number,
@@ -154,6 +155,7 @@ export class ViajeRepository implements ViajeInterface {
         name: 'manifiesto',
         query: () => queryManifiesto,
         values: () => [
+          fk_vehiculo,
           flete_total, porcentaje_retencion_fuente, valor_retencion_fuente, porcentaje_ica, valor_ica,
           deduccion_fiscal, neto_a_pagar, anticipo, saldo_a_pagar, total_gastos, queda_al_carro,
           a_favor_del_carro, porcentaje_conductor, ganancia_conductor,

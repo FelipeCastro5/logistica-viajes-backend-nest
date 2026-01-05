@@ -38,6 +38,7 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
         command.horas_pactadas_descargue,
         command.exoneracion_legal,
         //manifiesto
+        command.fk_vehiculo,
         command.flete_total,
         command.porcentaje_retencion_fuente,
         command.valor_retencion_fuente,

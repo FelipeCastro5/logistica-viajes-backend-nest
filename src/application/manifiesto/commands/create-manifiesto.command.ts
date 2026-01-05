@@ -1,6 +1,7 @@
 // create-manifiesto.command.ts
 export class CreateManifiestoCommand {
   constructor(
+    public readonly fk_vehiculo: number,
     public readonly flete_total: number,
     public readonly porcentaje_retencion_fuente: number,
     public readonly valor_retencion_fuente: number,

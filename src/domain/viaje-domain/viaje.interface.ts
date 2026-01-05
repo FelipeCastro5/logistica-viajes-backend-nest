@@ -79,6 +79,7 @@ export interface ViajeInterface {
     horas_pactadas_descargue: number,
     exoneracion_legal: string,
     //Manifiesto
+    fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
     valor_retencion_fuente: number,

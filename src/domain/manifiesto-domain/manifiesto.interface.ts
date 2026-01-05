@@ -4,6 +4,7 @@ export interface ManifiestoInterface {
   getAll(): Promise<Manifiesto[]>;
   getById(id: number): Promise<Manifiesto | null>;
   createManifiesto(
+    fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
     valor_retencion_fuente: number,
@@ -21,6 +22,7 @@ export interface ManifiestoInterface {
   ): Promise<Manifiesto>;
   updateManifiesto(
     id: number,
+    fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
     valor_retencion_fuente: number,

@@ -16,6 +16,7 @@ export class CreateManifiestoHandler implements ICommandHandler<CreateManifiesto
   async execute(command: CreateManifiestoCommand) {
     try {
       const manifiesto = await this.manifiestoRepository.createManifiesto(
+        command.fk_vehiculo,
         command.flete_total,
         command.porcentaje_retencion_fuente,
         command.valor_retencion_fuente,

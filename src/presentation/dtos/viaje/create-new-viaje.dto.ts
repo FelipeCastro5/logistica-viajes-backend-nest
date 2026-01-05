@@ -92,6 +92,15 @@ export class CreateNewViajeDto {
   @IsOptional()
   exoneracion_legal?: string;
 
+  // ========================
+  // MANIFIESTO
+  // ========================
+
+  @ApiProperty({
+    example: 3, required: false, description: 'Vehículo asociado al manifiesto',
+  })
+  @IsInt() @IsOptional() fk_vehiculo?: number;
+
   @ApiProperty() @IsNumber({ maxDecimalPlaces: 5 }, { message: 'Flete total debe ser un número decimal válido' }) flete_total: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje retención fuente debe ser un número válido' }) porcentaje_retencion_fuente: number;
   @ApiProperty() @IsNumber({}, { message: 'Valor retención fuente debe ser un número válido' }) valor_retencion_fuente: number;

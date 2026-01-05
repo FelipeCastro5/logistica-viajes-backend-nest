@@ -1,5 +1,7 @@
 export class Manifiesto {
   id_manifiesto: number;
+  fk_vehiculo: number;
+
   flete_total: number;
   porcentaje_retencion_fuente: number;
   valor_retencion_fuente: number;

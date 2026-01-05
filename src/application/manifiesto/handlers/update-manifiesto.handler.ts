@@ -17,6 +17,7 @@ export class UpdateManifiestoHandler implements ICommandHandler<UpdateManifiesto
     try {
       const result = await this.manifiestoRepository.updateManifiesto(
         command.id,
+        command.fk_vehiculo,
         command.flete_total,
         command.porcentaje_retencion_fuente,
         command.valor_retencion_fuente,

@@ -21,6 +21,7 @@ export class CreateNewViajeCommand {
     public readonly horas_pactadas_descargue: number,
     public readonly exoneracion_legal: string,
     // Manifiesto
+    public readonly fk_vehiculo: number,
     public readonly flete_total: number,
     public readonly porcentaje_retencion_fuente: number,
     public readonly valor_retencion_fuente: number,

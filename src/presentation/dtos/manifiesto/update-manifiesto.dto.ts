@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsInt, IsNumber } from 'class-validator';
 
 export class UpdateManifiestoDto {
   @ApiProperty({ example: 1 })
-  @IsNumber({}, { message: 'El ID del manifiesto debe ser un número' })
+  @IsInt()
   id_manifiesto: number;
+
+  @ApiProperty({
+    example: 3, required: false, description: 'ID del vehículo',
+  }) @IsInt() fk_vehiculo?: number;
 
   @ApiProperty() @IsNumber({}, { message: 'Flete total debe ser un número válido' }) flete_total: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje retención fuente debe ser un número válido' }) porcentaje_retencion_fuente: number;

@@ -20,6 +20,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
   }
 
   async createManifiesto(
+    fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
     valor_retencion_fuente: number,
@@ -37,6 +38,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
   ): Promise<Manifiesto> {
     const query = this.postgresService.getQuery('insert-manifiesto');
     const params = [
+      fk_vehiculo,
       flete_total,
       porcentaje_retencion_fuente,
       valor_retencion_fuente,
@@ -58,6 +60,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
 
   async updateManifiesto(
     id: number,
+    fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
     valor_retencion_fuente: number,
@@ -75,6 +78,7 @@ export class ManifiestoRepository implements ManifiestoInterface {
   ): Promise<any> {
     const query = this.postgresService.getQuery('update-manifiesto');
     const params = [
+      fk_vehiculo,
       flete_total,
       porcentaje_retencion_fuente,
       valor_retencion_fuente,
