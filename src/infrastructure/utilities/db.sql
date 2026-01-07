@@ -83,8 +83,8 @@ alter table viaje add column longitud_origen decimal(10,6);
 alter table viaje add column latitud_destino decimal(10,6);
 alter table viaje add column longitud_destino decimal(10,6);
 
-alter table viaje add column hora_salida timestamp;
-alter table viaje add column hora_llegada timestamp;
+alter table viaje add column hora_salida TIME;
+alter table viaje add column hora_llegada TIME;
 alter table viaje add column horas_pactadas_cargue decimal(5,2);
 alter table viaje add column horas_pactadas_descargue decimal(5,2);
 alter table viaje add column exoneracion_legal text;
@@ -144,6 +144,8 @@ INSERT INTO gasto (nombre_gasto) VALUES
 ('Mantenimiento'),
 ('Llantas'),
 ('Lavado'),
+('Alimentación'),
+('Hospedaje'),
 ('Otro'),
 ('Cargue'),
 ('Descargue');
