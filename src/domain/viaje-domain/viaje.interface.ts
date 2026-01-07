@@ -57,6 +57,7 @@ export interface ViajeInterface {
   getViajesPaginatedByUsuario(id: number, limit: number, offset: number): Promise<any>;
   countViajesByUsuario(id: number): Promise<any>;
   createNewViaje(
+    //viaje
     fk_usuario: number,
     fk_cliente: number,
     fk_origen: number,
@@ -78,7 +79,7 @@ export interface ViajeInterface {
     horas_pactadas_cargue: number,
     horas_pactadas_descargue: number,
     exoneracion_legal: string,
-    //Manifiesto
+    // Manifiesto
     fk_vehiculo: number,
     flete_total: number,
     porcentaje_retencion_fuente: number,
@@ -93,6 +94,23 @@ export interface ViajeInterface {
     queda_al_carro: number,
     a_favor_del_carro: number,
     porcentaje_conductor: number,
-    ganancia_conductor: number
+    ganancia_conductor: number,
+    // Remesa
+    numero_remesa: string,
+    numero_autorizacion: string,
+    tipo_empaque: string,
+    naturaleza_carga: string,
+    codigo_armonizado: string,
+    cantidad: number,
+    unidad_medida: string,
+    peso_total: number,
+    mercancia_peligrosa: boolean,
+    observaciones_remesa: string,
+    // Datos mercancía peligrosa (opcionales)
+    codigo_un?: string,
+    grupo_riesgo?: string,
+    caracteristica_peligrosidad?: string,
+    embalaje_envase?: string
   ): Promise<any>;
+
 }

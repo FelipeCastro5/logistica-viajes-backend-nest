@@ -1,5 +1,6 @@
 export class CreateNewViajeCommand {
   constructor(
+    // viaje
     public readonly fk_usuario: number,
     public readonly fk_cliente: number,
     public readonly fk_origen: number,
@@ -36,5 +37,21 @@ export class CreateNewViajeCommand {
     public readonly a_favor_del_carro: number,
     public readonly porcentaje_conductor: number,
     public readonly ganancia_conductor: number,
+    // Remesa
+    public readonly numero_remesa: string,
+    public readonly numero_autorizacion: string,
+    public readonly tipo_empaque: string,
+    public readonly naturaleza_carga: string,
+    public readonly codigo_armonizado: string,
+    public readonly cantidad: number,
+    public readonly unidad_medida: string,
+    public readonly peso_total: number,
+    public readonly mercancia_peligrosa: boolean,
+    public readonly observaciones_remesa: string,
+    // Mercancía peligrosa (opcionales)
+    public readonly codigo_un?: string,
+    public readonly grupo_riesgo?: string,
+    public readonly caracteristica_peligrosidad?: string,
+    public readonly embalaje_envase?: string,
   ) { }
 }

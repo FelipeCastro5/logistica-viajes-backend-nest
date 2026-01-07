@@ -122,50 +122,30 @@ export class ViajeController {
       new GetViajesPaginatedByUsuarioCommand(id_usuario, page, limit),
     );
   }
+
   @Post('createNewViaje')
   @ApiOperation({ summary: 'Crear un nuevo viaje' })
   @ApiResponse({ status: 201, description: 'Viaje creado exitosamente' })
   async createNewViaje(@Body() dto: CreateNewViajeDto) {
     const command = new CreateNewViajeCommand(
-      dto.fk_usuario,
-      dto.fk_cliente,
-      dto.fk_origen,
-      dto.fk_destino,
-      dto.codigo,
-      dto.observaciones,
-      dto.producto,
-      dto.detalle_producto,
-      dto.direccion_llegada,
-      dto.fecha_salida,
-      dto.fecha_llegada,
-      dto.latitud_origen,
-      dto.longitud_origen,
-      dto.latitud_destino,
-      dto.longitud_destino,
-      dto.hora_salida,
-      dto.hora_llegada,
-      dto.horas_pactadas_cargue,
-      dto.horas_pactadas_descargue,
-      dto.exoneracion_legal,
-      // manifiesto
-      dto.fk_vehiculo,
-      dto.flete_total,
-      dto.porcentaje_retencion_fuente,
-      dto.valor_retencion_fuente,
-      dto.porcentaje_ica,
-      dto.valor_ica,
-      dto.deduccion_fiscal,
-      dto.neto_a_pagar,
-      dto.anticipo,
-      dto.saldo_a_pagar,
-      dto.total_gastos,
-      dto.queda_al_carro,
-      dto.a_favor_del_carro,
-      dto.porcentaje_conductor,
-      dto.ganancia_conductor,
+      // Viaje
+      dto.fk_usuario, dto.fk_cliente, dto.fk_origen, dto.fk_destino, dto.codigo,
+      dto.observaciones, dto.producto, dto.detalle_producto, dto.direccion_llegada,
+      dto.fecha_salida, dto.fecha_llegada, dto.latitud_origen, dto.longitud_origen,
+      dto.latitud_destino, dto.longitud_destino, dto.hora_salida, dto.hora_llegada,
+      dto.horas_pactadas_cargue, dto.horas_pactadas_descargue, dto.exoneracion_legal,
+      // Manifiesto
+      dto.fk_vehiculo, dto.flete_total, dto.porcentaje_retencion_fuente, dto.valor_retencion_fuente,
+      dto.porcentaje_ica, dto.valor_ica, dto.deduccion_fiscal, dto.neto_a_pagar,
+      dto.anticipo, dto.saldo_a_pagar, dto.total_gastos, dto.queda_al_carro,
+      dto.a_favor_del_carro, dto.porcentaje_conductor, dto.ganancia_conductor,
+      // Remesa
+      dto.numero_remesa, dto.numero_autorizacion, dto.tipo_empaque, dto.naturaleza_carga,
+      dto.codigo_armonizado, dto.cantidad, dto.unidad_medida, dto.peso_total,
+      dto.mercancia_peligrosa, dto.observaciones_remesa,
+      // Mercancía peligrosa
+      dto.codigo_un, dto.grupo_riesgo, dto.caracteristica_peligrosidad, dto.embalaje_envase,
     );
-
     return this.commandBus.execute(command);
   }
-
 }

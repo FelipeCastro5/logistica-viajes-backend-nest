@@ -141,45 +141,87 @@ export class ViajeRepository implements ViajeInterface {
     flete_total: number, porcentaje_retencion_fuente: number, valor_retencion_fuente: number,
     porcentaje_ica: number, valor_ica: number, deduccion_fiscal: number, neto_a_pagar: number, anticipo: number,
     saldo_a_pagar: number, total_gastos: number, queda_al_carro: number, a_favor_del_carro: number,
-    porcentaje_conductor: number, ganancia_conductor: number
+    porcentaje_conductor: number, ganancia_conductor: number,
+    // REMESA
+    numero_remesa: string, numero_autorizacion: string, tipo_empaque: string, naturaleza_carga: string,
+    codigo_armonizado: string, cantidad: number, unidad_medida: string, peso_total: number,
+    mercancia_peligrosa: boolean, observaciones_remesa: string,
+    // MERCANCÍA PELIGROSA (OPCIONAL)
+    codigo_un?: string,
+    grupo_riesgo?: string,
+    caracteristica_peligrosidad?: string,
+    embalaje_envase?: string
   ): Promise<any> {
     const queryManifiesto = this.postgresService.getQuery('insert-manifiesto');
     const queryViaje = this.postgresService.getQuery('insert-viaje');
+    const queryRemesa = this.postgresService.getQuery('insert-remesa');
+    const queryMercanciaPeligrosa = this.postgresService.getQuery('insert-mercancia-peligrosa');
 
-    const results = await this.postgresService.queryWithTransactionDynamicArguments<any>([
+    const queries: any[] = [
       {
         name: 'manifiesto',
         query: () => queryManifiesto,
         values: () => [
           fk_vehiculo,
-          flete_total, porcentaje_retencion_fuente, valor_retencion_fuente, porcentaje_ica, valor_ica,
-          deduccion_fiscal, neto_a_pagar, anticipo, saldo_a_pagar, total_gastos, queda_al_carro,
-          a_favor_del_carro, porcentaje_conductor, ganancia_conductor,
+          flete_total,
+          porcentaje_retencion_fuente,
+          valor_retencion_fuente,
+          porcentaje_ica,
+          valor_ica,
+          deduccion_fiscal,
+          neto_a_pagar,
+          anticipo,
+          saldo_a_pagar,
+          total_gastos,
+          queda_al_carro,
+          a_favor_del_carro,
+          porcentaje_conductor,
+          ganancia_conductor,
         ],
       },
       {
         name: 'viaje',
         query: () => queryViaje,
-        values: (results) => {
-          const manifiestoId = results.manifiesto.rows[0].id_manifiesto; // o el campo correcto del RETURNING *
-          return [
-            fk_usuario, manifiestoId, fk_cliente, fk_origen, fk_destino, codigo, observaciones, estado_viaje,
-            producto, detalle_producto, direccion_llegada, fecha_salida, fecha_llegada,
-            latitud_origen,
-            longitud_origen,
-            latitud_destino,
-            longitud_destino,
-            hora_salida,
-            hora_llegada,
-            horas_pactadas_cargue,
-            horas_pactadas_descargue,
-            exoneracion_legal,
-          ];
-        },
+        values: (results) => [
+          fk_usuario, results.manifiesto.rows[0].id_manifiesto, fk_cliente, fk_origen,
+          fk_destino, codigo, observaciones, estado_viaje, producto, detalle_producto,
+          direccion_llegada, fecha_salida, fecha_llegada, latitud_origen, longitud_origen,
+          latitud_destino, longitud_destino, hora_salida, hora_llegada, horas_pactadas_cargue,
+          horas_pactadas_descargue, exoneracion_legal,
+        ],
       },
-    ]);
+      {
+        name: 'remesa',
+        query: () => queryRemesa,
+        values: (results) => [
+          results.viaje.rows[0].id_viaje, numero_remesa, numero_autorizacion, tipo_empaque,
+          naturaleza_carga, codigo_armonizado, cantidad, unidad_medida, peso_total,
+          mercancia_peligrosa, observaciones_remesa,
+        ],
+      },
+    ];
 
-    return results.viaje.rows[0];
+    // 👇 OPCIONAL
+    if (mercancia_peligrosa) {
+      queries.push({
+        name: 'mercancia_peligrosa',
+        query: () => queryMercanciaPeligrosa,
+        values: (results) => [
+          results.remesa.rows[0].id_remesa,
+          codigo_un,
+          grupo_riesgo,
+          caracteristica_peligrosidad,
+          embalaje_envase,
+        ],
+      });
+    }
+
+    const results = await this.postgresService.queryWithTransactionDynamicArguments(queries);
+
+    return {
+      viaje: results.viaje.rows[0],
+      remesa: results.remesa.rows[0],
+      mercancia_peligrosa: results.mercancia_peligrosa?.rows[0] ?? null,
+    };
   }
-
 }

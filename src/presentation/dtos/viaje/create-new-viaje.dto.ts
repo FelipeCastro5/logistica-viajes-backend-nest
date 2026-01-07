@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
 
 export class CreateNewViajeDto {
   @ApiProperty({ example: 1, description: 'ID del usuario' })
@@ -115,4 +115,62 @@ export class CreateNewViajeDto {
   @ApiProperty() @IsNumber({}, { message: 'A favor del carro debe ser un número válido' }) a_favor_del_carro: number;
   @ApiProperty() @IsNumber({}, { message: 'Porcentaje conductor debe ser un número válido' }) porcentaje_conductor: number;
   @ApiProperty() @IsNumber({}, { message: 'Ganancia conductor debe ser un número válido' }) ganancia_conductor: number;
+
+  // ========================
+  // REMESA
+  // ========================
+
+  @ApiProperty() @IsString()
+  numero_remesa: string;
+
+  @ApiProperty() @IsString()
+  numero_autorizacion: string;
+
+  @ApiProperty() @IsString()
+  tipo_empaque: string;
+
+  @ApiProperty() @IsString()
+  naturaleza_carga: string;
+
+  @ApiProperty() @IsString()
+  codigo_armonizado: string;
+
+  @ApiProperty() @IsNumber()
+  cantidad: number;
+
+  @ApiProperty() @IsString()
+  unidad_medida: string;
+
+  @ApiProperty() @IsNumber()
+  peso_total: number;
+
+  @ApiProperty() @IsBoolean()
+  mercancia_peligrosa: boolean;
+
+  @ApiProperty() @IsString()
+  observaciones_remesa: string;
+
+  // ========================
+  // MERCANCÍA PELIGROSA
+  // ========================
+
+  @ValidateIf(o => o.tiene_mercancia_peligrosa)
+  @ApiProperty({ required: false })
+  @IsString()
+  codigo_un?: string;
+
+  @ValidateIf(o => o.tiene_mercancia_peligrosa)
+  @ApiProperty({ required: false })
+  @IsString()
+  grupo_riesgo?: string;
+
+  @ValidateIf(o => o.tiene_mercancia_peligrosa)
+  @ApiProperty({ required: false })
+  @IsString()
+  caracteristica_peligrosidad?: string;
+
+  @ValidateIf(o => o.tiene_mercancia_peligrosa)
+  @ApiProperty({ required: false })
+  @IsString()
+  embalaje_envase?: string;
 }

@@ -6,7 +6,8 @@ import { ResponseUtil } from '../../utilities/response.util';
 
 @CommandHandler(CreateNewViajeCommand)
 @Injectable()
-export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeCommand> {
+export class CreateNewViajeHandler
+  implements ICommandHandler<CreateNewViajeCommand> {
   constructor(
     @Inject('ViajeInterface')
     private readonly viajeRepository: ViajeInterface,
@@ -14,7 +15,8 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
 
   async execute(command: CreateNewViajeCommand) {
     try {
-      var estado_viaje = true;
+      const estado_viaje = true;
+
       const viaje = await this.viajeRepository.createNewViaje(
         command.fk_usuario,
         command.fk_cliente,
@@ -37,7 +39,8 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
         command.horas_pactadas_cargue,
         command.horas_pactadas_descargue,
         command.exoneracion_legal,
-        //manifiesto
+
+        // Manifiesto
         command.fk_vehiculo,
         command.flete_total,
         command.porcentaje_retencion_fuente,
@@ -52,13 +55,32 @@ export class CreateNewViajeHandler implements ICommandHandler<CreateNewViajeComm
         command.queda_al_carro,
         command.a_favor_del_carro,
         command.porcentaje_conductor,
-        command.ganancia_conductor
+        command.ganancia_conductor,
+
+        // Remesa
+        command.numero_remesa,
+        command.numero_autorizacion,
+        command.tipo_empaque,
+        command.naturaleza_carga,
+        command.codigo_armonizado,
+        command.cantidad,
+        command.unidad_medida,
+        command.peso_total,
+        command.mercancia_peligrosa,
+        command.observaciones_remesa,
+        // Mercancía peligrosa (opcionales)
+        command.codigo_un,
+        command.grupo_riesgo,
+        command.caracteristica_peligrosidad,
+        command.embalaje_envase,
       );
+
       return ResponseUtil.success(viaje, 'Viaje creado exitosamente', 201);
     } catch (error) {
       console.error('Error en CreateNewViajeHandler:', error);
       const status = error.getStatus?.() ?? 500;
-      const message = error.response?.message || 'Error al crear el viaje';
+      const message =
+        error.response?.message || 'Error al crear el viaje';
       return ResponseUtil.error(message, status);
     }
   }
