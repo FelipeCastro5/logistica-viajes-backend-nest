@@ -112,6 +112,8 @@ export class RemesaRepository implements RemesaInterface {
         return {
           ...remesa,
           // 🔴 campos planos (NO objeto)
+          id_mercancia: mercancia?.id_mercancia ?? null,
+          fk_remesa: mercancia?.fk_remesa ?? null,
           codigo_un: mercancia?.codigo_un ?? null,
           grupo_riesgo: mercancia?.grupo_riesgo ?? null,
           caracteristica_peligrosidad:
