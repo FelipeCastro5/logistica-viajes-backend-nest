@@ -5,7 +5,7 @@ import { PostgresService } from '../postgres-db/postgres.service';
 
 @Injectable()
 export class RemesaRepository implements RemesaInterface {
-  constructor(private readonly postgresService: PostgresService) {}
+  constructor(private readonly postgresService: PostgresService) { }
 
   async getAll(): Promise<Remesa[]> {
     const query = this.postgresService.getQuery('get-all-remesas');
@@ -87,9 +87,41 @@ export class RemesaRepository implements RemesaInterface {
     return this.postgresService.query<any[]>(query, [id]);
   }
 
-  async getRemesasByViaje(fk_viaje: number): Promise<Remesa[]> {
-    const query = this.postgresService.getQuery('get-remesas-by-viaje');
-    const result = await this.postgresService.query<Remesa>(query, [fk_viaje]);
-    return result.rows || null;
+  async getRemesasByViaje(fk_viaje: number): Promise<any[]> {
+    const queryRemesas = this.postgresService.getQuery('get-remesas-by-viaje');
+    const queryMercanciaPeligrosa =
+      this.postgresService.getQuery('get-mercancia-peligrosa-by-remesa');
+
+    const result = await this.postgresService.query<any>(queryRemesas, [fk_viaje]);
+
+    if (!result.rows || result.rows.length === 0) {
+      return [];
+    }
+
+    const remesas = await Promise.all(
+      result.rows.map(async (remesa) => {
+        let mercancia = null;
+
+        if (remesa.mercancia_peligrosa) {
+          const mpResult = await this.postgresService.query<any>(
+            queryMercanciaPeligrosa,
+            [remesa.id_remesa],
+          );
+          mercancia = mpResult.rows[0] || null;
+        }
+        return {
+          ...remesa,
+          // 🔴 campos planos (NO objeto)
+          codigo_un: mercancia?.codigo_un ?? null,
+          grupo_riesgo: mercancia?.grupo_riesgo ?? null,
+          caracteristica_peligrosidad:
+            mercancia?.caracteristica_peligrosidad ?? null,
+          embalaje_envase: mercancia?.embalaje_envase ?? null,
+        };
+      }),
+    );
+
+    return remesas;
   }
+
 }
