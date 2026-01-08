@@ -17,7 +17,7 @@ export class UpdateRemesaHandler
   async execute(command: UpdateRemesaCommand) {
     try {
       const result = await this.remesaRepository.updateRemesa(
-        command.id,
+        command.id_remesa,
         command.fk_viaje,
         command.numero_remesa,
         command.numero_autorizacion,
@@ -29,6 +29,12 @@ export class UpdateRemesaHandler
         command.peso_total,
         command.mercancia_peligrosa,
         command.observaciones,
+        // 🔴 MERCANCÍA PELIGROSA
+        command.id_mercancia,
+        command.codigo_un,
+        command.grupo_riesgo,
+        command.caracteristica_peligrosidad,
+        command.embalaje_envase,
       );
 
       if (!result?.rowCount) {

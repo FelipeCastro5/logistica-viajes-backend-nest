@@ -5,7 +5,7 @@ export class UpdateRemesaDto {
   @ApiProperty({ example: 1 })
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  id_remesa: number;
 
   @ApiProperty({ example: 1 })
   @IsNumber()
@@ -34,7 +34,7 @@ export class UpdateRemesaDto {
 
   @ApiProperty({ example: '010121' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   codigo_armonizado: string;
 
   @ApiProperty({ example: 100 })
@@ -60,4 +60,31 @@ export class UpdateRemesaDto {
   @IsString()
   @IsOptional()
   observaciones: string;
+
+  //Mercancia Peligrosa
+
+  @ApiProperty({ example: 1, description: 'ID de la mercancía peligrosa', })
+  @IsNumber({}, { message: 'id mercancía debe ser un número' })
+  @IsOptional()
+  id_mercancia: number;
+
+  @ApiProperty({ example: 'UN 1203', description: 'Código UN' })
+  @IsString({ message: 'codigo_un debe ser texto' })
+  @IsOptional()
+  codigo_un: string;
+
+  @ApiProperty({ example: 'Clase 3', description: 'Grupo de riesgo' })
+  @IsString({ message: 'grupo_riesgo debe ser texto' })
+  @IsOptional()
+  grupo_riesgo: string;
+
+  @ApiProperty({ example: 'Líquido inflamable', description: 'Característica de peligrosidad', })
+  @IsString({ message: 'caracteristica_peligrosidad debe ser texto' })
+  @IsOptional()
+  caracteristica_peligrosidad: string;
+
+  @ApiProperty({ example: 'Bidón metálico', description: 'Tipo de embalaje o envase', })
+  @IsString({ message: 'embalaje_envase debe ser texto' })
+  @IsOptional()
+  embalaje_envase: string;
 }

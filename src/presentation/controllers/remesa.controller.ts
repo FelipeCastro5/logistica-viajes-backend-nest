@@ -68,7 +68,7 @@ export class RemesaController {
   @ApiResponse({ status: 200, description: 'Remesa actualizada exitosamente' })
   async updateRemesa(@Body() dto: UpdateRemesaDto) {
     const command = new UpdateRemesaCommand(
-      dto.id,
+      dto.id_remesa,
       dto.fk_viaje,
       dto.numero_remesa,
       dto.numero_autorizacion,
@@ -80,6 +80,11 @@ export class RemesaController {
       dto.peso_total,
       dto.mercancia_peligrosa,
       dto.observaciones,
+      dto.id_mercancia,
+      dto.codigo_un,
+      dto.grupo_riesgo,
+      dto.caracteristica_peligrosidad,
+      dto.embalaje_envase,
     );
     return this.commandBus.execute(command);
   }

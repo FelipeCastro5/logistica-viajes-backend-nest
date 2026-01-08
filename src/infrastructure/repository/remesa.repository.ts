@@ -51,7 +51,7 @@ export class RemesaRepository implements RemesaInterface {
   }
 
   async updateRemesa(
-    id: number,
+    id_remesa: number,
     fk_viaje: number,
     numero_remesa: string,
     numero_autorizacion: string,
@@ -63,23 +63,73 @@ export class RemesaRepository implements RemesaInterface {
     peso_total: number,
     mercancia_peligrosa: boolean,
     observaciones: string,
+    // Mercancia Peligrosa
+    id_mercancia: number | null,
+    codigo_un?: string,
+    grupo_riesgo?: string,
+    caracteristica_peligrosidad?: string,
+    embalaje_envase?: string
   ): Promise<any> {
-    const query = this.postgresService.getQuery('update-remesa');
-    const params = [
-      fk_viaje,
-      numero_remesa,
-      numero_autorizacion,
-      tipo_empaque,
-      naturaleza_carga,
-      codigo_armonizado,
-      cantidad,
-      unidad_medida,
-      peso_total,
-      mercancia_peligrosa,
-      observaciones,
-      id,
-    ];
-    return this.postgresService.query<any[]>(query, params);
+    return this.postgresService.queryWithTransactionDynamicArguments([
+      {
+        name: 'updateRemesa',
+        query: () => this.postgresService.getQuery('update-remesa'),
+        values: () => [
+          fk_viaje,
+          numero_remesa,
+          numero_autorizacion,
+          tipo_empaque,
+          naturaleza_carga,
+          codigo_armonizado,
+          cantidad,
+          unidad_medida,
+          peso_total,
+          mercancia_peligrosa,
+          observaciones,
+          id_remesa,
+        ],
+      },
+      {
+        name: 'handleMercancia',
+        query: () => {
+          if (!mercancia_peligrosa) {
+            // mercancia_peligrosa = false → eliminar si existe
+            return this.postgresService.getQuery('delete-mercancia-peligrosa-by-remesa');
+          } else {
+            if (id_mercancia) {
+              return this.postgresService.getQuery('update-mercancia-peligrosa');
+            } else {
+              return this.postgresService.getQuery('insert-mercancia-peligrosa');
+            }
+          }
+        },
+        values: () => {
+          if (!mercancia_peligrosa) {
+            // DELETE solo necesita fk_remesa
+            return [id_remesa];
+          } else {
+            if (id_mercancia) {
+              return [
+                id_remesa,
+                codigo_un,
+                grupo_riesgo,
+                caracteristica_peligrosidad,
+                embalaje_envase,
+                id_mercancia,
+              ];
+            } else {
+              return [
+                id_remesa,
+                codigo_un,
+                grupo_riesgo,
+                caracteristica_peligrosidad,
+                embalaje_envase,
+              ];
+            }
+          }
+        },
+      },
+    ]);
   }
 
   async deleteRemesa(id: number): Promise<any> {

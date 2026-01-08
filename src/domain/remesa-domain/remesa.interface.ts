@@ -19,7 +19,7 @@ export interface RemesaInterface {
   ): Promise<Remesa>;
 
   updateRemesa(
-    id: number,
+    id_remesa: number,
     fk_viaje: number,
     numero_remesa: string,
     numero_autorizacion: string,
@@ -31,6 +31,12 @@ export interface RemesaInterface {
     peso_total: number,
     mercancia_peligrosa: boolean,
     observaciones: string,
+    
+    id_mercancia: number,
+    codigo_un: string,
+    grupo_riesgo: string,
+    caracteristica_peligrosidad: string,
+    embalaje_envase: string
   ): Promise<any>;
 
   deleteRemesa(id: number): Promise<any>;
