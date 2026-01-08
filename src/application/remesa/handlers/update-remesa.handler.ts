@@ -37,7 +37,7 @@ export class UpdateRemesaHandler
         command.embalaje_envase,
       );
 
-      if (!result?.rowCount) {
+      if (!result?.updateRemesa?.rowCount) {
         return ResponseUtil.error('Remesa no encontrada', 404);
       }
 

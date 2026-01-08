@@ -93,12 +93,14 @@ export class RemesaRepository implements RemesaInterface {
         name: 'handleMercancia',
         query: () => {
           if (!mercancia_peligrosa) {
-            // mercancia_peligrosa = false → eliminar si existe
+            // Caso mercancia_peligrosa = false → eliminar si existe
             return this.postgresService.getQuery('delete-mercancia-peligrosa-by-remesa');
           } else {
             if (id_mercancia) {
+              // Actualizar mercancia existente
               return this.postgresService.getQuery('update-mercancia-peligrosa');
             } else {
+              // Crear nueva mercancia
               return this.postgresService.getQuery('insert-mercancia-peligrosa');
             }
           }
