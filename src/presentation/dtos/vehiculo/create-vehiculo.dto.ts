@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, Length, Matches } from 'class-validator';
 
 export class CreateVehiculoDto {
   @ApiProperty({ example: 1, description: 'ID del usuario propietario' })
@@ -7,9 +7,11 @@ export class CreateVehiculoDto {
   @IsOptional()
   fk_usuario: number | null;
 
-  @ApiProperty({ example: 'ABC123', description: 'Placa del vehículo' })
+  @ApiProperty({ example: 'ABC123', description: 'Placa del vehículo (3 letras mayúsculas + 3 números, sin guiones)' })
   @IsString()
   @IsNotEmpty()
+  @Length(6, 6, { message: 'La placa debe tener exactamente 6 caracteres' })
+  @Matches(/^[A-Za-z]{3}[0-9]{3}$/, { message: 'La placa debe tener 3 letras seguidas de 3 números, sin guiones' })
   placa: string;
 
   @ApiProperty({ example: 'Volvo', description: 'Marca del vehículo' })
