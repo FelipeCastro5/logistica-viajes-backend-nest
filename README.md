@@ -15,14 +15,38 @@ El proyecto está dividido en las siguientes capas:
 
 ## 📁 Estructura del Proyecto
 
-main.ts
-app.module.ts
+```text
+src:
+├── application
+│   ├── feature
+│   │   ├── commands
+│   │   └── handlers
+│   └── utilities
 │
-├── application/
-├── domain/
-├── infrastructure/
-├── presentation/
+├── domain
+│   └── domain-module
+│       ├── entity
+│       └── interface
+│
+├── infrastructure
+│   ├── external-services
+│   │   ├── ai-providers
+│   │   │   ├── provider-1
+│   │   │   ├── provider-2  
+│   │   │   └── provider-n
+│   │   ├── ai-providers
+│   │   ├── email-service
+│   │   ├── database
+│   │   │   └── queries
+│   │   ├── repository
+│   │   └── jwt
+│   └── utilities
+│
+└── presentation
+    ├── controllers
+    └── dtos
 
+```
 
 ### 🧩 Módulos principales
 
