@@ -7,6 +7,7 @@ import { Chat } from 'src/domain/chat-domain/chat.entity';
 import { ChatInterface } from 'src/domain/chat-domain/chat.interface';
 import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
 import { OpenRouterService } from '../openrouter-ia/openrouter.service';
+import { OpenAIService } from '../openai-ia/openai.service';
 
 @Injectable()
 export class IaToolkitService {
@@ -15,16 +16,31 @@ export class IaToolkitService {
   constructor(
     private readonly geminiService: GeminiService,
     private readonly openRouterService: OpenRouterService,
+    private openAIService: OpenAIService,
+
     private readonly postgresService: PostgresService,
+
     @Inject('ChatInterface')
     private readonly chatRepository: ChatInterface,
     @Inject('MensajeInterface')
     private readonly mensajeRepository: MensajeInterface,
   ) { }
 
-    // fallback automático entre modelos de IA
+  // fallback automático entre modelos de IA
   private async preguntarIA(prompt: string): Promise<string> {
-    // 1️⃣ Intentar Gemini primero
+
+    // 1️⃣ Intentar OpenIA primero
+    try {
+      this.logger.log('🤖 Consultando OpenAI...');
+      return await this.openAIService.preguntarOpenAI(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando OpenAI.',
+        error instanceof Error ? error.stack : error,
+      );
+    }
+
+    // 2️⃣ Fallback a Intentar Gemini segundo
     try {
       this.logger.log('🤖 Consultando Gemini...');
       return await this.geminiService.preguntarGemini(prompt);
@@ -35,7 +51,7 @@ export class IaToolkitService {
       );
     }
 
-    // 2️⃣ Fallback a OpenRouter (Devstral)
+    // 1️⃣+2️⃣ Fallback a OpenRouter (Devstral)
     try {
       this.logger.log('🤖 Consultando OpenRouter (Devstral)...');
       return await this.openRouterService.preguntar(prompt);

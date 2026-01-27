@@ -11,8 +11,9 @@ import { MensajeRepository } from "../../repository/mensaje.repository";
 import { ChatModule } from "src/presentation/modules/chat.module";
 import { MensajeModule } from "src/presentation/modules/mensaje.module";
 import { OpenRouterModule } from "../openrouter-ia/openrouter.module";
+import { OpenAIModule } from "../openai-ia/openai.module";
 @Module({
-  imports: [ChatModule, MensajeModule, OpenRouterModule], 
+  imports: [ChatModule, MensajeModule, OpenRouterModule,OpenAIModule], 
   providers: [
     GeminiService,
     PostgresService,
