@@ -1,8 +1,8 @@
 {
   "public.usuario": ["usuario", "usuarios", "persona", "personas", "cuenta", "cuentas", "login", "correo", "email"],
   "public.cliente": ["cliente", "clientes", "empresa", "empresa cliente", "nit", "contacto"],
-  "public.viaje": ["viaje", "trayecto", "transporte", "envío", "remesa", "ruta", "logística"],
-  "public.gasto": ["gasto", "costos", "combustible", "peaje", "mantenimiento", "alimentación", "hospedaje"],
+  "public.viaje": ["viaje", "trayecto", "transporte", "envío", "ruta", "logística"],
+  "public.gasto": ["gasto", "costos", "por tipo", "discriminado", "detalle de gastos", "combustible", "peaje", "mantenimiento", "alimentación", "hospedaje"],
   "public.gastosxviaje": ["gasto viaje", "gastos del viaje", "detalle gasto", "registro de gastos"],
   "public.manifiesto": ["manifiesto", "documento de viaje", "flete", "retención", "deducción fiscal"],
   "public.rol": ["rol", "roles", "perfil", "permisos"],
@@ -12,7 +12,5 @@
   "public.seguro": ["seguro", "póliza", "SOAT", "carga asegurada"],
   "public.remesa": ["remesa", "envío", "mercancía", "paquete"],
   "public.firma": ["firma", "conductor", "remitente", "destinatario", "titular"],
-  "public.mercancia_peligrosa": ["mercancía peligrosa", "sustancia peligrosa", "producto peligroso"],
-  "public.chat": ["chat", "conversación", "mensajes"],
-  "public.mensajes": ["mensaje", "historial de chat", "pregunta", "respuesta"]
+  "public.mercancia_peligrosa": ["mercancía peligrosa", "sustancia peligrosa", "producto peligroso"]
 }

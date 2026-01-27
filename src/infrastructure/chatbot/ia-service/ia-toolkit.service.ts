@@ -10,6 +10,20 @@ import { OpenRouterService } from '../openrouter-ia/openrouter.service';
 import { SchemaDigestService } from '../nl2sql/shema/schema-digest.service';
 import { SchemaCacheService } from '../nl2sql/shema/schema-cache.service';
 import { OpenAIService } from '../openai-ia/openai.service';
+type DigestTable = {
+  columns: Record<string, string>;
+  foreignKeys?: {
+    column: string;
+    references: {
+      table: string;
+      column: string;
+    };
+  }[];
+};
+
+type SchemaDigest = {
+  tables: Record<string, DigestTable>;
+};
 
 @Injectable()
 export class IaToolkitService {
@@ -22,7 +36,7 @@ export class IaToolkitService {
     private readonly geminiService: GeminiService,
     private readonly openRouterService: OpenRouterService,
     private readonly postgresService: PostgresService,
-  private openAIService: OpenAIService, 
+    private openAIService: OpenAIService,
     @Inject('ChatInterface')
     private readonly chatRepository: ChatInterface,
     @Inject('MensajeInterface')
@@ -31,16 +45,16 @@ export class IaToolkitService {
 
   // fallback automático entre modelos de IA
   private async preguntarIA(prompt: string): Promise<string> {
-    
-  try {
-    this.logger.log('🤖 Consultando OpenAI...');
-    return await this.openAIService.preguntarOpenAI(prompt);
-  } catch (error) {
-    this.logger.error(
-      '❌ Error consultando OpenAI.',
-      error instanceof Error ? error.stack : error,
-    );
-  }
+
+    try {
+      this.logger.log('🤖 Consultando OpenAI...');
+      return await this.openAIService.preguntarOpenAI(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando OpenAI.',
+        error instanceof Error ? error.stack : error,
+      );
+    }
 
     // 1️⃣ Intentar Gemini primero
     try {
@@ -106,42 +120,116 @@ export class IaToolkitService {
   }
 
   // 🔹 Generar SQL a partir de pregunta
-  public async generarSQLDesdePregunta(preguntaUsuario: string, fk_user: number): Promise<string> {
-    const esquemaPath = path.join(process.cwd(), 'src', 'infrastructure', 'utilities', 'esquema.sql');
-    const estructuraSQL = fs.readFileSync(esquemaPath, 'utf8');
+  //   public async generarSQLDesdePregunta(preguntaUsuario: string, fk_user: number): Promise<string> {
+  //     const esquemaPath = path.join(process.cwd(), 'src', 'infrastructure', 'utilities', 'esquema.sql');
+  //     const estructuraSQL = fs.readFileSync(esquemaPath, 'utf8');
 
-    const promptSQL = `Eres un asistente experto en SQL y tienes acceso a esta estructura de base de datos:
+  //     const promptSQL = `Eres un asistente experto en SQL y tienes acceso a esta estructura de base de datos:
 
-${estructuraSQL}
+  // ${estructuraSQL}
 
-Responde la siguiente pregunta del usuario con una consulta SQL válida:
+  // Responde la siguiente pregunta del usuario con una consulta SQL válida:
+  // "${preguntaUsuario}"
+
+  // 🟡 Instrucciones importantes:
+  // 1. Si necesitas aplicar funciones de agregación como SUM, COUNT o AVG, **evita usar ORDER BY directamente a menos que agrupes correctamente o uses una subconsulta**.
+  // 2. Prefiere subconsultas para operaciones como "el último registro", "el total de X del último viaje", etc.
+  // 3. Si es necesario filtrar por usuario, incluye **WHERE fk_usuario = ${fk_user}** o la columna equivalente, si existe.
+  // 4. Para coincidencias de texto, usa ILIKE con comodines '%', por ejemplo: ILIKE '%valor%'.
+  // 5. No incluyas comentarios, explicaciones ni bloques de código. Devuelve **solo la SQL** en una sola línea si es posible.
+
+  // Asegúrate de que la consulta sea ejecutable y no genere errores SQL de agregación.`;
+
+  //     const sqlGeneradoRaw = await this.preguntarIA(promptSQL);
+
+  //     const sqlLimpio: string = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
+
+  //     this.logger.debug(`🔍 SQL generado:\n${sqlLimpio}`);
+
+  //     return sqlLimpio;
+  //   }
+
+  // 🔹 Generar SQL a partir de pregunta usando Schema Digest (NL2SQL)
+  public async generarSQLDesdePregunta(
+    preguntaUsuario: string,
+    fk_user: number
+  ): Promise<string> {
+
+    // 1️⃣ Obtener digest filtrado por intención del usuario
+    const digest = await this.obtenerSchemaDigest(preguntaUsuario);
+
+    // 2️⃣ Convertir digest a texto entendible por la IA
+    const schemaContext = Object.entries(digest.tables)
+      .map(([fullName, table]) => {
+        const columns = Object.keys(table.columns)
+          .map(col => `  - ${col}`)
+          .join('\n');
+
+        return `Tabla ${fullName}:\n${columns}`;
+      })
+      .join('\n\n');
+
+    // 3️⃣ Prompt SQL optimizado
+    const promptSQL = `
+Eres un asistente experto en PostgreSQL.
+
+Estas son las ÚNICAS tablas relevantes del esquema:
+
+${schemaContext}
+
+Relaciones importantes:
+${Object.entries(digest.tables)
+        .map(([fullName, table]) =>
+          (table.foreignKeys || [])
+            .map(
+              fk =>
+                `- ${fullName}.${fk.column} → ${fk.references.table}.${fk.references.column}`
+            )
+            .join('\n')
+        )
+        .filter(Boolean)
+        .join('\n')}
+
+Pregunta del usuario:
 "${preguntaUsuario}"
 
-🟡 Instrucciones importantes:
-1. Si necesitas aplicar funciones de agregación como SUM, COUNT o AVG, **evita usar ORDER BY directamente a menos que agrupes correctamente o uses una subconsulta**.
-2. Prefiere subconsultas para operaciones como "el último registro", "el total de X del último viaje", etc.
-3. Si es necesario filtrar por usuario, incluye **WHERE fk_usuario = ${fk_user}** o la columna equivalente, si existe.
-4. Para coincidencias de texto, usa ILIKE con comodines '%', por ejemplo: ILIKE '%valor%'.
-5. No incluyas comentarios, explicaciones ni bloques de código. Devuelve **solo la SQL** en una sola línea si es posible.
+🟡 Instrucciones estrictas:
+1. Devuelve SOLO una consulta SQL válida (PostgreSQL).
+2. No incluyas explicaciones, comentarios ni markdown.
+3. Usa JOIN explícitos cuando sea necesario.
+4. Si usas SUM, COUNT o AVG, asegúrate de agrupar correctamente.
+5. Para texto usa ILIKE con '%'.
+6. Si aplica seguridad por usuario, filtra con fk_usuario = ${fk_user}.
+7. La consulta debe ser ejecutable sin errores.
+8. Si una columna es BOOLEAN, solo usa TRUE o FALSE, nunca strings como 'activo', 'inactivo', 'sí', 'no'.
+9, Si una columna representa estado activo/inactivo y es BOOLEAN, asume: activo = TRUE, inactivo = FALSE
+`;
 
-Asegúrate de que la consulta sea ejecutable y no genere errores SQL de agregación.`;
-
+    // 4️⃣ Llamar IA con fallback automático
     const sqlGeneradoRaw = await this.preguntarIA(promptSQL);
 
-    const sqlLimpio: string = sqlGeneradoRaw.replace(/```sql|```/g, '').trim();
+    // 5️⃣ Limpieza defensiva
+    const sqlLimpio = sqlGeneradoRaw
+      .replace(/```sql|```/gi, '')
+      .trim();
 
-    this.logger.debug(`🔍 SQL generado:\n${sqlLimpio}`);
+    this.logger.debug(`🧠 SQL generado:\n${sqlLimpio}`);
 
     return sqlLimpio;
   }
 
 
   // 🔹 Obtener digest del esquema para NL2SQL
-  public async obtenerSchemaDigest(usuarioQuery?: string) {
+  public async obtenerSchemaDigest(usuarioQuery?: string): Promise<SchemaDigest> {
     this.logger.log('📦 Obteniendo digest del schema...');
+
     const digest = await this.digestService.getDigest(usuarioQuery ?? '');
-    this.logger.debug(`Digest generado con ${Object.keys(digest.tables).length} tablas`);
-    return digest;
+
+    this.logger.debug(
+      `Digest generado con ${Object.keys(digest.tables).length} tablas`
+    );
+
+    return digest as SchemaDigest;
   }
 
   // 🔹 Ejecutar SQL
