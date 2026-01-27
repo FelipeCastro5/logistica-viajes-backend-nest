@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GeminiService } from "../gemini-ia/gemini.service";
+import { GeminiService } from "../llm-services/gemini-ia/gemini.service";
 import { PostgresService } from "../../postgres-db/postgres.service";
 import { IaToolkitService } from "./ia-toolkit.service";
 import { ClasificacionHandler } from "./handlers/clasificar.handler";

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { GeminiService } from '../gemini-ia/gemini.service';
+import { GeminiService } from '../llm-services/gemini-ia/gemini.service';
 import { PostgresService } from '../../postgres-db/postgres.service';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -62,7 +62,18 @@ export class IaToolkitService {
       return await this.geminiService.preguntarGemini(prompt);
     } catch (error) {
       this.logger.error(
-        '❌ Error consultando Gemini. Se usará OpenRouter como fallback.',
+        '❌ Error consultando Gemini.',
+        error instanceof Error ? error.stack : error,
+      );
+    }
+
+    // 3️⃣ Intentar DeepSeek como tercer paso
+    try {
+      this.logger.log('🤖 Consultando DeepSeek...');
+      return await this.deepSeekService.preguntarDeepSeek(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando DeepSeek.',
         error instanceof Error ? error.stack : error,
       );
     }
@@ -79,6 +90,7 @@ export class IaToolkitService {
       throw new Error('Ningún proveedor de IA pudo responder');
     }
   }
+
 
   // 🔹 Consultar al cliente IA directamente desde IaToolkitService
   public async preguntarIACliente(pregunta: string): Promise<string> {
