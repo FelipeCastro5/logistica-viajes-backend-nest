@@ -7,6 +7,8 @@ import { Chat } from 'src/domain/chat-domain/chat.entity';
 import { ChatInterface } from 'src/domain/chat-domain/chat.interface';
 import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
 import { OpenRouterService } from '../openrouter-ia/openrouter.service';
+import { SchemaDigestService } from '../nl2sql/shema/schema-digest.service';
+import { SchemaCacheService } from '../nl2sql/shema/schema-cache.service';
 import { OpenAIService } from '../openai-ia/openai.service';
 
 @Injectable()
@@ -14,12 +16,13 @@ export class IaToolkitService {
   private readonly logger = new Logger(IaToolkitService.name);
 
   constructor(
+    private readonly digestService: SchemaDigestService,
+    private readonly cacheService: SchemaCacheService,
+
     private readonly geminiService: GeminiService,
     private readonly openRouterService: OpenRouterService,
-    private openAIService: OpenAIService,
-
     private readonly postgresService: PostgresService,
-
+  private openAIService: OpenAIService, 
     @Inject('ChatInterface')
     private readonly chatRepository: ChatInterface,
     @Inject('MensajeInterface')
@@ -28,19 +31,18 @@ export class IaToolkitService {
 
   // fallback automático entre modelos de IA
   private async preguntarIA(prompt: string): Promise<string> {
+    
+  try {
+    this.logger.log('🤖 Consultando OpenAI...');
+    return await this.openAIService.preguntarOpenAI(prompt);
+  } catch (error) {
+    this.logger.error(
+      '❌ Error consultando OpenAI.',
+      error instanceof Error ? error.stack : error,
+    );
+  }
 
-    // 1️⃣ Intentar OpenIA primero
-    try {
-      this.logger.log('🤖 Consultando OpenAI...');
-      return await this.openAIService.preguntarOpenAI(prompt);
-    } catch (error) {
-      this.logger.error(
-        '❌ Error consultando OpenAI.',
-        error instanceof Error ? error.stack : error,
-      );
-    }
-
-    // 2️⃣ Fallback a Intentar Gemini segundo
+    // 1️⃣ Intentar Gemini primero
     try {
       this.logger.log('🤖 Consultando Gemini...');
       return await this.geminiService.preguntarGemini(prompt);
@@ -51,7 +53,7 @@ export class IaToolkitService {
       );
     }
 
-    // 1️⃣+2️⃣ Fallback a OpenRouter (Devstral)
+    // 2️⃣ Fallback a OpenRouter (Devstral)
     try {
       this.logger.log('🤖 Consultando OpenRouter (Devstral)...');
       return await this.openRouterService.preguntar(prompt);
@@ -133,6 +135,14 @@ Asegúrate de que la consulta sea ejecutable y no genere errores SQL de agregaci
     return sqlLimpio;
   }
 
+
+  // 🔹 Obtener digest del esquema para NL2SQL
+  public async obtenerSchemaDigest(usuarioQuery?: string) {
+    this.logger.log('📦 Obteniendo digest del schema...');
+    const digest = await this.digestService.getDigest(usuarioQuery ?? '');
+    this.logger.debug(`Digest generado con ${Object.keys(digest.tables).length} tablas`);
+    return digest;
+  }
 
   // 🔹 Ejecutar SQL
   public async ejecutarSQL(sql: string): Promise<any[]> {

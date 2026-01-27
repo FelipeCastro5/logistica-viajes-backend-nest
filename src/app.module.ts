@@ -24,6 +24,7 @@ import { SeguroModule } from './presentation/modules/seguro.module';
 import { RemesaModule } from './presentation/modules/remesa.module';
 import { MercanciaPeligrosaModule } from './presentation/modules/mercancia-peligrosa.module';
 import { FirmaModule } from './presentation/modules/firma.module';
+import { Nl2sqlModule } from './infrastructure/chatbot/nl2sql/nl2sql.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { FirmaModule } from './presentation/modules/firma.module';
     AuthModule,
     OpenAIModule,
     OpenRouterModule,
+    Nl2sqlModule,
     //Entidades
     UsuarioModule,
     ClienteModule,

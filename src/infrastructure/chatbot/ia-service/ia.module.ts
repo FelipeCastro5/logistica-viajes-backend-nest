@@ -11,9 +11,10 @@ import { MensajeRepository } from "../../repository/mensaje.repository";
 import { ChatModule } from "src/presentation/modules/chat.module";
 import { MensajeModule } from "src/presentation/modules/mensaje.module";
 import { OpenRouterModule } from "../openrouter-ia/openrouter.module";
+import { Nl2sqlModule } from "../nl2sql/nl2sql.module";
 import { OpenAIModule } from "../openai-ia/openai.module";
 @Module({
-  imports: [ChatModule, MensajeModule, OpenRouterModule,OpenAIModule], 
+  imports: [ChatModule, MensajeModule, OpenRouterModule, Nl2sqlModule, OpenAIModule],
   providers: [
     GeminiService,
     PostgresService,
@@ -26,4 +27,4 @@ import { OpenAIModule } from "../openai-ia/openai.module";
   ],
   controllers: [IaController],
 })
-export class iaModule {}
+export class iaModule { }
