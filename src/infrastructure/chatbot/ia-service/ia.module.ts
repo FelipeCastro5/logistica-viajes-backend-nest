@@ -10,11 +10,12 @@ import { IaController } from "./ia.controller";
 import { MensajeRepository } from "../../repository/mensaje.repository";
 import { ChatModule } from "src/presentation/modules/chat.module";
 import { MensajeModule } from "src/presentation/modules/mensaje.module";
-import { OpenRouterModule } from "../openrouter-ia/openrouter.module";
 import { Nl2sqlModule } from "../nl2sql/nl2sql.module";
-import { OpenAIModule } from "../openai-ia/openai.module";
+import { OpenAIModule } from "../llm-services/openai-ia/openai.module";
+import { OpenRouterModule } from "../llm-services/openrouter-ia/openrouter.module";
+import { DeepSeekModule } from "../llm-services/deepseek-ia/deepseek.module";
 @Module({
-  imports: [ChatModule, MensajeModule, OpenRouterModule, Nl2sqlModule, OpenAIModule],
+  imports: [ChatModule, MensajeModule, OpenRouterModule, Nl2sqlModule, OpenAIModule, DeepSeekModule],
   providers: [
     GeminiService,
     PostgresService,
