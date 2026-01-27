@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GoogleDriveModule } from './infrastructure/google-drive-api/google-drive.module';
-import { GeminiModule } from './infrastructure/chatbot/gemini-ia/gemini.module';
+import { GeminiModule } from './infrastructure/chatbot/llm-services/gemini-ia/gemini.module';
 import { ConfigModule } from '@nestjs/config';
 import { HistorialModule } from './presentation/modules/historial.module';
 import { iaModule } from './infrastructure/chatbot/ia-service/ia.module';
@@ -17,13 +17,14 @@ import { MensajeModule } from './presentation/modules/mensaje.module';
 import { ChatModule } from './presentation/modules/chat.module';
 import { EmailModule } from './infrastructure/email-service/email-service.module';
 import { AuthModule } from './infrastructure/auth/auth.module';
-import { OpenAIModule } from './infrastructure/chatbot/openai-ia/openai.module';
-import { OpenRouterModule } from './infrastructure/chatbot/openrouter-ia/openrouter.module';
+import { OpenAIModule } from './infrastructure/chatbot/llm-services/openai-ia/openai.module';
+import { OpenRouterModule } from './infrastructure/chatbot/llm-services/openrouter-ia/openrouter.module';
 import { VehiculoModule } from './presentation/modules/vehiculo.module';
 import { SeguroModule } from './presentation/modules/seguro.module';
 import { RemesaModule } from './presentation/modules/remesa.module';
 import { MercanciaPeligrosaModule } from './presentation/modules/mercancia-peligrosa.module';
 import { FirmaModule } from './presentation/modules/firma.module';
+import { DeepSeekModule } from './infrastructure/chatbot/llm-services/deepseek-ia/deepseek.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { FirmaModule } from './presentation/modules/firma.module';
     AuthModule,
     OpenAIModule,
     OpenRouterModule,
+    DeepSeekModule,
     //Entidades
     UsuarioModule,
     ClienteModule,

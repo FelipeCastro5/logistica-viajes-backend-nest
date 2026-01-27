@@ -1,13 +1,14 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { GeminiService } from '../gemini-ia/gemini.service';
+import { GeminiService } from '../llm-services/gemini-ia/gemini.service';
 import { PostgresService } from '../../postgres-db/postgres.service';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Chat } from 'src/domain/chat-domain/chat.entity';
 import { ChatInterface } from 'src/domain/chat-domain/chat.interface';
 import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
-import { OpenRouterService } from '../openrouter-ia/openrouter.service';
-import { OpenAIService } from '../openai-ia/openai.service';
+import { OpenRouterService } from '../llm-services/openrouter-ia/openrouter.service';
+import { OpenAIService } from '../llm-services/openai-ia/openai.service';
+import { DeepSeekService } from '../llm-services/deepseek-ia/deepseek.service';
 
 @Injectable()
 export class IaToolkitService {
@@ -17,6 +18,7 @@ export class IaToolkitService {
     private readonly geminiService: GeminiService,
     private readonly openRouterService: OpenRouterService,
     private openAIService: OpenAIService,
+    private readonly deepSeekService: DeepSeekService,
 
     private readonly postgresService: PostgresService,
 
@@ -29,7 +31,7 @@ export class IaToolkitService {
   // fallback automático entre modelos de IA
   private async preguntarIA(prompt: string): Promise<string> {
 
-    // 1️⃣ Intentar OpenIA primero
+    // 1️⃣ Intentar OpenAI primero
     try {
       this.logger.log('🤖 Consultando OpenAI...');
       return await this.openAIService.preguntarOpenAI(prompt);
@@ -40,18 +42,29 @@ export class IaToolkitService {
       );
     }
 
-    // 2️⃣ Fallback a Intentar Gemini segundo
+    // 2️⃣ Intentar Gemini segundo
     try {
       this.logger.log('🤖 Consultando Gemini...');
       return await this.geminiService.preguntarGemini(prompt);
     } catch (error) {
       this.logger.error(
-        '❌ Error consultando Gemini. Se usará OpenRouter como fallback.',
+        '❌ Error consultando Gemini.',
         error instanceof Error ? error.stack : error,
       );
     }
 
-    // 1️⃣+2️⃣ Fallback a OpenRouter (Devstral)
+    // 3️⃣ Intentar DeepSeek como tercer paso
+    try {
+      this.logger.log('🤖 Consultando DeepSeek...');
+      return await this.deepSeekService.preguntarDeepSeek(prompt);
+    } catch (error) {
+      this.logger.error(
+        '❌ Error consultando DeepSeek.',
+        error instanceof Error ? error.stack : error,
+      );
+    }
+
+    // 4️⃣ Fallback a OpenRouter (Devstral)
     try {
       this.logger.log('🤖 Consultando OpenRouter (Devstral)...');
       return await this.openRouterService.preguntar(prompt);
@@ -63,6 +76,7 @@ export class IaToolkitService {
       throw new Error('Ningún proveedor de IA pudo responder');
     }
   }
+
 
   // 🔹 Consultar al cliente IA directamente desde IaToolkitService
   public async preguntarIACliente(pregunta: string): Promise<string> {
