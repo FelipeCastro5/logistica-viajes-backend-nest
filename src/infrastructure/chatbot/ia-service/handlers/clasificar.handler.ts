@@ -1,8 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IaToolkitService } from '../ia-toolkit.service';
-import { HistoryHandler } from './history.handler';
-import { SqlHandler } from './sql.handler';
-import { MixtoHandler } from './mixto.handler';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 
 @Injectable()
@@ -20,7 +17,7 @@ export class ClasificacionHandler {
       let chatId = fk_chat;
       let respuesta: string;
       let nuevoTitulo: string | undefined;
-      let contexto: string | undefined;
+      let contexto: string;
       let datos: any = null;
       let sql: string | null = null;
 
@@ -50,16 +47,15 @@ export class ClasificacionHandler {
       respuesta = await this.toolkit.generarRespuestaEnLenguajeNatural(contexto, datos);
       this.logger.debug('💬 Respuesta generada:\n' + respuesta);
 
-      // 5️⃣ Crear chat si no existe
+      // 5️⃣ Crear chat si no existe (🔑 NUEVO FLUJO DE TÍTULO)
       if (!chatId) {
-        const titulo = this.toolkit.extraerTituloDeRespuesta(respuesta) || 'Consulta Mixta';
+        const titulo = await this.toolkit.generarTituloChat(pregunta, respuesta);
         nuevoTitulo = titulo;
 
         const nuevoChat = await this.toolkit.crearNuevoChat(fk_user, titulo);
         chatId = nuevoChat.id_chat;
 
         this.logger.log(`📌 Chat creado con título: "${titulo}" y ID: ${chatId}`);
-        respuesta = this.toolkit.removerLineaTitulo(respuesta);
       }
 
       // 6️⃣ Guardar mensaje y respuesta
@@ -77,8 +73,8 @@ export class ClasificacionHandler {
       );
 
     } catch (error) {
-      this.logger.error('❌ Error en flujo mixto', error);
-      throw new Error('Error al procesar el flujo mixto IA + BD');
+      this.logger.error('❌ Error en ClasificacionHandler', error);
+      throw new Error('Error al procesar la consulta inteligente');
     }
   }
 }

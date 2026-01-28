@@ -116,9 +116,31 @@ export class IaToolkitService {
   // Prompt sin historial (primer mensaje del chat)
   public generarPromptSinHistorial(pregunta: string): string {
     return `El usuario pregunta: "${pregunta}". 
-            Responde de forma clara y en español en un máximo de 400 a 500 caracteres. 
-            Además, sugiere un título breve (máximo 80 caracteres) que resuma la conversación. 
-            Incluye el título iniciando una línea con: "Título: ..."`;
+            Responde de forma clara y en español en un máximo de 400 a 500 caracteres."`;
+  }
+
+  public async generarTituloChat(
+    pregunta: string,
+    respuesta?: string
+  ): Promise<string> {
+    const prompt = `
+Genera un título corto y descriptivo (máximo 80 caracteres)
+para una conversación entre un usuario y un asistente.
+
+Pregunta inicial:
+"${pregunta}"
+
+${respuesta ? `Respuesta inicial:\n"${respuesta}"` : ''}
+
+Devuelve SOLO el título, sin comillas ni explicaciones.
+`;
+
+    const titulo = await this.preguntarIA(prompt);
+
+    return titulo
+      .replace(/["'\n]/g, '')
+      .trim()
+      .slice(0, 80);
   }
 
   // Prompt con historial de preguntas y respuestas
