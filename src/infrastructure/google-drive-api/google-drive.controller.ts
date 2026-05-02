@@ -1,8 +1,9 @@
-import { Controller, Post, Get, Delete, Body, UploadedFile, UseInterceptors, Query, BadRequestException, Param, } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, UploadedFile, UseInterceptors, Query, BadRequestException, Param, Res, } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { ResponseUtil } from '../../application/utilities/response.util';
 import { GoogleDriveService } from './google-drive.service';
+import { Response } from 'express';
 @ApiTags('Google Drive')
 @Controller('drive')
 export class GoogleDriveController {
@@ -26,22 +27,19 @@ export class GoogleDriveController {
     schema: {
       type: 'object',
       properties: {
-        folderId: { type: 'string' },
+        folderId: { type: 'string', nullable: true },
         file: { type: 'string', format: 'binary' },
       },
-      required: ['folderId', 'file'],
+      required: ['file'],
     },
   })
   @UseInterceptors(FileInterceptor('file'))
   async uploadFileToFolderById(
     @UploadedFile() file: Express.Multer.File,
-    @Body('folderId') folderId: string,
+    @Body('folderId') folderId?: string,
   ) {
     if (!file) {
       throw new BadRequestException('No se recibió ningún archivo.');
-    }
-    if (!folderId) {
-      throw new BadRequestException('El ID de la carpeta es requerido.');
     }
     const result = await this.googleDriveService.uploadFileToFolderById(file, folderId);
     return ResponseUtil.success(result, 'Archivo subido correctamente a la carpeta indicada.');
@@ -64,6 +62,25 @@ export class GoogleDriveController {
     }
     await this.googleDriveService.deleteFileByUrl(fileUrl);
     return ResponseUtil.success(null, 'Archivo eliminado correctamente.');
+  }
+
+  @Get('download')
+  @ApiOperation({ summary: 'Descargar un archivo de Google Drive por URL o ID' })
+  @ApiQuery({ name: 'fileUrl', required: true, description: 'URL o ID del archivo a descargar' })
+  async downloadFile(
+    @Query('fileUrl') fileUrl: string,
+    @Res() response: Response,
+  ): Promise<void> {
+    if (!fileUrl) {
+      throw new BadRequestException('La URL del archivo es requerida.');
+    }
+
+    const { stream, fileName, mimeType } = await this.googleDriveService.downloadFileByUrl(fileUrl);
+
+    response.setHeader('Content-Type', mimeType || 'application/octet-stream');
+    response.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(fileName)}"`);
+
+    stream.pipe(response);
   }
 
   @Get('root')

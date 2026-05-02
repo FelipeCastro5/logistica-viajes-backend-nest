@@ -1,41 +1,58 @@
 import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { google } from 'googleapis';
-import { join } from 'path';
 import { Readable } from 'stream';
-import { existsSync, readFileSync } from 'fs';
 import { Express } from 'express';
 import { DriveFileDto, DriveListingDto, DriveSubfolderDto } from './others/drive-listing.dto';
 
 @Injectable()
 export class GoogleDriveService {
   private driveClient: ReturnType<typeof google.drive>;
+  private readonly defaultFolderId?: string;
 
   constructor() {
-    const credentials = process.env.GOOGLE_DRIVE_CREDENTIALS
-      ? JSON.parse(process.env.GOOGLE_DRIVE_CREDENTIALS)
-      : this.loadCredentialsFromFile();
+    const oauthClient = this.createOAuthClient();
+    this.defaultFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID?.trim() || undefined;
 
-    const authClient = new google.auth.GoogleAuth({
-      credentials,
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
-    });
-
-    this.driveClient = google.drive({ version: 'v3', auth: authClient });
+    this.driveClient = google.drive({ version: 'v3', auth: oauthClient });
   }
 
-  private loadCredentialsFromFile() {
-    const filePath = join(process.cwd(), 'google-drive-credentials.json');
-    if (!existsSync(filePath)) throw new Error('Google Drive credentials not found.');
-    return JSON.parse(readFileSync(filePath, 'utf-8'));
+  private createOAuthClient() {
+    const clientId = process.env.GOOGLE_DRIVE_CLIENT_ID?.trim();
+    const clientSecret = process.env.GOOGLE_DRIVE_CLIENT_SECRET?.trim();
+    const refreshToken = process.env.GOOGLE_DRIVE_REFRESH_TOKEN?.trim();
+    const redirectUri = process.env.GOOGLE_DRIVE_REDIRECT_URI?.trim() || 'https://developers.google.com/oauthplayground';
+
+    if (!clientId || !clientSecret || !refreshToken) {
+      throw new Error(
+        'Faltan credenciales OAuth de Google Drive. Define GOOGLE_DRIVE_CLIENT_ID, GOOGLE_DRIVE_CLIENT_SECRET y GOOGLE_DRIVE_REFRESH_TOKEN.',
+      );
+    }
+
+    const oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUri);
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
+    return oauth2Client;
+  }
+
+  private resolveFolderId(folderId?: string): string {
+    const resolvedFolderId = folderId?.trim() || this.defaultFolderId;
+    if (!resolvedFolderId) {
+      throw new Error('Debes enviar un folderId o definir GOOGLE_DRIVE_FOLDER_ID.');
+    }
+
+    return resolvedFolderId;
   }
 
   async createFolder(folderName: string, parentFolderId?: string): Promise<string> {
     try {
+      const resolvedParentFolderId = parentFolderId?.trim() || this.defaultFolderId;
       const query = `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false` +
-        (parentFolderId ? ` and '${parentFolderId}' in parents` : '');
+        (resolvedParentFolderId ? ` and '${resolvedParentFolderId}' in parents` : '');
 
       const response = await this.driveClient.files.list({
         q: query,
+        supportsAllDrives: true,
+        includeItemsFromAllDrives: true,
         fields: 'files(id, name)',
       });
 
@@ -49,12 +66,13 @@ export class GoogleDriveService {
         mimeType: 'application/vnd.google-apps.folder',
       };
 
-      if (parentFolderId) {
-        folderMetadata.parents = [parentFolderId];
+      if (resolvedParentFolderId) {
+        folderMetadata.parents = [resolvedParentFolderId];
       }
 
       const folder = await this.driveClient.files.create({
         requestBody: folderMetadata,
+        supportsAllDrives: true,
         fields: 'id',
       });
 
@@ -62,7 +80,7 @@ export class GoogleDriveService {
       return folder.data.id!;
     } catch (error) {
       console.error('Error creando la carpeta:', error);
-      throw new Error('No se pudo crear la carpeta en Google Drive');
+      throw this.mapGoogleDriveError(error, 'No se pudo crear la carpeta en Google Drive');
     }
   }
 
@@ -70,6 +88,7 @@ export class GoogleDriveService {
     try {
       const response = await this.driveClient.files.get({
         fileId: fileOrFolderId,
+        supportsAllDrives: true,
         fields: 'id, name, mimeType, webViewLink',
       });
 
@@ -87,7 +106,7 @@ export class GoogleDriveService {
       };
     } catch (error) {
       console.error('Error obteniendo información:', error);
-      throw new Error('No se pudo obtener la información del archivo o carpeta');
+      throw this.mapGoogleDriveError(error, 'No se pudo obtener la información del archivo o carpeta');
     }
   }
 
@@ -98,19 +117,56 @@ export class GoogleDriveService {
         throw new Error('No se pudo extraer el ID del archivo de la URL proporcionada.');
       }
 
-      await this.driveClient.files.delete({ fileId });
+      await this.driveClient.files.delete({ fileId, supportsAllDrives: true });
       console.log(`Archivo con ID ${fileId} eliminado exitosamente.`);
     } catch (error) {
       console.error('Error eliminando el archivo:', error);
-      throw new Error('No se pudo eliminar el archivo de Google Drive');
+      throw this.mapGoogleDriveError(error, 'No se pudo eliminar el archivo de Google Drive');
     }
   }
 
-  async uploadFileToFolderById(file: Express.Multer.File, folderId: string) {
+  async downloadFileByUrl(fileUrl: string): Promise<{ stream: Readable; fileName: string; mimeType: string }> {
     try {
+      const fileId = this.extractId(fileUrl);
+      if (!fileId) {
+        throw new Error('No se pudo extraer el ID del archivo de la URL proporcionada.');
+      }
+
+      const metadataResponse = await this.driveClient.files.get({
+        fileId,
+        supportsAllDrives: true,
+        fields: 'id, name, mimeType',
+      });
+
+      const fileName = metadataResponse.data.name || 'archivo-descargado';
+      const mimeType = metadataResponse.data.mimeType || 'application/octet-stream';
+
+      const downloadResponse = await this.driveClient.files.get(
+        {
+          fileId,
+          alt: 'media',
+          supportsAllDrives: true,
+        },
+        { responseType: 'stream' },
+      );
+
+      return {
+        stream: downloadResponse.data as Readable,
+        fileName,
+        mimeType,
+      };
+    } catch (error) {
+      console.error('Error descargando el archivo:', error);
+      throw this.mapGoogleDriveError(error, 'No se pudo descargar el archivo de Google Drive');
+    }
+  }
+
+  async uploadFileToFolderById(file: Express.Multer.File, folderId?: string) {
+    try {
+      const resolvedFolderId = this.resolveFolderId(folderId);
       const fileMetadata = {
         name: file.originalname,
-        parents: [folderId],
+        parents: [resolvedFolderId],
       };
 
       const media = {
@@ -121,6 +177,7 @@ export class GoogleDriveService {
       const response = await this.driveClient.files.create({
         requestBody: fileMetadata,
         media,
+        supportsAllDrives: true,
         fields: 'id, webViewLink',
       });
 
@@ -131,6 +188,7 @@ export class GoogleDriveService {
 
       await this.driveClient.permissions.create({
         fileId,
+        supportsAllDrives: true,
         requestBody: {
           role: 'reader',
           type: 'anyone',
@@ -144,18 +202,21 @@ export class GoogleDriveService {
       };
     } catch (error) {
       console.error('Error subiendo el archivo:', error);
-      throw new Error('No se pudo subir el archivo a Google Drive');
+      throw this.mapGoogleDriveError(error, 'No se pudo subir el archivo a Google Drive');
     }
   }
 
   async listFilesAndFolders(parentFolderId?: string) {
     try {
-      const query = parentFolderId
-        ? `'${parentFolderId}' in parents and trashed=false`
+      const resolvedFolderId = parentFolderId?.trim() || this.defaultFolderId;
+      const query = resolvedFolderId
+        ? `'${resolvedFolderId}' in parents and trashed=false`
         : `'root' in parents and trashed=false`;
 
       const response = await this.driveClient.files.list({
         q: query,
+        supportsAllDrives: true,
+        includeItemsFromAllDrives: true,
         fields: 'files(id, name, mimeType)',
       });
 
@@ -171,7 +232,7 @@ export class GoogleDriveService {
       }));
     } catch (error) {
       console.error('Error obteniendo la lista de archivos y carpetas:', error);
-      throw new Error('No se pudo obtener la lista de archivos y carpetas');
+      throw this.mapGoogleDriveError(error, 'No se pudo obtener la lista de archivos y carpetas');
     }
   }
 
@@ -179,6 +240,7 @@ export class GoogleDriveService {
     try {
       await this.driveClient.permissions.create({
         fileId: fileOrFolderId,
+        supportsAllDrives: true,
         requestBody: {
           role,
           type: 'user',
@@ -188,13 +250,13 @@ export class GoogleDriveService {
       console.log(`Compartido con ${userEmail}`);
     } catch (error) {
       console.error('Error compartiendo el archivo o carpeta:', error);
-      throw new Error('No se pudo compartir el archivo o carpeta');
+      throw this.mapGoogleDriveError(error, 'No se pudo compartir el archivo o carpeta');
     }
   }
 
   async listSubfoldersAndFiles(inputIdOrUrl: string): Promise<DriveListingDto> {
     try {
-      const parentFolderId = this.extractId(inputIdOrUrl);
+      const parentFolderId = this.extractId(inputIdOrUrl) || this.defaultFolderId;
       if (!parentFolderId) {
         throw new Error('No se pudo extraer un ID válido del input proporcionado.');
       }
@@ -202,6 +264,8 @@ export class GoogleDriveService {
       // Paso 1: Listar subcarpetas
       const subfolders = await this.driveClient.files.list({
         q: `'${parentFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+        supportsAllDrives: true,
+        includeItemsFromAllDrives: true,
         fields: 'files(id, name)',
       });
 
@@ -211,6 +275,8 @@ export class GoogleDriveService {
         // Paso 2: Para cada subcarpeta, listar archivos
         const filesResp = await this.driveClient.files.list({
           q: `'${subfolder.id}' in parents and mimeType != 'application/vnd.google-apps.folder' and trashed=false`,
+          supportsAllDrives: true,
+          includeItemsFromAllDrives: true,
           fields: 'files(id, name, mimeType, webViewLink)',
         });
 
@@ -234,7 +300,7 @@ export class GoogleDriveService {
       };
     } catch (error) {
       console.error('Error en listSubfoldersAndFiles:', error);
-      throw new Error('No se pudo obtener la estructura de carpetas y archivos');
+      throw this.mapGoogleDriveError(error, 'No se pudo obtener la estructura de carpetas y archivos');
     }
   }
 
@@ -264,4 +330,46 @@ export class GoogleDriveService {
     return null;
   }
 
+  private mapGoogleDriveError(error: unknown, fallbackMessage: string): Error {
+    const googleError = error as {
+      code?: number;
+      message?: string;
+      response?: { status?: number; data?: { error?: { message?: string } } };
+      cause?: { message?: string; code?: number };
+    };
+
+    const status = googleError.response?.status ?? googleError.code ?? googleError.cause?.code;
+    const message = googleError.response?.data?.error?.message ?? googleError.message ?? googleError.cause?.message ?? '';
+    const normalizedMessage = message.toLowerCase();
+
+    if (normalizedMessage.includes('service accounts do not have storage quota')) {
+      throw new HttpException(
+        'La cuenta de servicio no puede almacenar archivos en un My Drive personal. Usa un Shared Drive o habilita OAuth delegation con un usuario.',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    if (normalizedMessage.includes('project #') && normalizedMessage.includes('has been deleted')) {
+      throw new HttpException(
+        'Las credenciales de Google apuntan a un proyecto eliminado o inválido. Genera una nueva key JSON en un proyecto activo.',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    if (status === 403 && normalizedMessage.includes('sharing quota')) {
+      throw new HttpException(
+        'Google Drive agotó la cuota de compartidos. Intenta más tarde o usa otra cuenta de servicio.',
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
+    if (status === 403) {
+      throw new HttpException(
+        'Google Drive rechazó la operación de permisos. Revisa si la cuenta de servicio tiene acceso suficiente.',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    return new Error(fallbackMessage);
+  }
 }
