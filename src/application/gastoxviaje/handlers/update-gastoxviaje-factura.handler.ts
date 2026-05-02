@@ -45,8 +45,13 @@ export class UpdateGastoxviajeFacturaHandler implements ICommandHandler<UpdateGa
       }
 
       console.error('Error en UpdateGastoxviajeFacturaHandler:', error);
-      const status = error.getStatus?.() ?? 500;
-      const message = error.response?.message || error.message || 'Error al subir la factura';
+      const failure = error as {
+        getStatus?: () => number;
+        response?: { message?: string };
+        message?: string;
+      };
+      const status = failure.getStatus?.() ?? 500;
+      const message = failure.response?.message || failure.message || 'Error al subir la factura';
       return ResponseUtil.error(message, status);
     }
   }

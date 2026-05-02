@@ -163,7 +163,7 @@ export class GoogleDriveService {
 
   async uploadFileToFolderById(file: Express.Multer.File, folderId?: string) {
     try {
-      const resolvedFolderId = this.resolveFolderId(folderId);
+      const resolvedFolderId = folderId?.trim() || this.defaultFolderId || 'root';
       const fileMetadata = {
         name: file.originalname,
         parents: [resolvedFolderId],
