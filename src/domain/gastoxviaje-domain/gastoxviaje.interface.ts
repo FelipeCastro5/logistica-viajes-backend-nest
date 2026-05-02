@@ -18,4 +18,6 @@ export interface GastoxviajeInterface {
   ): Promise<any>;
   deleteGastoxviaje(id: number): Promise<any>;
   getGastosByViaje(fk: number): Promise<any | null>;
+  updateGastoxviajeFactura(id: number, urlFactura: string, idFactura: string): Promise<any>;
+  clearGastoxviajeFactura(id: number): Promise<any>;
 }

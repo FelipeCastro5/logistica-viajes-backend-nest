@@ -94,7 +94,9 @@ create table gastosxviaje (
   fk_viaje int,
   fk_gasto int,
   valor decimal(15,5),
-  detalles varchar(250)
+  detalles varchar(250),
+  url_factura text,
+  id_factura text
 );
 
 create table chat (
