@@ -56,9 +56,33 @@ export class GastoxviajeRepository implements GastoxviajeInterface {
 
   async updateGastoxviajeFactura(id: number, urlFactura: string, idFactura: string): Promise<any> {
     const query = this.postgresService.getQuery('update-gastoxviaje-factura');
-    const params = [id, urlFactura, idFactura];
-    const result = await this.postgresService.query<any>(query, params);
-    return result.rows[0];
+    const params = [urlFactura, idFactura, id];
+    console.log('[gastoxviaje-repository] updateGastoxviajeFactura', {
+      id,
+      urlFactura,
+      idFactura,
+      queryName: 'update-gastoxviaje-factura',
+      params,
+    });
+
+    try {
+      const result = await this.postgresService.query<any>(query, params);
+      console.log('[gastoxviaje-repository] factura actualizada', {
+        id,
+        rowCount: result.rowCount,
+        returnedRow: result.rows[0],
+      });
+      return result.rows[0];
+    } catch (error) {
+      console.error('[gastoxviaje-repository] error actualizando factura', {
+        id,
+        urlFactura,
+        idFactura,
+        params,
+        error,
+      });
+      throw error;
+    }
   }
 
   async clearGastoxviajeFactura(id: number): Promise<any> {

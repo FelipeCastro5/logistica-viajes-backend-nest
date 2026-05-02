@@ -4,7 +4,9 @@ SELECT
   gxv.fk_gasto,
   gxv.valor,
   gxv.detalles,
-  g.nombre_gasto
+  g.nombre_gasto,
+  gxv.url_factura,
+  gxv.id_factura
 FROM 
   gastosxviaje gxv
 JOIN 

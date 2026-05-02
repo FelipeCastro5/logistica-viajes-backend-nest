@@ -164,10 +164,19 @@ export class GoogleDriveService {
   async uploadFileToFolderById(file: Express.Multer.File, folderId?: string) {
     try {
       const resolvedFolderId = folderId?.trim() || this.defaultFolderId || 'root';
+      console.log('[google-drive] uploadFileToFolderById', {
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        resolvedFolderId,
+      });
+
       const fileMetadata = {
         name: file.originalname,
         parents: [resolvedFolderId],
       };
+
+      console.log('[google-drive] requestBody create', fileMetadata);
 
       const media = {
         mimeType: file.mimetype,
@@ -186,6 +195,11 @@ export class GoogleDriveService {
         throw new Error('El archivo no tiene un ID válido después de crearse.');
       }
 
+      console.log('[google-drive] archivo creado', {
+        fileId,
+        webViewLink: response.data.webViewLink,
+      });
+
       await this.driveClient.permissions.create({
         fileId,
         supportsAllDrives: true,
@@ -195,13 +209,20 @@ export class GoogleDriveService {
         },
       });
 
+      console.log('[google-drive] permisos públicos aplicados', { fileId });
       console.log('Archivo subido y compartido:', response.data);
       return {
         fileId,
         fileUrl: response.data.webViewLink,
       };
     } catch (error) {
-      console.error('Error subiendo el archivo:', error);
+      console.error('[google-drive] error subiendo el archivo:', {
+        fileName: file?.originalname,
+        mimeType: file?.mimetype,
+        size: file?.size,
+        folderId,
+        error,
+      });
       throw this.mapGoogleDriveError(error, 'No se pudo subir el archivo a Google Drive');
     }
   }

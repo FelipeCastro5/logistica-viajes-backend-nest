@@ -18,10 +18,26 @@ export class UpdateGastoxviajeFacturaHandler implements ICommandHandler<UpdateGa
     let uploadedFileId: string | null = null;
     let uploadedFileUrl: string | null = null;
 
+    console.log('[gastoxviaje:update-factura] inicio', {
+      id_gastoxviaje: command.id_gastoxviaje,
+      fileName: command.file?.originalname,
+      mimeType: command.file?.mimetype,
+      size: command.file?.size,
+    });
+
     try {
+      console.log('[gastoxviaje:update-factura] subiendo archivo a Drive');
       const uploaded = await this.googleDriveService.uploadFileToFolderById(command.file);
+      console.log('[gastoxviaje:update-factura] archivo subido a Drive', uploaded);
+
       uploadedFileId = uploaded.fileId;
       uploadedFileUrl = uploaded.fileUrl || `https://drive.google.com/file/d/${uploaded.fileId}/view`;
+
+      console.log('[gastoxviaje:update-factura] actualizando registro en base de datos', {
+        id_gastoxviaje: command.id_gastoxviaje,
+        uploadedFileId,
+        uploadedFileUrl,
+      });
 
       const updated = await this.repository.updateGastoxviajeFactura(
         command.id_gastoxviaje,
@@ -29,7 +45,12 @@ export class UpdateGastoxviajeFacturaHandler implements ICommandHandler<UpdateGa
         uploadedFileId,
       );
 
+      console.log('[gastoxviaje:update-factura] resultado update', updated);
+
       if (!updated) {
+        console.warn('[gastoxviaje:update-factura] el update no devolvió fila, se elimina el archivo subido', {
+          uploadedFileId,
+        });
         await this.googleDriveService.deleteFileByUrl(uploadedFileId);
         return ResponseUtil.error('Gasto por viaje no encontrado', 404);
       }
@@ -38,6 +59,9 @@ export class UpdateGastoxviajeFacturaHandler implements ICommandHandler<UpdateGa
     } catch (error) {
       if (uploadedFileId) {
         try {
+          console.warn('[gastoxviaje:update-factura] rollback: eliminando archivo subido tras error', {
+            uploadedFileId,
+          });
           await this.googleDriveService.deleteFileByUrl(uploadedFileId);
         } catch (rollbackError) {
           console.error('Error haciendo rollback del archivo subido:', rollbackError);
