@@ -13,6 +13,7 @@ import { GetAllGastoxviajeHandler } from '../../application/gastoxviaje/handlers
 import { GetGastosByViajeHandler } from 'src/application/gastoxviaje/handlers/get-gastos-by-viaje.handler';
 import { UpdateGastoxviajeFacturaHandler } from '../../application/gastoxviaje/handlers/update-gastoxviaje-factura.handler';
 import { DeleteGastoxviajeFacturaHandler } from '../../application/gastoxviaje/handlers/delete-gastoxviaje-factura.handler';
+import { DownloadGastoxviajeFacturaHandler } from '../../application/gastoxviaje/handlers/download-gastoxviaje-factura.handler';
 
 @Module({
   imports: [PostgresModule, CqrsModule, GoogleDriveModule],
@@ -29,6 +30,7 @@ import { DeleteGastoxviajeFacturaHandler } from '../../application/gastoxviaje/h
     GetGastosByViajeHandler,
     UpdateGastoxviajeFacturaHandler,
     DeleteGastoxviajeFacturaHandler,
+    DownloadGastoxviajeFacturaHandler,
   ],
   controllers: [GastoxviajeController],
 })

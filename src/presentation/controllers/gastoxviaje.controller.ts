@@ -1,7 +1,8 @@
-import { BadRequestException, Body, Controller, Delete, Get, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, ParseIntPipe, Post, Put, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
 import { CreateGastoXViajeCommand } from '../../application/gastoxviaje/commands/create-gastoxviaje.command';
 import { UpdateGastoXViajeCommand } from '../../application/gastoxviaje/commands/update-gastoxviaje.command';
@@ -10,6 +11,7 @@ import { GetAllGastosXViajeCommand } from '../../application/gastoxviaje/command
 import { GetGastoXViajeByIdCommand } from '../../application/gastoxviaje/commands/get-gastoxviaje-by-id.command';
 import { UpdateGastoXViajeFacturaCommand } from '../../application/gastoxviaje/commands/update-gastoxviaje-factura.command';
 import { DeleteGastoXViajeFacturaCommand } from '../../application/gastoxviaje/commands/delete-gastoxviaje-factura.command';
+import { DownloadGastoXViajeFacturaCommand } from '../../application/gastoxviaje/commands/download-gastoxviaje-factura.command';
 
 import { CreateGastoXViajeDto } from '../dtos/gastoxviaje/create-gastoxviaje.dto';
 import { UpdateGastoXViajeDto } from '../dtos/gastoxviaje/update-gastoxviaje.dto';
@@ -104,6 +106,23 @@ export class GastoxviajeController {
     return this.commandBus.execute(
       new UpdateGastoXViajeFacturaCommand(id_gastoxviaje, file),
     );
+  }
+
+  @Get('download-factura')
+  @ApiOperation({ summary: 'Descargar la factura asociada a un gasto por viaje o por referencia de Drive' })
+  @ApiQuery({ name: 'reference', required: true, description: 'ID del gasto por viaje, URL o ID del archivo en Google Drive' })
+  async downloadFactura(
+    @Res() response: Response,
+    @Query('reference') reference?: string,
+  ): Promise<void> {
+    const { stream, fileName, mimeType } = await this.queryBus.execute(
+      new DownloadGastoXViajeFacturaCommand(reference || ''),
+    );
+
+    response.setHeader('Content-Type', mimeType || 'application/octet-stream');
+    response.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(fileName)}"`);
+
+    stream.pipe(response);
   }
 
   @Delete('delete-factura')
