@@ -5,19 +5,28 @@ import { Readable } from 'stream';
 import { Express } from 'express';
 import { DriveFileDto, DriveListingDto, DriveSubfolderDto } from './others/drive-listing.dto';
 
+/**
+ * Clase de infraestructura: GoogleDriveService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class GoogleDriveService {
   private driveClient: ReturnType<typeof google.drive>;
   private readonly defaultFolderId?: string;
 
-  constructor() {
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor() {
     const oauthClient = this.createOAuthClient();
     this.defaultFolderId = process.env.GOOGLE_DRIVE_FOLDER_ID?.trim() || undefined;
 
     this.driveClient = google.drive({ version: 'v3', auth: oauthClient });
   }
 
-  private createOAuthClient() {
+  /**
+     * Ejecuta la operación técnica de createOAuthClient.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private createOAuthClient() {
     const clientId = process.env.GOOGLE_DRIVE_CLIENT_ID?.trim();
     const clientSecret = process.env.GOOGLE_DRIVE_CLIENT_SECRET?.trim();
     const refreshToken = process.env.GOOGLE_DRIVE_REFRESH_TOKEN?.trim();
@@ -34,7 +43,12 @@ export class GoogleDriveService {
     return oauth2Client;
   }
 
-  private resolveFolderId(folderId?: string): string {
+  /**
+     * Ejecuta la operación técnica de resolveFolderId.
+     * @param folderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private resolveFolderId(folderId?: string): string {
     const resolvedFolderId = folderId?.trim() || this.defaultFolderId;
     if (!resolvedFolderId) {
       throw new Error('Debes enviar un folderId o definir GOOGLE_DRIVE_FOLDER_ID.');
@@ -43,7 +57,13 @@ export class GoogleDriveService {
     return resolvedFolderId;
   }
 
-  async createFolder(folderName: string, parentFolderId?: string): Promise<string> {
+  /**
+     * Ejecuta la operación técnica de createFolder.
+     * @param folderName Parámetro de entrada de tipo string.
+     * @param parentFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async createFolder(folderName: string, parentFolderId?: string): Promise<string> {
     try {
       const resolvedParentFolderId = parentFolderId?.trim() || this.defaultFolderId;
       const query = `name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false` +
@@ -84,7 +104,12 @@ export class GoogleDriveService {
     }
   }
 
-  async getFileOrFolderInfo(fileOrFolderId: string) {
+  /**
+     * Ejecuta la operación técnica de getFileOrFolderInfo.
+     * @param fileOrFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async getFileOrFolderInfo(fileOrFolderId: string) {
     try {
       const response = await this.driveClient.files.get({
         fileId: fileOrFolderId,
@@ -110,7 +135,12 @@ export class GoogleDriveService {
     }
   }
 
-  async deleteFileByUrl(fileUrl: string): Promise<void> {
+  /**
+     * Ejecuta la operación técnica de deleteFileByUrl.
+     * @param fileUrl Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async deleteFileByUrl(fileUrl: string): Promise<void> {
     try {
       const fileId = this.extractId(fileUrl);
       if (!fileId) {
@@ -125,7 +155,12 @@ export class GoogleDriveService {
     }
   }
 
-  async downloadFileByUrl(fileUrl: string): Promise<{ stream: Readable; fileName: string; mimeType: string }> {
+  /**
+     * Ejecuta la operación técnica de downloadFileByUrl.
+     * @param fileUrl Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async downloadFileByUrl(fileUrl: string): Promise<{ stream: Readable; fileName: string; mimeType: string }> {
     try {
       const fileId = this.extractId(fileUrl);
       if (!fileId) {
@@ -161,7 +196,13 @@ export class GoogleDriveService {
     }
   }
 
-  async uploadFileToFolderById(file: Express.Multer.File, folderId?: string) {
+  /**
+     * Ejecuta la operación técnica de uploadFileToFolderById.
+     * @param file Parámetro de entrada de tipo Express.Multer.File.
+     * @param folderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async uploadFileToFolderById(file: Express.Multer.File, folderId?: string) {
     try {
       const resolvedFolderId = folderId?.trim() || this.defaultFolderId || 'root';
       console.log('[google-drive] uploadFileToFolderById', {
@@ -227,7 +268,12 @@ export class GoogleDriveService {
     }
   }
 
-  async listFilesAndFolders(parentFolderId?: string) {
+  /**
+     * Ejecuta la operación técnica de listFilesAndFolders.
+     * @param parentFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async listFilesAndFolders(parentFolderId?: string) {
     try {
       const resolvedFolderId = parentFolderId?.trim() || this.defaultFolderId;
       const query = resolvedFolderId
@@ -257,7 +303,14 @@ export class GoogleDriveService {
     }
   }
 
-  async shareWithUser(fileOrFolderId: string, userEmail: string, role: 'reader' | 'writer' = 'writer') {
+  /**
+     * Ejecuta la operación técnica de shareWithUser.
+     * @param fileOrFolderId Parámetro de entrada de tipo string.
+     * @param userEmail Parámetro de entrada de tipo string.
+     * @param role Parámetro de entrada de tipo 'reader' | 'writer'.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async shareWithUser(fileOrFolderId: string, userEmail: string, role: 'reader' | 'writer' = 'writer') {
     try {
       await this.driveClient.permissions.create({
         fileId: fileOrFolderId,
@@ -275,7 +328,12 @@ export class GoogleDriveService {
     }
   }
 
-  async listSubfoldersAndFiles(inputIdOrUrl: string): Promise<DriveListingDto> {
+  /**
+     * Ejecuta la operación técnica de listSubfoldersAndFiles.
+     * @param inputIdOrUrl Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async listSubfoldersAndFiles(inputIdOrUrl: string): Promise<DriveListingDto> {
     try {
       const parentFolderId = this.extractId(inputIdOrUrl) || this.defaultFolderId;
       if (!parentFolderId) {
@@ -325,7 +383,12 @@ export class GoogleDriveService {
     }
   }
 
-  private extractId(input: string): string | null {
+  /**
+     * Ejecuta la operación técnica de extractId.
+     * @param input Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private extractId(input: string): string | null {
     // Caso 1: ID directo
     if (/^[a-zA-Z0-9_-]{10,}$/.test(input)) {
       return input;
@@ -351,7 +414,13 @@ export class GoogleDriveService {
     return null;
   }
 
-  private mapGoogleDriveError(error: unknown, fallbackMessage: string): Error {
+  /**
+     * Ejecuta la operación técnica de mapGoogleDriveError.
+     * @param error Parámetro de entrada de tipo unknown.
+     * @param fallbackMessage Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private mapGoogleDriveError(error: unknown, fallbackMessage: string): Error {
     const googleError = error as {
       code?: number;
       message?: string;

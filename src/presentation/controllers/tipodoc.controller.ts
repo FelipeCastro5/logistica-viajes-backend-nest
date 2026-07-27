@@ -11,51 +11,94 @@ import { GetTipodocByIdCommand } from '../../application/tipodoc/commands/get-ti
 import { CreateTipodocDto } from '../dtos/tipodoc/create-tipodoc.dto';
 import { UpdateTipodocDto } from '../dtos/tipodoc/update-tipodoc.dto';
 
+/**
+ * Controlador REST para Tipodoc.
+ * Se encarga de recibir peticiones HTTP, validarlas y enrutarlas hacia la capa de aplicación (CQRS).
+ */
 @ApiTags('Tipos de Documento')
 @Controller('tipodoc')
 export class TipodocController {
-  constructor(
+  /** Constructor de la clase. Inyecta dependencias como el bus de comandos/consultas. */
+    constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get('getAll')
+  /**
+     * Endpoint para la operación de getAll.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los tipos de documento' })
   @ApiResponse({ status: 200, description: 'Tipos de documento obtenidos exitosamente' })
   async getAll() {
-    return this.queryBus.execute(new GetAllTipodocsCommand());
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetAllTipodocsCommand());
+    }
 
-  @Get('getById')
+  /**
+     * Endpoint para la operación de getById.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getById')
   @ApiOperation({ summary: 'Obtener tipo de documento por ID' })
   @ApiResponse({ status: 200, description: 'Tipo de documento encontrado exitosamente' })
   @ApiResponse({ status: 404, description: 'Tipo de documento no encontrado' })
   async getById(@Query('id') id: number) {
-    return this.queryBus.execute(new GetTipodocByIdCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetTipodocByIdCommand(id));
+    }
 
-  @Post('create')
+  /**
+     * Endpoint para la operación de create.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Post('create')
   @ApiOperation({ summary: 'Crear un nuevo tipo de documento' })
   @ApiResponse({ status: 201, description: 'Tipo de documento creado exitosamente' })
   async create(@Body() dto: CreateTipodocDto) {
-    const command = new CreateTipodocCommand(dto.nombre_documento, dto.abreviatura);
-    return this.commandBus.execute(command);
-  }
+        // 1. Construimos el comando CQRS mapeando los datos de la petición (DTO/Query/Param).
+        const command = new CreateTipodocCommand(dto.nombre_documento, dto.abreviatura);
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
 
-  @Put('update')
+        return this.commandBus.execute(command);
+    }
+
+  /**
+     * Endpoint para la operación de update.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Put('update')
   @ApiOperation({ summary: 'Actualizar un tipo de documento existente' })
   @ApiResponse({ status: 200, description: 'Tipo de documento actualizado exitosamente' })
   @ApiResponse({ status: 404, description: 'Tipo de documento no encontrado' })
   async update(@Body() dto: UpdateTipodocDto) {
-    const command = new UpdateTipodocCommand(dto.id, dto.nombre_documento, dto.abreviatura);
-    return this.commandBus.execute(command);
-  }
+        // 1. Construimos el comando CQRS mapeando los datos de la petición (DTO/Query/Param).
+        const command = new UpdateTipodocCommand(dto.id, dto.nombre_documento, dto.abreviatura);
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
 
-  @Delete('delete')
+        return this.commandBus.execute(command);
+    }
+
+  /**
+     * Endpoint para la operación de delete.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Delete('delete')
   @ApiOperation({ summary: 'Eliminar un tipo de documento por ID' })
   @ApiResponse({ status: 200, description: 'Tipo de documento eliminado exitosamente' })
   @ApiResponse({ status: 404, description: 'Tipo de documento no encontrado' })
   async delete(@Query('id') id: number) {
-    return this.commandBus.execute(new DeleteTipodocCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.commandBus.execute(new DeleteTipodocCommand(id));
+    }
 }

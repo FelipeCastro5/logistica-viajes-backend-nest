@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, Length } from 'class-validator';
 
+/**
+ * Clase de infraestructura: UpdatePasswordDto.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 export class UpdatePasswordDto {
   @ApiProperty({ example: 5, description: 'ID del usuario que se va a actualizar' })
   @IsInt({ message: 'El ID del usuario debe ser un número entero.' })

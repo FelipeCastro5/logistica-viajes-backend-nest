@@ -8,6 +8,10 @@ import { JwtCustomModule } from '../jwt/jwt.module';
 import { LoginHandler } from './handlers/login.handler';
 import { UpdatePasswordHandler } from './handlers/update-password.handler';
 
+/**
+ * Clase de infraestructura: AuthModule.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Module({
   imports: [PostgresModule, CqrsModule, JwtCustomModule],
   providers: [

@@ -5,17 +5,29 @@ import { HistoryHandler } from './handlers/history.handler';
 import { SqlHandler } from './handlers/sql.handler';
 import { MixtoHandler } from './handlers/mixto.handler';
 
+/**
+ * Clase de infraestructura: IaController.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @ApiTags('IA Toolkit')
 @Controller('ia')
 export class IaController {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly clasificacionHandler: ClasificacionHandler,
     private readonly historyHandler: HistoryHandler,
     private readonly sqlHandler: SqlHandler,
     private readonly mixtoHandler: MixtoHandler,
   ) { }
 
-  @Get('conversacion-simple')
+  /**
+     * Ejecuta la operación técnica de chatHistorial.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chatRaw Parámetro de entrada de tipo string.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('conversacion-simple')
   @ApiOperation({ summary: 'Pregunta basada solo en historial de conversación' })
   @ApiQuery({ name: 'fk_user', required: true, type: Number })
   @ApiQuery({ name: 'fk_chat', required: false, type: Number, description: 'ID del chat existente o vacío para crear uno nuevo' })
@@ -38,7 +50,14 @@ export class IaController {
     return await this.historyHandler.procesarChatSimple(fk_user, fk_chat, pregunta);
   }
 
-  @Get('generar-sql')
+  /**
+     * Ejecuta la operación técnica de consultaSql.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chatRaw Parámetro de entrada de tipo string.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('generar-sql')
   @ApiOperation({ summary: 'Pregunta transformada en SQL y consultada en la base de datos' })
   @ApiQuery({ name: 'fk_user', required: true, type: Number })
   @ApiQuery({ name: 'fk_chat', required: false, type: Number, description: 'ID del chat existente o vacío para crear uno nuevo' })
@@ -63,7 +82,14 @@ export class IaController {
     return await this.sqlHandler.procesarConsultaDb(fk_user, fk_chat, pregunta);
   }
 
-  @Get('mixto')
+  /**
+     * Ejecuta la operación técnica de mixto.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chatRaw Parámetro de entrada de tipo string.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('mixto')
   @ApiOperation({ summary: 'Flujo mixto: historial + IA + base de datos' })
   @ApiQuery({ name: 'fk_user', required: true, type: Number })
   @ApiQuery({
@@ -96,7 +122,14 @@ export class IaController {
     return await this.mixtoHandler.procesarFlujoMixto(fk_user, fk_chat, pregunta);
   }
 
-  @Get('inteligente')
+  /**
+     * Ejecuta la operación técnica de clasificacionInteligente.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @param fk_chat Parámetro de entrada de tipo number.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('inteligente')
   @ApiOperation({ summary: 'Flujo inteligente: IA decide si usar historial, SQL o mixto' })
   @ApiQuery({ name: 'fk_user', required: true, type: Number }) // ✅ Agregado
   @ApiQuery({ name: 'fk_chat', required: false, type: Number }) // ✅ Notar: puede ser null

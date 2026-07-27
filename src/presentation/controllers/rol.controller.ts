@@ -11,49 +11,88 @@ import { GetRolByIdCommand } from '../../application/rol/commands/get-rol-by-id.
 import { CreateRolDto } from '../dtos/rol/create-rol.dto';
 import { UpdateRolDto } from '../dtos/rol/update-rol.dto';
 
+/**
+ * Controlador REST para Rol.
+ * Se encarga de recibir peticiones HTTP, validarlas y enrutarlas hacia la capa de aplicación (CQRS).
+ */
 @ApiTags('Roles')
 @Controller('roles')
 export class RolController {
-  constructor(
+  /** Constructor de la clase. Inyecta dependencias como el bus de comandos/consultas. */
+    constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get('getAll')
+  /**
+     * Endpoint para la operación de getAllRoles.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los roles' })
   @ApiResponse({ status: 200, description: 'Roles obtenidos exitosamente' })
   async getAllRoles() {
-    return this.queryBus.execute(new GetAllRolesCommand());
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetAllRolesCommand());
+    }
 
-  @Get('getById')
+  /**
+     * Endpoint para la operación de getRolById.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getById')
   @ApiOperation({ summary: 'Obtener rol por ID' })
   @ApiResponse({ status: 200, description: 'Rol encontrado exitosamente' })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
   async getRolById(@Query('id') id: number) {
-    return this.queryBus.execute(new GetRolByIdCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetRolByIdCommand(id));
+    }
 
-  @Post('create')
+  /**
+     * Endpoint para la operación de createRol.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Post('create')
   @ApiOperation({ summary: 'Crear un nuevo rol' })
   @ApiResponse({ status: 201, description: 'Rol creado exitosamente' })
   async createRol(@Body() dto: CreateRolDto) {
-    return this.commandBus.execute(new CreateRolCommand(dto.nombre_rol));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.commandBus.execute(new CreateRolCommand(dto.nombre_rol));
+    }
 
-  @Put('update')
+  /**
+     * Endpoint para la operación de updateRol.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Put('update')
   @ApiOperation({ summary: 'Actualizar un rol existente' })
   @ApiResponse({ status: 200, description: 'Rol actualizado exitosamente' })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
   async updateRol(@Body() dto: UpdateRolDto) {
-    return this.commandBus.execute(new UpdateRolCommand(dto.id, dto.nombre_rol));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.commandBus.execute(new UpdateRolCommand(dto.id, dto.nombre_rol));
+    }
 
-  @Delete('delete')
+  /**
+     * Endpoint para la operación de deleteRol.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Delete('delete')
   @ApiOperation({ summary: 'Eliminar un rol por ID' })
   @ApiResponse({ status: 200, description: 'Rol eliminado exitosamente' })
   @ApiResponse({ status: 404, description: 'Rol no encontrado' })
   async deleteRol(@Query('id') id: number) {
-    return this.commandBus.execute(new DeleteRolCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.commandBus.execute(new DeleteRolCommand(id));
+    }
 }

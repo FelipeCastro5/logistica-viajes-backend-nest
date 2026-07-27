@@ -4,12 +4,22 @@ import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/s
 import { ResponseUtil } from '../../application/utilities/response.util';
 import { GoogleDriveService } from './google-drive.service';
 import { Response } from 'express';
+/**
+ * Clase de infraestructura: GoogleDriveController.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @ApiTags('Google Drive')
 @Controller('drive')
 export class GoogleDriveController {
-  constructor(private readonly googleDriveService: GoogleDriveService) { }
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly googleDriveService: GoogleDriveService) { }
 
-  @Get('getFileOrFolderById')
+  /**
+     * Ejecuta la operación técnica de getFileOrFolderInfo.
+     * @param id Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('getFileOrFolderById')
   @ApiOperation({ summary: 'Obtener información de un archivo o carpeta por ID' })
   @ApiQuery({ name: 'id', required: true, description: 'ID del archivo o carpeta en Google Drive' })
   async getFileOrFolderInfo(@Query('id') id: string) {
@@ -20,7 +30,13 @@ export class GoogleDriveController {
     return ResponseUtil.success(info, 'Información obtenida correctamente.');
   }
 
-  @Post('upload-to-folder-id')
+  /**
+     * Ejecuta la operación técnica de uploadFileToFolderById.
+     * @param file Parámetro de entrada de tipo Express.Multer.File.
+     * @param folderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Post('upload-to-folder-id')
   @ApiOperation({ summary: 'Subir un archivo a una carpeta de Google Drive por ID de carpeta' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -45,7 +61,12 @@ export class GoogleDriveController {
     return ResponseUtil.success(result, 'Archivo subido correctamente a la carpeta indicada.');
   }
 
-  @Get('list')
+  /**
+     * Ejecuta la operación técnica de listFilesAndFolders.
+     * @param parentFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('list')
   @ApiOperation({ summary: 'Listar archivos y carpetas dentro de una carpeta (opcional)' })
   @ApiQuery({ name: 'parentFolderId', required: false })
   async listFilesAndFolders(@Query('parentFolderId') parentFolderId?: string) {
@@ -53,7 +74,12 @@ export class GoogleDriveController {
     return ResponseUtil.success(items, 'Elementos obtenidos correctamente.');
   }
 
-  @Delete('delete')
+  /**
+     * Ejecuta la operación técnica de deleteFile.
+     * @param fileUrl Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Delete('delete')
   @ApiOperation({ summary: 'Eliminar archivo por URL de Google Drive' })
   @ApiQuery({ name: 'fileUrl', required: true, description: 'URL del archivo a eliminar' })
   async deleteFile(@Query('fileUrl') fileUrl: string) {
@@ -64,7 +90,13 @@ export class GoogleDriveController {
     return ResponseUtil.success(null, 'Archivo eliminado correctamente.');
   }
 
-  @Get('download')
+  /**
+     * Ejecuta la operación técnica de downloadFile.
+     * @param fileUrl Parámetro de entrada de tipo string.
+     * @param response Parámetro de entrada de tipo Response.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('download')
   @ApiOperation({ summary: 'Descargar un archivo de Google Drive por URL o ID' })
   @ApiQuery({ name: 'fileUrl', required: true, description: 'URL o ID del archivo a descargar' })
   async downloadFile(
@@ -83,14 +115,25 @@ export class GoogleDriveController {
     stream.pipe(response);
   }
 
-  @Get('root')
+  /**
+     * Ejecuta la operación técnica de listRootFiles.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('root')
   @ApiOperation({ summary: 'Listar archivos y carpetas en la raíz de Google Drive' })
   async listRootFiles() {
     const items = await this.googleDriveService.listFilesAndFolders();
     return ResponseUtil.success(items, 'Contenido raíz obtenido correctamente.');
   }
 
-  @Post('share')
+  /**
+     * Ejecuta la operación técnica de shareFile.
+     * @param fileOrFolderId Parámetro de entrada de tipo string.
+     * @param email Parámetro de entrada de tipo string.
+     * @param role Parámetro de entrada de tipo 'reader' | 'writer'.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Post('share')
   @ApiOperation({ summary: 'Compartir archivo o carpeta con un usuario por correo' })
   @ApiBody({
     schema: {
@@ -115,14 +158,25 @@ export class GoogleDriveController {
     return ResponseUtil.success(null, `Archivo o carpeta compartido con ${email} como ${role}.`);
   }
 
-  @Get('list-subfolders-files/:parentFolderId')
+  /**
+     * Ejecuta la operación técnica de listSubfoldersFiles.
+     * @param parentFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('list-subfolders-files/:parentFolderId')
   @ApiOperation({ summary: 'Listar subcarpetas y sus archivos dentro de una carpeta' })
   async listSubfoldersFiles(@Param('parentFolderId') parentFolderId: string): Promise<any> {
     const data = await this.googleDriveService.listSubfoldersAndFiles(parentFolderId);
     return ResponseUtil.success(data, 'Subcarpetas y archivos obtenidos correctamente.');
   }
 
-  @Post('create-folder')
+  /**
+     * Ejecuta la operación técnica de createFolder.
+     * @param folderName Parámetro de entrada de tipo string.
+     * @param parentFolderId Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Post('create-folder')
   @ApiOperation({ summary: 'Crear una carpeta en Google Drive' })
   @ApiBody({
     schema: {

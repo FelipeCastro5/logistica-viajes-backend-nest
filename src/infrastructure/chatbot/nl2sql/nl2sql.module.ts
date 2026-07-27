@@ -6,9 +6,7 @@ import { SchemaDigestService } from './shema/schema-digest.service';
 import { SchemaAliasService } from './alias/schema-alias.service';
 import { TableRankerService } from './ranking/table-ranker.service';
 import { LlmConfigService } from './llm/llm-config.service';
-import { OpenAIAdapter } from './llm/adapters/openai.adapter';
 import { GeminiAdapter } from './llm/adapters/gemini.adapter';
-import { DeepSeekAdapter } from './llm/adapters/deepseek.adapter';
 import { LlmAdapterFactory } from './llm/llm-adapter.factory';
 import { Nl2sqlPromptBuilder } from './prompt/nl2sql-prompt-builder.service';
 import { SqlGuardsService } from './guards/sql-guards.service';
@@ -18,6 +16,10 @@ import { InternalNl2sqlController } from './controllers/internal-nl2sql.controll
 import { Nl2sqlController } from './controllers/nl2sql.controller';
 import { PostgresModule } from 'src/infrastructure/postgres-db/postgres.module';
 
+/**
+ * Clase de infraestructura: Nl2sqlModule.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Module({
   imports: [
     PostgresModule,
@@ -33,10 +35,8 @@ import { PostgresModule } from 'src/infrastructure/postgres-db/postgres.module';
     // LLM config
     LlmConfigService,
 
-    // 👇 LLM Adapters (ESTO FALTABA)
-    OpenAIAdapter,
+    // 👇 LLM Adapters
     GeminiAdapter,
-    DeepSeekAdapter,
 
     // Factory
     LlmAdapterFactory,

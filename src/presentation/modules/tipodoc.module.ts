@@ -10,6 +10,10 @@ import { DeleteTipodocHandler } from '../../application/tipodoc/handlers/delete-
 import { GetAllTipodocsHandler } from '../../application/tipodoc/handlers/get-all-tipodocs.handler';
 import { GetTipodocByIdHandler } from '../../application/tipodoc/handlers/get-tipodoc-by-id.handler';
 
+/**
+ * Clase de presentación: TipodocModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

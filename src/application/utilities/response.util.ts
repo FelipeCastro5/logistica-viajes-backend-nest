@@ -1,7 +1,18 @@
 import { ResponseDto } from './response.dto';
 
+/**
+ * Clase de utilidad/servicio: ResponseUtil.
+ * Provee funciones auxiliares reutilizables a nivel de aplicación.
+ */
 export class ResponseUtil {
-  static success<T>(
+  /**
+     * Método success: Ejecuta lógica auxiliar.
+     * @param data Parámetro de entrada.
+     * @param msg Parámetro de entrada.
+     * @param status Parámetro de entrada.
+     * @returns Resultado de la operación utilitaria.
+     */
+    static success<T>(
     data: T,
     msg = 'Operación exitosa',
     status = 200,
@@ -9,7 +20,13 @@ export class ResponseUtil {
     return new ResponseDto(status, msg, data);
   }
 
-  static error(msg: string, status = 400): ResponseDto<null> {
+  /**
+     * Método error: Ejecuta lógica auxiliar.
+     * @param msg Parámetro de entrada.
+     * @param status Parámetro de entrada.
+     * @returns Resultado de la operación utilitaria.
+     */
+    static error(msg: string, status = 400): ResponseDto<null> {
     return new ResponseDto(status, msg, null);
   }
 }

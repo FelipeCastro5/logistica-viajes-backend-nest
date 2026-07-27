@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
+/**
+ * Clase de infraestructura: SqlPostprocessService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class SqlPostprocessService {
-  process(sql: string): { sql: string; warnings: string[] } {
+  /**
+     * Ejecuta la operación técnica de process.
+     * @param sql Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    process(sql: string): { sql: string; warnings: string[] } {
     let cleaned = sql;
     const warnings: string[] = [];
 

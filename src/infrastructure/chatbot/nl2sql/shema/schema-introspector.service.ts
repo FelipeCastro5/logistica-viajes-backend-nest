@@ -2,20 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PostgresSchemaService } from './postgres-schema.service';
 
+/**
+ * Clase de infraestructura: SchemaIntrospectorService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class SchemaIntrospectorService {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly pg: PostgresSchemaService,
     private readonly config: ConfigService,
   ) {}
 
-  private getAllowedSchemas(): string[] {
+  /**
+     * Ejecuta la operación técnica de getAllowedSchemas.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private getAllowedSchemas(): string[] {
     const raw = this.config.get<string>('NL2SQL_ALLOWED_SCHEMAS');
     if (!raw) return [];
     return raw.split(',').map(s => s.trim());
   }
 
-  async introspect() {
+  /**
+     * Ejecuta la operación técnica de introspect.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async introspect() {
     const allowed = this.getAllowedSchemas();
 
     const [

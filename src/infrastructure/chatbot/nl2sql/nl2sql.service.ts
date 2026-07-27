@@ -8,9 +8,14 @@ import { LlmAdapterFactory } from './llm/llm-adapter.factory';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 import { ResponseDto } from 'src/application/utilities/response.dto';
 
+/**
+ * Clase de infraestructura: Nl2sqlService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class Nl2sqlService {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly llmConfig: LlmConfigService,
     private readonly schemaDigest: SchemaDigestService,
     private readonly promptBuilder: Nl2sqlPromptBuilder,
@@ -19,7 +24,20 @@ export class Nl2sqlService {
     private readonly sqlPostprocess: SqlPostprocessService,
   ) { }
 
-  async execute(input: {
+  /**
+     * Ejecuta la operación técnica de execute.
+     * @param input Parámetro de entrada de tipo {
+     *     projectId: number;
+     *     question: string;
+     *     context?: {
+     *       bbox?: [number, number, number, number];
+     *       filters?: Record<string, any>;
+     *     };
+     *     debug?: boolean;
+     *   }.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async execute(input: {
     projectId: number;
     question: string;
     context?: {

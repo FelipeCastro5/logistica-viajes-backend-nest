@@ -1,6 +1,12 @@
+/**
+ * Clase de utilidad/servicio: PaginatedDto.
+ * Provee funciones auxiliares reutilizables a nivel de aplicación.
+ */
 export class PaginatedDto {
-  logs: any[];
-  pagination: {
+  /** Propiedad utilitaria: logs. */
+    logs: any[];
+  /** Propiedad utilitaria: pagination. */
+    pagination: {
     total_items: number;
     total_pages: number;
     current_page: number;

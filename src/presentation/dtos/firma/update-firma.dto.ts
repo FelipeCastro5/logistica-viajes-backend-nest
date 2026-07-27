@@ -1,18 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
+/**
+ * Data Transfer Object (DTO) para UpdateFirmaDto.
+ * Define la estructura de los datos esperados en las peticiones HTTP y facilita la validación.
+ */
 export class UpdateFirmaDto {
-  @ApiProperty({ example: 1, description: 'ID de la firma a actualizar' })
+  /**
+     * Propiedad del DTO que representa id.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({ example: 1, description: 'ID de la firma a actualizar' })
   @IsNumber({}, { message: 'El campo id debe ser un número' })
   @IsNotEmpty({ message: 'El campo id es obligatorio' })
   id: number;
 
-  @ApiProperty({ example: 10, description: 'ID del viaje asociado' })
+  /**
+     * Propiedad del DTO que representa fk_viaje.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({ example: 10, description: 'ID del viaje asociado' })
   @IsNumber({}, { message: 'El campo fk_viaje debe ser un número' })
   @IsNotEmpty({ message: 'El campo fk_viaje es obligatorio' })
   fk_viaje: number;
 
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa tipo_firma.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'Destinatario',
     description: 'Tipo de firma',
   })
@@ -20,7 +36,11 @@ export class UpdateFirmaDto {
   @IsNotEmpty({ message: 'El campo tipo_firma es obligatorio' })
   tipo_firma: string;
 
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa firma_digital.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'base64_string_o_url',
     description: 'Firma digital',
   })

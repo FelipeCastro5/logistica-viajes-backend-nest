@@ -1,6 +1,11 @@
+/**
+ * Clase de utilidad/servicio: SqlSanitizer.
+ * Provee funciones auxiliares reutilizables a nivel de aplicación.
+ */
 export class SqlSanitizer {
   // Lista básica de patrones peligrosos
-  private static readonly blackListPatterns: RegExp[] = [
+  /** Propiedad utilitaria: blackListPatterns. */
+    private static readonly blackListPatterns: RegExp[] = [
     /(\b(ALTER|DROP|TRUNCATE|GRANT|REVOKE|EXEC|EXECUTE|MERGE|UNION|INSERT|UPDATE|DELETE|CREATE|REPLACE)\b)/gi,
     /(--|#)/g,                         // Comentarios SQL
     /(\bOR\b\s+\d+=\d+)/gi,            // OR 1=1

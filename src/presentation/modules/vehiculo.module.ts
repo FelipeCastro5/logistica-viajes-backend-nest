@@ -12,6 +12,10 @@ import { GetAllVehiculosHandler } from '../../application/vehiculo/handlers/get-
 import { GetVehiculoByIdHandler } from '../../application/vehiculo/handlers/get-vehiculo-by-id.handler';
 import { GetVehiculosByUsuarioHandler } from '../../application/vehiculo/handlers/get-vehiculos-by-usuario.handler';
 
+/**
+ * Clase de presentación: VehiculoModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

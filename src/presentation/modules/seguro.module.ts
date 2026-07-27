@@ -11,6 +11,10 @@ import { GetAllSegurosHandler } from '../../application/seguro/handlers/get-all-
 import { GetSeguroByIdHandler } from '../../application/seguro/handlers/get-seguro-by-id.handler';
 import { GetSegurosByVehiculoHandler } from '../../application/seguro/handlers/get-seguros-by-vehiculo.handler';
 
+/**
+ * Clase de presentación: SeguroModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

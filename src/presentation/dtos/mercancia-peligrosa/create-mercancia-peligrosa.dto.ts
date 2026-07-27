@@ -1,23 +1,43 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
 
+/**
+ * Data Transfer Object (DTO) para CreateMercanciaPeligrosaDto.
+ * Define la estructura de los datos esperados en las peticiones HTTP y facilita la validación.
+ */
 export class CreateMercanciaPeligrosaDto {
-  @ApiProperty({ example: 10, description: 'ID de la remesa asociada' })
+  /**
+     * Propiedad del DTO que representa fk_remesa.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({ example: 10, description: 'ID de la remesa asociada' })
   @IsNumber({}, { message: 'fk_remesa debe ser un número' })
   @IsNotEmpty({ message: 'fk_remesa es obligatorio' })
   fk_remesa: number;
 
-  @ApiProperty({ example: 'UN 1203', description: 'Código UN' })
+  /**
+     * Propiedad del DTO que representa codigo_un.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({ example: 'UN 1203', description: 'Código UN' })
   @IsString({ message: 'codigo_un debe ser texto' })
   @IsNotEmpty({ message: 'codigo_un es obligatorio' })
   codigo_un: string;
 
-  @ApiProperty({ example: 'Clase 3', description: 'Grupo de riesgo' })
+  /**
+     * Propiedad del DTO que representa grupo_riesgo.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({ example: 'Clase 3', description: 'Grupo de riesgo' })
   @IsString({ message: 'grupo_riesgo debe ser texto' })
   @IsNotEmpty({ message: 'grupo_riesgo es obligatorio' })
   grupo_riesgo: string;
 
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa caracteristica_peligrosidad.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'Líquido inflamable',
     description: 'Característica de peligrosidad',
   })
@@ -27,7 +47,11 @@ export class CreateMercanciaPeligrosaDto {
   })
   caracteristica_peligrosidad: string;
 
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa embalaje_envase.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'Bidón metálico',
     description: 'Tipo de embalaje o envase',
   })

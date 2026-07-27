@@ -1,5 +1,35 @@
+/**
+ * Clase de comando CQRS que representa la operación UpdateViajeCommand.
+ * Encapsula los datos necesarios para ejecutar el caso de uso.
+ */
 export class UpdateViajeCommand {
-  constructor(
+  /**
+     * Constructor del comando UpdateViajeCommand.
+     * @param id Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_usuario Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_manifiesto Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_cliente Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param codigo Dato requerido de tipo string para la ejecución del comando.
+     * @param observaciones Dato requerido de tipo string para la ejecución del comando.
+     * @param estado_viaje Dato requerido de tipo boolean para la ejecución del comando.
+     * @param producto Dato requerido de tipo string para la ejecución del comando.
+     * @param detalle_producto Dato requerido de tipo string para la ejecución del comando.
+     * @param direccion_llegada Dato requerido de tipo string para la ejecución del comando.
+     * @param fecha_salida Dato requerido de tipo Date para la ejecución del comando.
+     * @param fecha_llegada Dato requerido de tipo Date para la ejecución del comando.
+     * @param latitud_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param longitud_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param latitud_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param longitud_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param hora_salida Dato requerido de tipo Date para la ejecución del comando.
+     * @param hora_llegada Dato requerido de tipo Date para la ejecución del comando.
+     * @param horas_pactadas_cargue Dato requerido de tipo number para la ejecución del comando.
+     * @param horas_pactadas_descargue Dato requerido de tipo number para la ejecución del comando.
+     * @param exoneracion_legal Dato requerido de tipo string para la ejecución del comando.
+     */
+    constructor(
     public readonly id: number,
     public readonly fk_usuario: number,
     public readonly fk_manifiesto: number,

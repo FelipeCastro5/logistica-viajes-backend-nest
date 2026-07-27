@@ -12,6 +12,10 @@ import { GetViajeByIdHandler } from '../../application/viaje/handlers/get-viaje-
 import { GetViajesPaginatedByUsuarioHandler } from '../../application/viaje/handlers/get-viajes-paginated-by-usuario.handler';
 import { CreateNewViajeHandler } from '../../application/viaje/handlers/create-new-viaje.handler';
 
+/**
+ * Clase de presentación: ViajeModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

@@ -6,6 +6,10 @@
 // }
 
 
+/**
+ * Clase de infraestructura: ChatTitleGenerator.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 export class ChatTitleGenerator {
 
   private readonly STOPWORDS = [
@@ -15,7 +19,12 @@ export class ChatTitleGenerator {
     'del', 'al', 'mi'
   ];
 
-  private normalizarPregunta(p: string): string[] {
+  /**
+     * Ejecuta la operación técnica de normalizarPregunta.
+     * @param p Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private normalizarPregunta(p: string): string[] {
     return p
       .toLowerCase()
       .replace(/[¿?¡!.,]/g, '')
@@ -23,7 +32,12 @@ export class ChatTitleGenerator {
       .filter(w => w.length > 2 && !this.STOPWORDS.includes(w));
   }
 
-  private generarTituloSinIA(pregunta: string): string {
+  /**
+     * Ejecuta la operación técnica de generarTituloSinIA.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private generarTituloSinIA(pregunta: string): string {
     const tokens = this.normalizarPregunta(pregunta);
 
     if (tokens.length === 0) return 'Conversación';
@@ -34,7 +48,12 @@ export class ChatTitleGenerator {
       .join(' ');
   }
 
-  private esTituloValido(titulo: string): boolean {
+  /**
+     * Ejecuta la operación técnica de esTituloValido.
+     * @param titulo Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private esTituloValido(titulo: string): boolean {
     if (!titulo) return false;
     if (titulo.length < 4) return false;
     if (titulo.toLowerCase() === 'conversación') return false;

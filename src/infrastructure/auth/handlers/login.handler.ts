@@ -6,15 +6,25 @@ import { JwtService } from '../../../infrastructure/jwt/jwt.service';
 import { HashService } from '../../../application/utilities/hash.service';
 import { AuthInterface } from '../auth.interface';
 
+/**
+ * Clase de infraestructura: LoginHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @QueryHandler(loginCommand)
 @Injectable()
 export class LoginHandler implements IQueryHandler<loginCommand> {
+    /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
     constructor(
         @Inject('AuthInterface')
         private readonly authRepository: AuthInterface,
         private readonly jwtService: JwtService,
     ) { }
 
+    /**
+     * Ejecuta la operación técnica de execute.
+     * @param command Parámetro de entrada de tipo loginCommand.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async execute(command: loginCommand) {
         try {
             const usuario = await this.authRepository.login(command.correo);

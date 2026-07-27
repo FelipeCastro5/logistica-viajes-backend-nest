@@ -11,6 +11,10 @@ import { GetAllManifiestosHandler } from '../../application/manifiesto/handlers/
 import { GetManifiestoByIdHandler } from '../../application/manifiesto/handlers/get-manifiesto-by-id.handler';
 import { UpdateTotalGastosHandler } from 'src/application/manifiesto/handlers/update-total-gastos.handler';
 
+/**
+ * Clase de presentación: ManifiestoModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

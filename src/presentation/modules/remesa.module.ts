@@ -11,6 +11,10 @@ import { GetAllRemesasHandler } from '../../application/remesa/handlers/get-all-
 import { GetRemesaByIdHandler } from '../../application/remesa/handlers/get-remesa-by-id.handler';
 import { GetRemesasByViajeHandler } from '../../application/remesa/handlers/get-remesas-by-viaje.handler';
 
+/**
+ * Clase de presentación: RemesaModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

@@ -6,15 +6,25 @@ import { UpdatePasswordCommand } from '../commands/update-password.command';
 import { AuthInterface } from '../auth.interface';
 import { HashService } from '../../../application/utilities/hash.service';
 
+/**
+ * Clase de infraestructura: UpdatePasswordHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @CommandHandler(UpdatePasswordCommand)
 @Injectable()
 export class UpdatePasswordHandler implements ICommandHandler<UpdatePasswordCommand> {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     @Inject('AuthInterface')
     private readonly authRepository: AuthInterface,
   ) { }
 
-  async execute(command: UpdatePasswordCommand) {
+  /**
+     * Ejecuta la operación técnica de execute.
+     * @param command Parámetro de entrada de tipo UpdatePasswordCommand.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async execute(command: UpdatePasswordCommand) {
     try {
       const hashedPassword = await HashService.hash(command.contrasena);
       const result = await this.authRepository.updatePassword(

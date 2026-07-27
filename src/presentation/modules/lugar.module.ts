@@ -10,6 +10,10 @@ import { DeleteLugarHandler } from '../../application/lugar/handlers/delete-luga
 import { GetAllLugaresHandler } from '../../application/lugar/handlers/get-all-lugares.handler';
 import { GetLugarByIdHandler } from '../../application/lugar/handlers/get-lugar-by-id.handler';
 
+/**
+ * Clase de presentación: LugarModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

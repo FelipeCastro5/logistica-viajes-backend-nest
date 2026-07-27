@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, MinLength, MaxLength } from 'class-validator';
 
+/**
+ * Data Transfer Object (DTO) para UpdateGastoDto.
+ * Define la estructura de los datos esperados en las peticiones HTTP y facilita la validación.
+ */
 export class UpdateGastoDto {
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa id.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({
     example: 1,
     description: 'ID del gasto',
   })
@@ -10,7 +18,11 @@ export class UpdateGastoDto {
   @IsNumber({}, { message: 'El ID del gasto debe ser un número' })
   id: number;
 
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa nombre_gasto.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'Alimentación',
     description: 'Nombre actualizado del gasto',
   })

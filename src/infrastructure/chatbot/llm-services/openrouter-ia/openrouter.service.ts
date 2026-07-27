@@ -2,11 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
+/**
+ * Clase de infraestructura: OpenRouterService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class OpenRouterService {
   private client: OpenAI;
 
-  constructor(private configService: ConfigService) {
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('OPENROUTER_API_KEY');
     const baseURL = this.configService.get<string>('OPENROUTER_BASE_URL');
 
@@ -24,7 +29,12 @@ export class OpenRouterService {
     });
   }
 
-  async preguntar(pregunta: string): Promise<string> {
+  /**
+     * Ejecuta la operación técnica de preguntar.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async preguntar(pregunta: string): Promise<string> {
     try {
       const model =
         this.configService.get<string>('OPENROUTER_MODEL') ??

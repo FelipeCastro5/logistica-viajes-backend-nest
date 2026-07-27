@@ -8,7 +8,7 @@ El proyecto sigue una arquitectura limpia (Clean Architecture) dividida en 4 cap
 
 - **Domain**: Define el núcleo del negocio. Contiene las entidades (Usuario, Viaje, Manifiesto, etc.) y las interfaces de los repositorios sin conocer detalles de infraestructura.
 - **Application**: Maneja los casos de uso y la lógica de negocio mediante Comandos (Commands) y Manejadores (Handlers) aplicando el patrón CQRS.
-- **Infrastructure**: Implementa los detalles técnicos como la persistencia en base de datos (PostgreSQL), autenticación (JWT), e integración con APIs externas (Google Drive, Email) y proveedores de Inteligencia Artificial (Gemini, OpenAI, OpenRouter, Deepseek, Groq).
+- **Infrastructure**: Implementa los detalles técnicos como la persistencia en base de datos (PostgreSQL), autenticación (JWT), e integración con APIs externas (Google Drive, Email) y proveedores de Inteligencia Artificial (Gemini, OpenRouter).
 - **Presentation**: Expone los Controladores HTTP (Endpoints RESTful) documentados con Swagger, DTOs (Data Transfer Objects) para validación de datos de entrada y la configuración de los Módulos de NestJS.
 
 ---
@@ -59,7 +59,7 @@ El sistema permite gestionar de manera unificada los procesos clave del transpor
 - **Cliente y Lugar**: Mantenimiento de clientes directos o empresas contratistas y la administración de catálogo de ubicaciones o ciudades disponibles en la operación.
 - **Firma**: Gestión de la firma digital de los diferentes documentos generados a lo largo de un viaje para asegurar su validez.
 - **Mercancía Peligrosa**: Registro y seguimiento específico de cargas que requieren regulaciones o tratos especiales.
-- **Chat, Mensajes y NL2SQL (Chatbot IA)**: Innovador sistema de comunicación interno impulsado por IA, que permite interacciones en lenguaje natural para consultar la base de datos (Text-to-SQL) de manera automática. Soporta integraciones dinámicas con Gemini, OpenAI, Deepseek, etc.
+- **Chat, Mensajes y NL2SQL (Chatbot IA)**: Innovador sistema de comunicación interno impulsado por IA, que permite interacciones en lenguaje natural para consultar la base de datos (Text-to-SQL) de manera automática. Soporta integraciones dinámicas con Gemini, OpenRouter, etc.
 - **Google Drive API**: Almacenamiento persistente, ordenado y escalable de los archivos, fotos o manifiestos en la nube.
 - **Email Service**: Motor de notificaciones vía correo electrónico para alertas automáticas.
 
@@ -73,7 +73,7 @@ Para levantar este proyecto en tu entorno local, necesitas tener instalado:
 - **Node.js**: v18 o superior.
 - **PostgreSQL**: v14 o superior.
 - **Git**: Para clonar el repositorio.
-- **Credenciales para servicios externos**: APIs de IA (OpenAI, Gemini, etc.), acceso a cuenta SMTP para envíos de correo, y credenciales OAuth2 de Google Cloud (Drive).
+- **Credenciales para servicios externos**: APIs de IA (OpenRouter, Gemini, etc.), acceso a cuenta SMTP para envíos de correo, y credenciales OAuth2 de Google Cloud (Drive).
 
 ---
 
@@ -162,9 +162,6 @@ El archivo `.env` contiene información sensible y los conectores clave que hace
 Esta arquitectura soporta múltiples modelos LLM para la generación de resúmenes o conversión a sentencias SQL. Solo es estrictamente necesario configurar el de tu preferencia o el que el sistema utilice por defecto:
 - **`GEMINI_API_KEY`**: Llave principal para acceder a la API de Google Gemini AI.
 - **`OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_BASE_URL`**: Credenciales de la plataforma OpenRouter si deseas un puente hacia otros modelos globales.
-- **`OPENAI_API_KEY`, `OPENAI_MODEL`**: Credenciales nativas del ecosistema de OpenAI (Ej: modelo `gpt-4o`).
-- **`DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL`, `DEEPSEEK_API_URL`**: Llave de acceso a los modelos económicos de DeepSeek.
-- **`GROQ_API`**: Clave de API de los aceleradores de Groq.
 
 ### 🔑 Seguridad JWT
 - **`JWT_SECRET`**: Cadena alfanumérica altamente secreta y segura utilizada para firmar digitalmente y encriptar los tokens de sesión de los usuarios (`JWT`).

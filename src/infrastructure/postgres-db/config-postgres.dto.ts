@@ -1,5 +1,9 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
+/**
+ * Clase de infraestructura: ConfigPostgresDto.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 export class ConfigPostgresDto {
   @IsString()
   @IsNotEmpty()

@@ -1,18 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
+/**
+ * Data Transfer Object (DTO) para UpdateChatDto.
+ * Define la estructura de los datos esperados en las peticiones HTTP y facilita la validación.
+ */
 export class UpdateChatDto {
-  @ApiProperty({ example: 1, description: 'ID del chat a actualizar' })
+  /**
+     * Propiedad del DTO que representa id_chat.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({ example: 1, description: 'ID del chat a actualizar' })
   @IsInt({ message: 'El campo id debe ser un número entero' })
   @Min(1, { message: 'El campo id debe ser mayor que 0' })
   id_chat: number;
 
-  @ApiProperty({ example: 1, description: 'ID del usuario dueño del chat' })
+  /**
+     * Propiedad del DTO que representa fk_usuario.
+     * Tipo esperado: number.
+     */
+    @ApiProperty({ example: 1, description: 'ID del usuario dueño del chat' })
   @IsInt({ message: 'El campo fk_usuario debe ser un número entero' })
   @Min(1, { message: 'El campo fk_usuario debe ser mayor que 0' })
   fk_usuario: number;
 
-  @ApiProperty({ example: 'Chat renombrado', description: 'Nuevo nombre del chat' })
+  /**
+     * Propiedad del DTO que representa nombre_chat.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({ example: 'Chat renombrado', description: 'Nuevo nombre del chat' })
   @IsString({ message: 'El campo nombre_chat debe ser una cadena de texto' })
   @IsNotEmpty({ message: 'El campo nombre_chat no debe estar vacío' })
   nombre_chat: string;

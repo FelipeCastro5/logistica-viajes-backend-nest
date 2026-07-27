@@ -15,9 +15,18 @@ interface PromptBuilderInput {
   };
 }
 
+/**
+ * Clase de infraestructura: Nl2sqlPromptBuilder.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class Nl2sqlPromptBuilder {
-  build(input: PromptBuilderInput): { prompt: string } {
+  /**
+     * Ejecuta la operación técnica de build.
+     * @param input Parámetro de entrada de tipo PromptBuilderInput.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    build(input: PromptBuilderInput): { prompt: string } {
     const {
       question,
       schemaDigest,
@@ -55,7 +64,12 @@ ${userQuestion}
   // Reglas
   // =====================
 
-  private buildRules(ranking?: PromptBuilderInput['ranking']): string {
+  /**
+     * Ejecuta la operación técnica de buildRules.
+     * @param ranking Parámetro de entrada de tipo PromptBuilderInput['ranking'].
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private buildRules(ranking?: PromptBuilderInput['ranking']): string {
     const rules: string[] = [
       '- Usa exclusivamente SELECT',
       '- No uses DELETE, UPDATE, INSERT, DROP, ALTER, TRUNCATE ni COPY',
@@ -92,7 +106,12 @@ ${userQuestion}
   // Esquema
   // =====================
 
-  private buildSchemaSection(schemaDigest: any): string {
+  /**
+     * Ejecuta la operación técnica de buildSchemaSection.
+     * @param schemaDigest Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private buildSchemaSection(schemaDigest: any): string {
     const lines: string[] = [];
 
     for (const [fullName, table] of Object.entries(schemaDigest.tables)) {
@@ -132,7 +151,13 @@ ${userQuestion}
   // Pregunta
   // =====================
 
-  private buildQuestion(
+  /**
+     * Ejecuta la operación técnica de buildQuestion.
+     * @param question Parámetro de entrada de tipo string.
+     * @param context Parámetro de entrada de tipo PromptBuilderInput['context'].
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private buildQuestion(
     question: string,
     context?: PromptBuilderInput['context'],
   ): string {
@@ -157,7 +182,12 @@ ${userQuestion}
   // Utils
   // =====================
 
-  private isSpatial(schemaDigest: any): boolean {
+  /**
+     * Ejecuta la operación técnica de isSpatial.
+     * @param schemaDigest Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private isSpatial(schemaDigest: any): boolean {
     return Object.values(schemaDigest.tables).some(
       (t: any) => Boolean(t.geometry),
     );

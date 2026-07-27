@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
+/**
+ * Data Transfer Object (DTO) para CreateLugarDto.
+ * Define la estructura de los datos esperados en las peticiones HTTP y facilita la validación.
+ */
 export class CreateLugarDto {
-  @ApiProperty({
+  /**
+     * Propiedad del DTO que representa nombre_lugar.
+     * Tipo esperado: string.
+     */
+    @ApiProperty({
     example: 'Auditorio Central',
     description: 'Nombre del lugar a registrar',
   })

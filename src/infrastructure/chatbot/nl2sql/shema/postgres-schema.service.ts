@@ -1,10 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PostgresService } from 'src/infrastructure/postgres-db/postgres.service';
 
+/**
+ * Clase de infraestructura: PostgresSchemaService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class PostgresSchemaService {
+    /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
     constructor(private readonly db: PostgresService) { }
 
+    /**
+     * Ejecuta la operación técnica de getSchemas.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getSchemas() {
         const { rows } = await this.db.query(`
       SELECT schema_name
@@ -14,6 +23,10 @@ export class PostgresSchemaService {
         return rows;
     }
 
+    /**
+     * Ejecuta la operación técnica de getTables.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getTables() {
         const { rows } = await this.db.query(`
       SELECT table_schema, table_name
@@ -24,6 +37,10 @@ export class PostgresSchemaService {
         return rows;
     }
 
+    /**
+     * Ejecuta la operación técnica de getColumns.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getColumns() {
         const { rows } = await this.db.query(`
       SELECT table_schema, table_name, column_name, data_type, is_nullable
@@ -33,6 +50,10 @@ export class PostgresSchemaService {
         return rows;
     }
 
+    /**
+     * Ejecuta la operación técnica de getPrimaryKeys.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getPrimaryKeys() {
         const { rows } = await this.db.query(`
       SELECT
@@ -47,6 +68,10 @@ export class PostgresSchemaService {
         return rows;
     }
 
+    /**
+     * Ejecuta la operación técnica de getForeignKeys.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getForeignKeys() {
         const { rows } = await this.db.query(`
       SELECT
@@ -66,6 +91,10 @@ export class PostgresSchemaService {
         return rows;
     }
 
+    /**
+     * Ejecuta la operación técnica de getGeometryColumns.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     async getGeometryColumns() {
         try {
             const { rows } = await this.db.query(`

@@ -3,13 +3,25 @@ import { IaToolkitService } from '../ia-toolkit.service';
 import { ResponseDto } from 'src/application/utilities/response.dto';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 
+/**
+ * Clase de infraestructura: HistoryHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class HistoryHandler {
   private readonly logger = new Logger(HistoryHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) { }
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly toolkit: IaToolkitService) { }
 
-  async procesarChatSimple(
+  /**
+     * Ejecuta la operación técnica de procesarChatSimple.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chat Parámetro de entrada de tipo number | null.
+     * @param nuevaPregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async procesarChatSimple(
     fk_user: number,
     fk_chat: number | null,
     nuevaPregunta: string

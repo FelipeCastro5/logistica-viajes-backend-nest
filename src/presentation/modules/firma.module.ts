@@ -11,6 +11,10 @@ import { GetAllFirmasHandler } from '../../application/firma/handlers/get-all-fi
 import { GetFirmaByIdHandler } from '../../application/firma/handlers/get-firma-by-id.handler';
 import { GetFirmasByViajeHandler } from '../../application/firma/handlers/get-firmas-by-viaje.handler';
 
+/**
+ * Clase de presentación: FirmaModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

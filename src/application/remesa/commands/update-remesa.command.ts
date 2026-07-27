@@ -1,5 +1,29 @@
+/**
+ * Clase de comando CQRS que representa la operación UpdateRemesaCommand.
+ * Encapsula los datos necesarios para ejecutar el caso de uso.
+ */
 export class UpdateRemesaCommand {
-  constructor(
+  /**
+     * Constructor del comando UpdateRemesaCommand.
+     * @param id_remesa Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_viaje Dato requerido de tipo number para la ejecución del comando.
+     * @param numero_remesa Dato requerido de tipo string para la ejecución del comando.
+     * @param numero_autorizacion Dato requerido de tipo string para la ejecución del comando.
+     * @param tipo_empaque Dato requerido de tipo string para la ejecución del comando.
+     * @param naturaleza_carga Dato requerido de tipo string para la ejecución del comando.
+     * @param codigo_armonizado Dato requerido de tipo string para la ejecución del comando.
+     * @param cantidad Dato requerido de tipo number para la ejecución del comando.
+     * @param unidad_medida Dato requerido de tipo string para la ejecución del comando.
+     * @param peso_total Dato requerido de tipo number para la ejecución del comando.
+     * @param mercancia_peligrosa Dato requerido de tipo boolean para la ejecución del comando.
+     * @param observaciones Dato requerido de tipo string para la ejecución del comando.
+     * @param id_mercancia Dato requerido de tipo number para la ejecución del comando.
+     * @param codigo_un Dato requerido de tipo string para la ejecución del comando.
+     * @param grupo_riesgo Dato requerido de tipo string para la ejecución del comando.
+     * @param caracteristica_peligrosidad Dato requerido de tipo string para la ejecución del comando.
+     * @param embalaje_envase Dato requerido de tipo string para la ejecución del comando.
+     */
+    constructor(
     public readonly id_remesa: number,
     public readonly fk_viaje: number,
     public readonly numero_remesa: string,

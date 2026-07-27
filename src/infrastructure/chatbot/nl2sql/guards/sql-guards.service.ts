@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
+/**
+ * Clase de infraestructura: SqlGuardsService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class SqlGuardsService {
-  validate(sql: string): void {
+  /**
+     * Ejecuta la operación técnica de validate.
+     * @param sql Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    validate(sql: string): void {
     if (!sql || typeof sql !== 'string') {
       throw new Error('SQL vacío o inválido');
     }
@@ -50,7 +59,12 @@ export class SqlGuardsService {
     }
   }
 
-  private hasMultipleStatements(sql: string): boolean {
+  /**
+     * Ejecuta la operación técnica de hasMultipleStatements.
+     * @param sql Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private hasMultipleStatements(sql: string): boolean {
     const semicolons = sql.split(';').filter(s => s.trim().length > 0);
     return semicolons.length > 1;
   }

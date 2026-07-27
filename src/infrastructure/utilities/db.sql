@@ -254,3 +254,35 @@ alter table mercancia_peligrosa add foreign key (fk_remesa) references remesa(id
 alter table manifiesto add column fk_vehiculo int;
 
 alter table manifiesto add foreign key (fk_vehiculo) references vehiculo(id_vehiculo) on delete set null;
+
+-- Habilitar la extensión (solo si no está habilitada)
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Insertar usando crypt() para generar el hash en tiempo real
+INSERT INTO usuario (
+    fk_tipodoc,
+    num_doc,
+    fk_rol,
+    fk_contador,
+    p_nombre,
+    s_nombre,
+    p_apellido,
+    s_apellido,
+    telefono,
+    correo,
+    contrasena,
+    estado_usuario
+) VALUES (
+    3,
+    '1234567890',
+    1,
+    NULL,
+    'Daniel',
+    'Felipe',
+    'Castro',
+    'Lizarazo',
+    '+573001234567',
+    'daniel.castro@example.com',
+    crypt('123456', gen_salt('bf', 10)),  -- bcrypt con costo 10
+    true
+);

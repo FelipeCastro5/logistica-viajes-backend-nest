@@ -3,13 +3,25 @@ import { IaToolkitService } from '../ia-toolkit.service';
 import { ResponseDto } from 'src/application/utilities/response.dto';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 
+/**
+ * Clase de infraestructura: SqlHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class SqlHandler {
   private readonly logger = new Logger(SqlHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) { }
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly toolkit: IaToolkitService) { }
 
-  async procesarConsultaDb(
+  /**
+     * Ejecuta la operación técnica de procesarConsultaDb.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chat Parámetro de entrada de tipo number | null.
+     * @param preguntaUsuario Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async procesarConsultaDb(
     fk_user: number,
     fk_chat: number | null,
     preguntaUsuario: string

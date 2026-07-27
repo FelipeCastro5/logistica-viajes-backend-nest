@@ -10,6 +10,10 @@ import { DeleteGastoHandler } from '../../application/gasto/handlers/delete-gast
 import { GetAllGastosHandler } from '../../application/gasto/handlers/get-all-gastos.handler';
 import { GetGastoByIdHandler } from '../../application/gasto/handlers/get-gasto-by-id.handler';
 
+/**
+ * Clase de presentación: GastoModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

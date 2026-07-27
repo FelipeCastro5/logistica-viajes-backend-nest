@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PostgresService } from 'src/infrastructure/postgres-db/postgres.service';
 
-export type LlmProvider = 'openai' | 'gemini' | 'deepseek';
+export type LlmProvider = 'gemini';
 
 export interface LlmProjectConfig {
   projectId: number;
@@ -11,17 +11,25 @@ export interface LlmProjectConfig {
   maxTokens: number;
 }
 
+/**
+ * Clase de infraestructura: LlmConfigService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class LlmConfigService {
   private readonly SUPPORTED_PROVIDERS: LlmProvider[] = [
-    'openai',
     'gemini',
-    'deepseek',
   ];
 
-  constructor(private readonly db: PostgresService) { }
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly db: PostgresService) { }
 
-  async getForProject(projectId: number): Promise<LlmProjectConfig> {
+  /**
+     * Ejecuta la operación técnica de getForProject.
+     * @param projectId Parámetro de entrada de tipo number.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async getForProject(projectId: number): Promise<LlmProjectConfig> {
     const { rows } = await this.db.query<{
       project_id: number;
       provider: string;

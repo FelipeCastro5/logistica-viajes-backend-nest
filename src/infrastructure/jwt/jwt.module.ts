@@ -4,6 +4,10 @@ import { JwtService } from './jwt.service';
 import { JwtModule as NestJwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 
+/**
+ * Clase de infraestructura: JwtCustomModule.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Module({
   imports: [
     NestJwtModule.register({

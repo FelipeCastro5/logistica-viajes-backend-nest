@@ -12,6 +12,10 @@ import { GetAllMercanciaPeligrosaHandler } from '../../application/mercancia-pel
 import { GetMercanciaPeligrosaByIdHandler } from '../../application/mercancia-peligrosa/handlers/get-mercancia-peligrosa-by-id.handler';
 import { GetMercanciaPeligrosaByRemesaHandler } from '../../application/mercancia-peligrosa/handlers/get-mercancia-peligrosa-by-remesa.handler';
 
+/**
+ * Clase de presentación: MercanciaPeligrosaModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   controllers: [MercanciaPeligrosaController],

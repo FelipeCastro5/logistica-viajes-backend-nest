@@ -10,12 +10,17 @@ import { join } from 'path';
 import { Client, QueryResult } from 'pg';
 import { ConfigPostgresDto } from './config-postgres.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+/**
+ * Clase de infraestructura: PostgresService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class PostgresService implements OnApplicationShutdown, OnModuleInit {
   private readonly _client: Client;
   private readonly _queries: Record<string, string> = {};
 
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly configService: ConfigService,
   ) {
     const config = configService.get<ConfigPostgresDto>('postgres');
@@ -35,7 +40,11 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
     this.loadQueries();
   }
 
-  private connect(): void {
+  /**
+     * Ejecuta la operación técnica de connect.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private connect(): void {
     this._client
       .connect()
       .then(() => {
@@ -46,7 +55,11 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
       );
   }
 
-  private loadQueries(): void {
+  /**
+     * Ejecuta la operación técnica de loadQueries.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private loadQueries(): void {
 
     const queriesDir = join(process.cwd(), 'src', 'infrastructure', 'postgres-db', 'queries');
 
@@ -67,7 +80,12 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
     loadRecursive(queriesDir);
   }
 
-  public getQuery(name: string): string {
+  /**
+     * Ejecuta la operación técnica de getQuery.
+     * @param name Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public getQuery(name: string): string {
     const query = this._queries[name];
     console.log(`Buscando query: "${name}"`);
 
@@ -200,9 +218,17 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
   }
 
 
-  async onModuleInit() { }
+  /**
+     * Ejecuta la operación técnica de onModuleInit.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async onModuleInit() { }
 
-  private async disconnect(): Promise<void> {
+  /**
+     * Ejecuta la operación técnica de disconnect.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private async disconnect(): Promise<void> {
     try {
       await this._client.end();
       console.log(('/** DISCONNECTED FROM POSTGRES **/'));
@@ -212,7 +238,11 @@ export class PostgresService implements OnApplicationShutdown, OnModuleInit {
     }
   }
 
-  async onApplicationShutdown(): Promise<void> {
+  /**
+     * Ejecuta la operación técnica de onApplicationShutdown.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async onApplicationShutdown(): Promise<void> {
     await this.disconnect();
   }
 }

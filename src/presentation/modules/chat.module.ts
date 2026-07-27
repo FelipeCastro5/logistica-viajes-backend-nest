@@ -10,6 +10,10 @@ import { DeleteChatHandler } from '../../application/chat/handlers/delete-chat.h
 import { GetAllChatsHandler } from '../../application/chat/handlers/get-all-chats.handler';
 import { GetChatByIdHandler } from '../../application/chat/handlers/get-chat-by-id.handler';
 
+/**
+ * Clase de presentación: ChatModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

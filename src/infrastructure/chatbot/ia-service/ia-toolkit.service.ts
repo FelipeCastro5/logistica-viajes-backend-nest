@@ -9,8 +9,6 @@ import { MensajeInterface } from 'src/domain/mensaje-domain/mensaje.interface';
 import { SchemaDigestService } from '../nl2sql/shema/schema-digest.service';
 import { SchemaCacheService } from '../nl2sql/shema/schema-cache.service';
 import { OpenRouterService } from '../llm-services/openrouter-ia/openrouter.service';
-import { OpenAIService } from '../llm-services/openai-ia/openai.service';
-import { DeepSeekService } from '../llm-services/deepseek-ia/deepseek.service';
 type DigestTable = {
   columns: Record<string, string>;
   foreignKeys?: {
@@ -26,19 +24,22 @@ type SchemaDigest = {
   tables: Record<string, DigestTable>;
 };
 
+/**
+ * Clase de infraestructura: IaToolkitService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class IaToolkitService {
   private readonly logger = new Logger(IaToolkitService.name);
 
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly digestService: SchemaDigestService,
     private readonly cacheService: SchemaCacheService,
 
     private readonly geminiService: GeminiService,
     private readonly openRouterService: OpenRouterService,
     private readonly postgresService: PostgresService,
-    private readonly openAIService: OpenAIService,
-    private readonly deepSeekService: DeepSeekService,
 
     @Inject('ChatInterface')
     private readonly chatRepository: ChatInterface,
@@ -47,20 +48,14 @@ export class IaToolkitService {
   ) { }
 
   // fallback automático entre modelos de IA
+  /**
+     * Ejecuta la operación técnica de preguntarIA.
+     * @param prompt Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
   private async preguntarIA(prompt: string): Promise<string> {
 
-    // 1. Intentar OpenIA primero
-    try {
-      this.logger.log('🤖 Consultando OpenAI...');
-      return await this.openAIService.preguntarOpenAI(prompt);
-    } catch (error) {
-      this.logger.error(
-        '❌ Error consultando OpenAI.',
-        error instanceof Error ? error.stack : error,
-      );
-    }
-
-    // 2. Intentar Gemini segundo
+    // 1. Intentar Gemini primero
     try {
       this.logger.log('🤖 Consultando Gemini...');
       return await this.geminiService.preguntarGemini(prompt);
@@ -71,18 +66,7 @@ export class IaToolkitService {
       );
     }
 
-    // 3. Intentar DeepSeek como tercer paso
-    try {
-      this.logger.log('🤖 Consultando DeepSeek...');
-      return await this.deepSeekService.preguntarDeepSeek(prompt);
-    } catch (error) {
-      this.logger.error(
-        '❌ Error consultando DeepSeek.',
-        error instanceof Error ? error.stack : error,
-      );
-    }
-
-    // 4. Fallback a OpenRouter (Devstral)
+    // 2. Fallback a OpenRouter (Devstral)
     try {
       this.logger.log('🤖 Consultando OpenRouter (Devstral)...');
       return await this.openRouterService.preguntar(prompt);
@@ -97,29 +81,56 @@ export class IaToolkitService {
 
 
   // 🔹 Consultar al cliente IA directamente desde IaToolkitService
-  public async preguntarIACliente(pregunta: string): Promise<string> {
+  /**
+     * Ejecuta la operación técnica de preguntarIACliente.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async preguntarIACliente(pregunta: string): Promise<string> {
     return await this.preguntarIA(pregunta);
   }
 
   // 🔹 Crear un nuevo chat
-  public async crearNuevoChat(fk_usuario: number, nombre_chat: string): Promise<Chat> {
+  /**
+     * Ejecuta la operación técnica de crearNuevoChat.
+     * @param fk_usuario Parámetro de entrada de tipo number.
+     * @param nombre_chat Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async crearNuevoChat(fk_usuario: number, nombre_chat: string): Promise<Chat> {
     const nuevoChat = await this.chatRepository.createChat(fk_usuario, nombre_chat);
     this.logger.log(`🆕 Chat creado: [ID ${nuevoChat.id_chat}] "${nuevoChat.nombre_chat}" para usuario ${fk_usuario}`);
     return nuevoChat;
   }
 
   // 🔹 Obtener historial reciente
-  public async obtenerHistorial(fk_chat: number) {
+  /**
+     * Ejecuta la operación técnica de obtenerHistorial.
+     * @param fk_chat Parámetro de entrada de tipo number.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async obtenerHistorial(fk_chat: number) {
     return await this.mensajeRepository.getLastFiveByChat(fk_chat);
   }
 
   // Prompt sin historial (primer mensaje del chat)
-  public generarPromptSinHistorial(pregunta: string): string {
+  /**
+     * Ejecuta la operación técnica de generarPromptSinHistorial.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public generarPromptSinHistorial(pregunta: string): string {
     return `El usuario pregunta: "${pregunta}". 
             Responde de forma clara y en español en un máximo de 400 a 500 caracteres."`;
   }
 
-  public async generarTituloChat(
+  /**
+     * Ejecuta la operación técnica de generarTituloChat.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @param respuesta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async generarTituloChat(
     pregunta: string,
     respuesta?: string
   ): Promise<string> {
@@ -144,7 +155,13 @@ Devuelve SOLO el título, sin comillas ni explicaciones.
   }
 
   // Prompt con historial de preguntas y respuestas
-  public generarPromptConHistorial(historial: any[], pregunta: string): string {
+  /**
+     * Ejecuta la operación técnica de generarPromptConHistorial.
+     * @param historial Parámetro de entrada de tipo any[].
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public generarPromptConHistorial(historial: any[], pregunta: string): string {
     const contexto = historial
       .map(item => `Usuario: ${item.pregunta}\nIA: ${item.respuesta}`)
       .join('\n\n');
@@ -153,7 +170,14 @@ Devuelve SOLO el título, sin comillas ni explicaciones.
   }
 
   // 🔹 Guardar en historial
-  public async guardarPreguntaYRespuesta(fk_chat: number, pregunta: string, respuesta: string) {
+  /**
+     * Ejecuta la operación técnica de guardarPreguntaYRespuesta.
+     * @param fk_chat Parámetro de entrada de tipo number.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @param respuesta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async guardarPreguntaYRespuesta(fk_chat: number, pregunta: string, respuesta: string) {
     await this.mensajeRepository.createMensaje(fk_chat, pregunta, respuesta.trim());
   }
 
@@ -188,7 +212,13 @@ Devuelve SOLO el título, sin comillas ni explicaciones.
   //   }
 
   // 🔹 Generar SQL a partir de pregunta usando Schema Digest (NL2SQL)
-  public async generarSQLDesdePregunta(
+  /**
+     * Ejecuta la operación técnica de generarSQLDesdePregunta.
+     * @param preguntaUsuario Parámetro de entrada de tipo string.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async generarSQLDesdePregunta(
     preguntaUsuario: string,
     fk_user: number
   ): Promise<string> {
@@ -258,7 +288,12 @@ Pregunta del usuario:
 
 
   // 🔹 Obtener digest del esquema para NL2SQL
-  public async obtenerSchemaDigest(usuarioQuery?: string): Promise<SchemaDigest> {
+  /**
+     * Ejecuta la operación técnica de obtenerSchemaDigest.
+     * @param usuarioQuery Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async obtenerSchemaDigest(usuarioQuery?: string): Promise<SchemaDigest> {
     this.logger.log('📦 Obteniendo digest del schema...');
 
     const digest = await this.digestService.getDigest(usuarioQuery ?? '');
@@ -271,13 +306,24 @@ Pregunta del usuario:
   }
 
   // 🔹 Ejecutar SQL
-  public async ejecutarSQL(sql: string): Promise<any[]> {
+  /**
+     * Ejecuta la operación técnica de ejecutarSQL.
+     * @param sql Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async ejecutarSQL(sql: string): Promise<any[]> {
     const resultado = await this.postgresService.query(sql);
     return resultado.rows;
   }
 
   // 🔹 Generar respuesta final en lenguaje natural
-  public async generarRespuestaEnLenguajeNatural(pregunta: string, datos: any[]): Promise<string> {
+  /**
+     * Ejecuta la operación técnica de generarRespuestaEnLenguajeNatural.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @param datos Parámetro de entrada de tipo any[].
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async generarRespuestaEnLenguajeNatural(pregunta: string, datos: any[]): Promise<string> {
     const promptConclusion = `El usuario preguntó: "${pregunta}".
 Los datos obtenidos de la base de datos son:
 
@@ -290,7 +336,12 @@ Redacta una respuesta clara en español explicando estos resultados.`;
   }
 
   // 🔹 Clasificar tipo de pregunta
-  public async clasificarTipoDePregunta(pregunta: string): Promise<'sql' | 'historial' | 'mixto'> {
+  /**
+     * Ejecuta la operación técnica de clasificarTipoDePregunta.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public async clasificarTipoDePregunta(pregunta: string): Promise<'sql' | 'historial' | 'mixto'> {
     const promptClasificacion = `Clasifica la siguiente pregunta en una de las siguientes categorías:
         - "sql": si se refiere directamente a obtener datos de una base de datos.
         - "historial": si es una conversación general que no requiere acceso a la base de datos.
@@ -311,12 +362,22 @@ Redacta una respuesta clara en español explicando estos resultados.`;
     return 'historial';
   }
 
-  public extraerTituloDeRespuesta(respuesta: string): string | null {
+  /**
+     * Ejecuta la operación técnica de extraerTituloDeRespuesta.
+     * @param respuesta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public extraerTituloDeRespuesta(respuesta: string): string | null {
     const match = respuesta.match(/Título:\s*(.+)/i);
     return match ? match[1].trim() : null;
   }
 
-  public removerLineaTitulo(respuesta: string): string {
+  /**
+     * Ejecuta la operación técnica de removerLineaTitulo.
+     * @param respuesta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    public removerLineaTitulo(respuesta: string): string {
     return respuesta
       .split('\n')
       .filter(linea => !/^título:/i.test(linea.trim()))

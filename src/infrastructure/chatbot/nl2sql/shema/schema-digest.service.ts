@@ -5,16 +5,26 @@ import { SchemaAliasService } from '../alias/schema-alias.service';
 import { ConfigService } from '@nestjs/config';
 import { TableRankerService } from '../ranking/table-ranker.service';
 
+/**
+ * Clase de infraestructura: SchemaDigestService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class SchemaDigestService {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly cache: SchemaCacheService,
     private readonly ranker: TableRankerService,
     private readonly aliases: SchemaAliasService,
     private readonly config: ConfigService,
   ) {}
 
-  async getDigest(userQuery: string) {
+  /**
+     * Ejecuta la operación técnica de getDigest.
+     * @param userQuery Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async getDigest(userQuery: string) {
     const rawSchema = await this.cache.getSchema();
     const fullDigest = buildSchemaDigest(rawSchema);
 

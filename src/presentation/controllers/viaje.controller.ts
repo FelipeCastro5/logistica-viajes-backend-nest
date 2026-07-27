@@ -14,102 +14,153 @@ import { UpdateViajeDto } from '../dtos/viaje/update-viaje.dto';
 import { GetViajesPaginatedByUsuarioCommand } from '../../application/viaje/commands/get-viajes-paginated-by-usuario.command';
 import { CreateNewViajeDto } from '../dtos/viaje/create-new-viaje.dto';
 
+/**
+ * Controlador REST para Viaje.
+ * Se encarga de recibir peticiones HTTP, validarlas y enrutarlas hacia la capa de aplicación (CQRS).
+ */
 @ApiTags('Viajes')
 @Controller('viajes')
 export class ViajeController {
-  constructor(
+  /** Constructor de la clase. Inyecta dependencias como el bus de comandos/consultas. */
+    constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) { }
 
-  @Get('getAll')
+  /**
+     * Endpoint para la operación de getAllViajes.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getAll')
   @ApiOperation({ summary: 'Obtener todos los viajes' })
   @ApiResponse({ status: 200, description: 'Viajes obtenidos exitosamente' })
   async getAllViajes() {
-    return this.queryBus.execute(new GetAllViajesCommand());
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetAllViajesCommand());
+    }
 
-  @Get('getById')
+  /**
+     * Endpoint para la operación de getViajeById.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('getById')
   @ApiOperation({ summary: 'Obtener un viaje por ID' })
   @ApiResponse({ status: 200, description: 'Viaje encontrado exitosamente' })
   @ApiResponse({ status: 404, description: 'Viaje no encontrado' })
   async getViajeById(@Query('id') id: number) {
-    return this.queryBus.execute(new GetViajeByIdCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(new GetViajeByIdCommand(id));
+    }
 
-  @Post('create')
+  /**
+     * Endpoint para la operación de createViaje.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Post('create')
   @ApiOperation({ summary: 'Crear un nuevo viaje' })
   @ApiResponse({ status: 201, description: 'Viaje creado exitosamente' })
   async createViaje(@Body() dto: CreateViajeDto) {
-    const command = new CreateViajeCommand(
-      dto.fk_usuario,
-      dto.fk_manifiesto,
-      dto.fk_cliente,
-      dto.fk_origen,
-      dto.fk_destino,
-      dto.codigo,
-      dto.observaciones,
-      dto.estado_viaje,
-      dto.producto,
-      dto.detalle_producto,
-      dto.direccion_llegada,
-      dto.fecha_salida,
-      dto.fecha_llegada,
-      dto.latitud_origen,
-      dto.longitud_origen,
-      dto.latitud_destino,
-      dto.longitud_destino,
-      dto.hora_salida,
-      dto.hora_llegada,
-      dto.horas_pactadas_cargue,
-      dto.horas_pactadas_descargue,
-      dto.exoneracion_legal,
-    );
-    return this.commandBus.execute(command);
-  }
+        // 1. Construimos el comando CQRS mapeando los datos de la petición (DTO/Query/Param).
+        const command = new CreateViajeCommand(
+          dto.fk_usuario,
+          dto.fk_manifiesto,
+          dto.fk_cliente,
+          dto.fk_origen,
+          dto.fk_destino,
+          dto.codigo,
+          dto.observaciones,
+          dto.estado_viaje,
+          dto.producto,
+          dto.detalle_producto,
+          dto.direccion_llegada,
+          dto.fecha_salida,
+          dto.fecha_llegada,
+          dto.latitud_origen,
+          dto.longitud_origen,
+          dto.latitud_destino,
+          dto.longitud_destino,
+          dto.hora_salida,
+          dto.hora_llegada,
+          dto.horas_pactadas_cargue,
+          dto.horas_pactadas_descargue,
+          dto.exoneracion_legal,
+        );
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
 
-  @Put('update')
+        return this.commandBus.execute(command);
+    }
+
+  /**
+     * Endpoint para la operación de updateViaje.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Put('update')
   @ApiOperation({ summary: 'Actualizar un viaje existente' })
   @ApiResponse({ status: 200, description: 'Viaje actualizado exitosamente' })
   @ApiResponse({ status: 404, description: 'Viaje no encontrado' })
   async updateViaje(@Body() dto: UpdateViajeDto) {
-    const command = new UpdateViajeCommand(
-      dto.id_viaje,
-      dto.fk_usuario,
-      dto.fk_manifiesto,
-      dto.fk_cliente,
-      dto.fk_origen,
-      dto.fk_destino,
-      dto.codigo,
-      dto.observaciones,
-      dto.estado_viaje,
-      dto.producto,
-      dto.detalle_producto,
-      dto.direccion_llegada,
-      dto.fecha_salida,
-      dto.fecha_llegada,
-      dto.latitud_origen,
-      dto.longitud_origen,
-      dto.latitud_destino,
-      dto.longitud_destino,
-      dto.hora_salida,
-      dto.hora_llegada,
-      dto.horas_pactadas_cargue,
-      dto.horas_pactadas_descargue,
-      dto.exoneracion_legal,
-    );
-    return this.commandBus.execute(command);
-  }
+        // 1. Construimos el comando CQRS mapeando los datos de la petición (DTO/Query/Param).
+        const command = new UpdateViajeCommand(
+          dto.id_viaje,
+          dto.fk_usuario,
+          dto.fk_manifiesto,
+          dto.fk_cliente,
+          dto.fk_origen,
+          dto.fk_destino,
+          dto.codigo,
+          dto.observaciones,
+          dto.estado_viaje,
+          dto.producto,
+          dto.detalle_producto,
+          dto.direccion_llegada,
+          dto.fecha_salida,
+          dto.fecha_llegada,
+          dto.latitud_origen,
+          dto.longitud_origen,
+          dto.latitud_destino,
+          dto.longitud_destino,
+          dto.hora_salida,
+          dto.hora_llegada,
+          dto.horas_pactadas_cargue,
+          dto.horas_pactadas_descargue,
+          dto.exoneracion_legal,
+        );
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
 
-  @Delete('delete')
+        return this.commandBus.execute(command);
+    }
+
+  /**
+     * Endpoint para la operación de deleteViaje.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Delete('delete')
   @ApiOperation({ summary: 'Eliminar un viaje por ID' })
   @ApiResponse({ status: 200, description: 'Viaje eliminado exitosamente' })
   @ApiResponse({ status: 404, description: 'Viaje no encontrado' })
   async deleteViaje(@Query('id') id: number) {
-    return this.commandBus.execute(new DeleteViajeCommand(id));
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.commandBus.execute(new DeleteViajeCommand(id));
+    }
 
-  @Get('paginatedByUsuario')
+  /**
+     * Endpoint para la operación de getViajesPaginatedByUsuario.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param id_usuario Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @param page Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @param limit Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Get('paginatedByUsuario')
   @ApiOperation({ summary: 'Obtener viajes paginados por usuario' })
   @ApiResponse({ status: 200, description: 'Viajes paginados obtenidos exitosamente' })
   @ApiResponse({ status: 400, description: 'Parámetros inválidos' })
@@ -118,34 +169,44 @@ export class ViajeController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.queryBus.execute(
-      new GetViajesPaginatedByUsuarioCommand(id_usuario, page, limit),
-    );
-  }
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+        return this.queryBus.execute(
+          new GetViajesPaginatedByUsuarioCommand(id_usuario, page, limit),
+        );
+    }
 
-  @Post('createNewViaje')
+  /**
+     * Endpoint para la operación de createNewViaje.
+     * Recibe la petición y despacha el comando/consulta correspondiente.
+     * @param dto Parámetro recibido en la petición HTTP (Body, Query o Param).
+     * @returns El resultado de la ejecución en la capa de aplicación devuelto como respuesta HTTP.
+     */
+    @Post('createNewViaje')
   @ApiOperation({ summary: 'Crear un nuevo viaje' })
   @ApiResponse({ status: 201, description: 'Viaje creado exitosamente' })
   async createNewViaje(@Body() dto: CreateNewViajeDto) {
-    const command = new CreateNewViajeCommand(
-      // Viaje
-      dto.fk_usuario, dto.fk_cliente, dto.fk_origen, dto.fk_destino, dto.codigo,
-      dto.observaciones, dto.producto, dto.detalle_producto, dto.direccion_llegada,
-      dto.fecha_salida, dto.fecha_llegada, dto.latitud_origen, dto.longitud_origen,
-      dto.latitud_destino, dto.longitud_destino, dto.hora_salida, dto.hora_llegada,
-      dto.horas_pactadas_cargue, dto.horas_pactadas_descargue, dto.exoneracion_legal,
-      // Manifiesto
-      dto.fk_vehiculo, dto.flete_total, dto.porcentaje_retencion_fuente, dto.valor_retencion_fuente,
-      dto.porcentaje_ica, dto.valor_ica, dto.deduccion_fiscal, dto.neto_a_pagar,
-      dto.anticipo, dto.saldo_a_pagar, dto.total_gastos, dto.queda_al_carro,
-      dto.a_favor_del_carro, dto.porcentaje_conductor, dto.ganancia_conductor,
-      // Remesa
-      dto.numero_remesa, dto.numero_autorizacion, dto.tipo_empaque, dto.naturaleza_carga,
-      dto.codigo_armonizado, dto.cantidad, dto.unidad_medida, dto.peso_total,
-      dto.mercancia_peligrosa, dto.observaciones_remesa,
-      // Mercancía peligrosa
-      dto.codigo_un, dto.grupo_riesgo, dto.caracteristica_peligrosidad, dto.embalaje_envase,
-    );
-    return this.commandBus.execute(command);
-  }
+        // 1. Construimos el comando CQRS mapeando los datos de la petición (DTO/Query/Param).
+        const command = new CreateNewViajeCommand(
+          // Viaje
+          dto.fk_usuario, dto.fk_cliente, dto.fk_origen, dto.fk_destino, dto.codigo,
+          dto.observaciones, dto.producto, dto.detalle_producto, dto.direccion_llegada,
+          dto.fecha_salida, dto.fecha_llegada, dto.latitud_origen, dto.longitud_origen,
+          dto.latitud_destino, dto.longitud_destino, dto.hora_salida, dto.hora_llegada,
+          dto.horas_pactadas_cargue, dto.horas_pactadas_descargue, dto.exoneracion_legal,
+          // Manifiesto
+          dto.fk_vehiculo, dto.flete_total, dto.porcentaje_retencion_fuente, dto.valor_retencion_fuente,
+          dto.porcentaje_ica, dto.valor_ica, dto.deduccion_fiscal, dto.neto_a_pagar,
+          dto.anticipo, dto.saldo_a_pagar, dto.total_gastos, dto.queda_al_carro,
+          dto.a_favor_del_carro, dto.porcentaje_conductor, dto.ganancia_conductor,
+          // Remesa
+          dto.numero_remesa, dto.numero_autorizacion, dto.tipo_empaque, dto.naturaleza_carga,
+          dto.codigo_armonizado, dto.cantidad, dto.unidad_medida, dto.peso_total,
+          dto.mercancia_peligrosa, dto.observaciones_remesa,
+          // Mercancía peligrosa
+          dto.codigo_un, dto.grupo_riesgo, dto.caracteristica_peligrosidad, dto.embalaje_envase,
+        );
+        // 2. Despachamos la acción al bus correspondiente de NestJS CQRS y retornamos el resultado.
+
+        return this.commandBus.execute(command);
+    }
 }

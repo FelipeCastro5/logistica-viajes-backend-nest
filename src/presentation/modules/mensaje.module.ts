@@ -10,6 +10,10 @@ import { DeleteMensajeHandler } from '../../application/mensaje/handlers/delete-
 import { GetAllMensajesHandler } from '../../application/mensaje/handlers/get-all-mensajes.handler';
 import { GetMensajeByIdHandler } from '../../application/mensaje/handlers/get-mensaje-by-id.handler';
 
+/**
+ * Clase de presentación: MensajeModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

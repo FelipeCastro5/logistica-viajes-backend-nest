@@ -1,3 +1,11 @@
+/**
+ * Clase de comando CQRS que representa la operación DeleteMercanciaPeligrosaCommand.
+ * Encapsula los datos necesarios para ejecutar el caso de uso.
+ */
 export class DeleteMercanciaPeligrosaCommand {
-  constructor(public readonly id: number) {}
+  /**
+     * Constructor del comando DeleteMercanciaPeligrosaCommand.
+     * @param id Dato requerido de tipo number para la ejecución del comando.
+     */
+    constructor(public readonly id: number) {}
 }

@@ -15,6 +15,10 @@ import { UpdateGastoxviajeFacturaHandler } from '../../application/gastoxviaje/h
 import { DeleteGastoxviajeFacturaHandler } from '../../application/gastoxviaje/handlers/delete-gastoxviaje-factura.handler';
 import { DownloadGastoxviajeFacturaHandler } from '../../application/gastoxviaje/handlers/download-gastoxviaje-factura.handler';
 
+/**
+ * Clase de presentación: GastoxviajeModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule, GoogleDriveModule],
   providers: [

@@ -11,12 +11,17 @@ import { SchemaCacheService } from '../shema/schema-cache.service';
 import { SchemaDigestService } from '../shema/schema-digest.service';
 import { buildSchemaDigest } from '../shema/schema-digest.builder';
 
+/**
+ * Clase de infraestructura: InternalNl2sqlController.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @ApiTags('NL2SQL Internal')
 @ApiBearerAuth()
 // @UseGuards(JwtAuthGuard)
 @Controller('internal/nl2sql')
 export class InternalNl2sqlController {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly schemaCacheService: SchemaCacheService,
     private readonly digest: SchemaDigestService,
   ) {}
@@ -24,7 +29,11 @@ export class InternalNl2sqlController {
   // ─────────────────────────────────────────────
   // GET /internal/nl2sql/schema-digest
   // ─────────────────────────────────────────────
-  @Get('schema-digest')
+  /**
+     * Ejecuta la operación técnica de getSchemaDigest.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('schema-digest')
   @ApiOperation({
     summary: 'Schema digest completo para NL2SQL (uso interno)',
     description:
@@ -39,7 +48,12 @@ export class InternalNl2sqlController {
   // ─────────────────────────────────────────────
   // GET /internal/nl2sql/schema-for-query
   // ─────────────────────────────────────────────
-  @Get('schema-for-query')
+  /**
+     * Ejecuta la operación técnica de getSchemaForQuery.
+     * @param q Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    @Get('schema-for-query')
   @ApiOperation({
     summary: 'Schema reducido para una consulta NL2SQL',
     description:

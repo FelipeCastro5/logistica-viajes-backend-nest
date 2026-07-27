@@ -10,6 +10,10 @@ import { DeleteRolHandler } from '../../application/rol/handlers/delete-rol.hand
 import { GetAllRolesHandler } from '../../application/rol/handlers/get-all-roles.handler';
 import { GetRolByIdHandler } from '../../application/rol/handlers/get-rol-by-id.handler';
 
+/**
+ * Clase de presentación: RolModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

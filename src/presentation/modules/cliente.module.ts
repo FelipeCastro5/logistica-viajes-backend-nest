@@ -11,6 +11,10 @@ import { GetAllClientesHandler } from '../../application/cliente/handlers/get-al
 import { GetClienteByIdHandler } from '../../application/cliente/handlers/get-cliente-by-id.handler';
 import { GetClientesByUsuarioHandler } from '../../application/cliente/handlers/get-cliente-by-usuario.handler';
 
+/**
+ * Clase de presentación: ClienteModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule],
   providers: [

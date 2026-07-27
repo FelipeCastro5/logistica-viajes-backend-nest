@@ -2,9 +2,14 @@
 import { Injectable } from '@nestjs/common';
 import { SchemaAliasService } from '../alias/schema-alias.service';
 
+/**
+ * Clase de infraestructura: TableRankerService.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class TableRankerService {
-  constructor(
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(
     private readonly aliasService: SchemaAliasService
   ) {}
 
@@ -12,7 +17,12 @@ export class TableRankerService {
      Normalización y tokens
      ======================= */
 
-  private normalizeName(str = ''): string {
+  /**
+     * Ejecuta la operación técnica de normalizeName.
+     * @param str Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private normalizeName(str = ''): string {
     return String(str)
       .toLowerCase()
       .normalize('NFD')
@@ -22,13 +32,23 @@ export class TableRankerService {
       .trim();
   }
 
-  private tokenize(input = ''): string[] {
+  /**
+     * Ejecuta la operación técnica de tokenize.
+     * @param input Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private tokenize(input = ''): string[] {
     return this.normalizeName(input)
       .split(/\s+/)
       .filter(Boolean);
   }
 
-  private buildTokenBigrams(tokens: string[]): string[] {
+  /**
+     * Ejecuta la operación técnica de buildTokenBigrams.
+     * @param tokens Parámetro de entrada de tipo string[].
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private buildTokenBigrams(tokens: string[]): string[] {
     const res: string[] = [];
     for (let i = 0; i < tokens.length - 1; i++) {
       res.push(`${tokens[i]} ${tokens[i + 1]}`);
@@ -36,11 +56,22 @@ export class TableRankerService {
     return res;
   }
 
-  private splitNameIntoWords(name = ''): string[] {
+  /**
+     * Ejecuta la operación técnica de splitNameIntoWords.
+     * @param name Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private splitNameIntoWords(name = ''): string[] {
     return this.normalizeName(name).split(/\s+/).filter(Boolean);
   }
 
-  private ngrams(str = '', n = 3): string[] {
+  /**
+     * Ejecuta la operación técnica de ngrams.
+     * @param str Parámetro de entrada de tipo any.
+     * @param n Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private ngrams(str = '', n = 3): string[] {
     const s = this.normalizeName(str).replace(/\s+/g, '');
     if (s.length < n) return [s];
     const res: string[] = [];
@@ -50,7 +81,13 @@ export class TableRankerService {
     return res;
   }
 
-  private overlapCoefficient(aArr: string[], bArr: string[]): number {
+  /**
+     * Ejecuta la operación técnica de overlapCoefficient.
+     * @param aArr Parámetro de entrada de tipo string[].
+     * @param bArr Parámetro de entrada de tipo string[].
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private overlapCoefficient(aArr: string[], bArr: string[]): number {
     if (!aArr.length || !bArr.length) return 0;
     const a = new Set(aArr);
     const b = new Set(bArr);
@@ -63,7 +100,12 @@ export class TableRankerService {
      Spatial intent
      ======================= */
 
-  private detectSpatialIntent(text = ''): boolean {
+  /**
+     * Ejecuta la operación técnica de detectSpatialIntent.
+     * @param text Parámetro de entrada de tipo any.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    private detectSpatialIntent(text = ''): boolean {
     return /(mapa|ubicacion|latitud|longitud|distancia|cerca de|origen|destino|ruta|trayecto|entre\s+\w+\s+y\s+\w+)/i
       .test(text.toLowerCase());
   }
@@ -72,7 +114,26 @@ export class TableRankerService {
      Ranking principal
      ======================= */
 
-  rankTables(
+  /**
+     * Ejecuta la operación técnica de rankTables.
+     * @param userInput Parámetro de entrada de tipo string.
+     * @param schema Parámetro de entrada de tipo {
+     *       tables: Record<string, {
+     *         columns: Record<string, string>;
+     *         geometry?: { column: string; srid?: number };
+     *       }>;
+     *     }.
+     * @param options Parámetro de entrada de tipo {
+     *       maxTables?: number;
+     *       aliasBoost?: number;
+     *       nameTokenBoost?: number;
+     *       columnTokenBoost?: number;
+     *       ngramBoost?: number;
+     *       aliases?: Record<string, string[]>;
+     *     }.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    rankTables(
     userInput: string,
     schema: {
       tables: Record<string, {

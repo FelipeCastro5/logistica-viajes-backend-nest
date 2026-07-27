@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
+/**
+ * Clase de infraestructura: SendEmailDto.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 export class SendEmailDto {
   @ApiProperty({
     example: 'destinatario@example.com',

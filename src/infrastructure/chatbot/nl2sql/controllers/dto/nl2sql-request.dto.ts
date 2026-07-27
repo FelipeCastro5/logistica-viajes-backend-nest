@@ -2,6 +2,10 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested, 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
+/**
+ * Clase de infraestructura: Nl2sqlContextDto.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 class Nl2sqlContextDto {
   @ApiPropertyOptional({
     description: 'Bounding box [minLng, minLat, maxLng, maxLat]',
@@ -26,6 +30,10 @@ class Nl2sqlContextDto {
 }
 
 
+/**
+ * Clase de infraestructura: Nl2sqlRequestDto.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 export class Nl2sqlRequestDto {
     @ApiProperty({
         description: 'ID del proyecto',

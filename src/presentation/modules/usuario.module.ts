@@ -12,6 +12,10 @@ import { GetUsuarioByIdHandler } from '../../application/usuario/handlers/get-us
 import { JwtCustomModule } from '../../infrastructure/jwt/jwt.module';
 import { GetConductoresByFilterHandler } from 'src/application/usuario/handlers/get-conductores-by-filter.handler';
 
+/**
+ * Clase de presentación: UsuarioModule.
+ * Maneja la interacción entre el cliente (HTTP) y el sistema.
+ */
 @Module({
   imports: [PostgresModule, CqrsModule, JwtCustomModule],
   providers: [

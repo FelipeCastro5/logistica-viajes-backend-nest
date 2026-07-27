@@ -11,11 +11,13 @@ import { MensajeRepository } from "../../repository/mensaje.repository";
 import { ChatModule } from "src/presentation/modules/chat.module";
 import { MensajeModule } from "src/presentation/modules/mensaje.module";
 import { Nl2sqlModule } from "../nl2sql/nl2sql.module";
-import { OpenAIModule } from "../llm-services/openai-ia/openai.module";
 import { OpenRouterModule } from "../llm-services/openrouter-ia/openrouter.module";
-import { DeepSeekModule } from "../llm-services/deepseek-ia/deepseek.module";
+/**
+ * Clase de infraestructura: iaModule.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Module({
-  imports: [ChatModule, MensajeModule, OpenRouterModule, Nl2sqlModule, OpenAIModule, DeepSeekModule],
+  imports: [ChatModule, MensajeModule, OpenRouterModule, Nl2sqlModule],
   providers: [
     GeminiService,
     PostgresService,

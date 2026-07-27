@@ -5,11 +5,16 @@ import { ConfigService } from '@nestjs/config';
 import { Nl2sqlService } from '../nl2sql.service';
 import { Nl2sqlRequestDto } from './dto/nl2sql-request.dto';
 
+/**
+ * Clase de infraestructura: Nl2sqlController.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @ApiTags('NL2SQL')
 @ApiBearerAuth()
 // @UseGuards(JwtAuthGuard)
 @Controller('nl2sql')
 export class Nl2sqlController {
+    /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
     constructor(
         private readonly nl2sql: Nl2sqlService,
         private readonly config: ConfigService,
@@ -18,6 +23,11 @@ export class Nl2sqlController {
     // ─────────────────────────────────────────────
     // POST /nl2sql
     // ─────────────────────────────────────────────
+    /**
+     * Ejecuta la operación técnica de generateSql.
+     * @param dto Parámetro de entrada de tipo Nl2sqlRequestDto.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
     @Post()
     @ApiOperation({
         summary: 'Generar SQL a partir de lenguaje natural (NL2SQL)',

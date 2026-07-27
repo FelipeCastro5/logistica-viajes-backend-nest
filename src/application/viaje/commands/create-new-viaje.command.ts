@@ -1,5 +1,61 @@
+/**
+ * Clase de comando CQRS que representa la operación CreateNewViajeCommand.
+ * Encapsula los datos necesarios para ejecutar el caso de uso.
+ */
 export class CreateNewViajeCommand {
-  constructor(
+  /**
+     * Constructor del comando CreateNewViajeCommand.
+     * @param fk_usuario Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_cliente Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param fk_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param codigo Dato requerido de tipo string para la ejecución del comando.
+     * @param observaciones Dato requerido de tipo string para la ejecución del comando.
+     * @param producto Dato requerido de tipo string para la ejecución del comando.
+     * @param detalle_producto Dato requerido de tipo string para la ejecución del comando.
+     * @param direccion_llegada Dato requerido de tipo string para la ejecución del comando.
+     * @param fecha_salida Dato requerido de tipo Date para la ejecución del comando.
+     * @param fecha_llegada Dato requerido de tipo Date para la ejecución del comando.
+     * @param latitud_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param longitud_origen Dato requerido de tipo number para la ejecución del comando.
+     * @param latitud_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param longitud_destino Dato requerido de tipo number para la ejecución del comando.
+     * @param hora_salida Dato requerido de tipo Date para la ejecución del comando.
+     * @param hora_llegada Dato requerido de tipo Date para la ejecución del comando.
+     * @param horas_pactadas_cargue Dato requerido de tipo number para la ejecución del comando.
+     * @param horas_pactadas_descargue Dato requerido de tipo number para la ejecución del comando.
+     * @param exoneracion_legal Dato requerido de tipo string para la ejecución del comando.
+     * @param fk_vehiculo Dato requerido de tipo number para la ejecución del comando.
+     * @param flete_total Dato requerido de tipo number para la ejecución del comando.
+     * @param porcentaje_retencion_fuente Dato requerido de tipo number para la ejecución del comando.
+     * @param valor_retencion_fuente Dato requerido de tipo number para la ejecución del comando.
+     * @param porcentaje_ica Dato requerido de tipo number para la ejecución del comando.
+     * @param valor_ica Dato requerido de tipo number para la ejecución del comando.
+     * @param deduccion_fiscal Dato requerido de tipo number para la ejecución del comando.
+     * @param neto_a_pagar Dato requerido de tipo number para la ejecución del comando.
+     * @param anticipo Dato requerido de tipo number para la ejecución del comando.
+     * @param saldo_a_pagar Dato requerido de tipo number para la ejecución del comando.
+     * @param total_gastos Dato requerido de tipo number para la ejecución del comando.
+     * @param queda_al_carro Dato requerido de tipo number para la ejecución del comando.
+     * @param a_favor_del_carro Dato requerido de tipo number para la ejecución del comando.
+     * @param porcentaje_conductor Dato requerido de tipo number para la ejecución del comando.
+     * @param ganancia_conductor Dato requerido de tipo number para la ejecución del comando.
+     * @param numero_remesa Dato requerido de tipo string para la ejecución del comando.
+     * @param numero_autorizacion Dato requerido de tipo string para la ejecución del comando.
+     * @param tipo_empaque Dato requerido de tipo string para la ejecución del comando.
+     * @param naturaleza_carga Dato requerido de tipo string para la ejecución del comando.
+     * @param codigo_armonizado Dato requerido de tipo string para la ejecución del comando.
+     * @param cantidad Dato requerido de tipo number para la ejecución del comando.
+     * @param unidad_medida Dato requerido de tipo string para la ejecución del comando.
+     * @param peso_total Dato requerido de tipo number para la ejecución del comando.
+     * @param mercancia_peligrosa Dato requerido de tipo boolean para la ejecución del comando.
+     * @param observaciones_remesa Dato requerido de tipo string para la ejecución del comando.
+     * @param codigo_un Dato requerido de tipo string para la ejecución del comando.
+     * @param grupo_riesgo Dato requerido de tipo string para la ejecución del comando.
+     * @param caracteristica_peligrosidad Dato requerido de tipo string para la ejecución del comando.
+     * @param embalaje_envase Dato requerido de tipo string para la ejecución del comando.
+     */
+    constructor(
     // viaje
     public readonly fk_usuario: number,
     public readonly fk_cliente: number,

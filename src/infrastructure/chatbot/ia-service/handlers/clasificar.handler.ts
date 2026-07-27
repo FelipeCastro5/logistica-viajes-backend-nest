@@ -2,13 +2,25 @@ import { Injectable, Logger } from '@nestjs/common';
 import { IaToolkitService } from '../ia-toolkit.service';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 
+/**
+ * Clase de infraestructura: ClasificacionHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class ClasificacionHandler {
   private readonly logger = new Logger(ClasificacionHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) {}
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly toolkit: IaToolkitService) {}
 
-  async procesarPreguntaInteligente(
+  /**
+     * Ejecuta la operación técnica de procesarPreguntaInteligente.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chat Parámetro de entrada de tipo number | null.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async procesarPreguntaInteligente(
     fk_user: number,
     fk_chat: number | null,
     pregunta: string

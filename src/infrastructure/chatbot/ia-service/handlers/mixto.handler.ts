@@ -3,13 +3,25 @@ import { IaToolkitService } from '../ia-toolkit.service';
 import { ResponseUtil } from 'src/application/utilities/response.util';
 import { ResponseDto } from 'src/application/utilities/response.dto';
 
+/**
+ * Clase de infraestructura: MixtoHandler.
+ * Provee implementación técnica de un servicio o adaptador (e.g. BD, APIs externas, JWT).
+ */
 @Injectable()
 export class MixtoHandler {
   private readonly logger = new Logger(MixtoHandler.name);
 
-  constructor(private readonly toolkit: IaToolkitService) {}
+  /** Constructor de la clase. Inyecta los servicios o configuración necesarios para operar. */
+    constructor(private readonly toolkit: IaToolkitService) {}
 
-  async procesarFlujoMixto(
+  /**
+     * Ejecuta la operación técnica de procesarFlujoMixto.
+     * @param fk_user Parámetro de entrada de tipo number.
+     * @param fk_chat Parámetro de entrada de tipo number | null.
+     * @param pregunta Parámetro de entrada de tipo string.
+     * @returns Resultado de la operación en la capa de infraestructura.
+     */
+    async procesarFlujoMixto(
     fk_user: number,
     fk_chat: number | null,
     pregunta: string

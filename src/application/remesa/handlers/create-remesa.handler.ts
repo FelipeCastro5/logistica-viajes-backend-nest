@@ -4,38 +4,60 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RemesaInterface } from '../../../domain/remesa-domain/remesa.interface';
 import { ResponseUtil } from '../../utilities/response.util';
 
+/**
+ * Clase manejadora (Handler) para ejecutar la lógica de negocio.
+ * Implementa el patrón CQRS para procesar su respectivo comando.
+ */
 @CommandHandler(CreateRemesaCommand)
 @Injectable()
 export class CreateRemesaHandler
   implements ICommandHandler<CreateRemesaCommand>
 {
-  constructor(
+  /**
+     * Constructor del manejador donde se inyectan las dependencias (repositorios, servicios, etc.).
+     * @param remesaRepository Dependencia inyectada para el uso dentro del manejador.
+     */
+    constructor(
     @Inject('RemesaInterface')
     private readonly remesaRepository: RemesaInterface,
   ) {}
 
-  async execute(command: CreateRemesaCommand) {
-    try {
-      const remesa = await this.remesaRepository.createRemesa(
-        command.fk_viaje,
-        command.numero_remesa,
-        command.numero_autorizacion,
-        command.tipo_empaque,
-        command.naturaleza_carga,
-        command.codigo_armonizado,
-        command.cantidad,
-        command.unidad_medida,
-        command.peso_total,
-        command.mercancia_peligrosa,
-        command.observaciones,
-      );
+  /**
+     * Punto de entrada principal del manejador.
+     * Se encarga de orquestar la lógica paso a paso para cumplir con el comando.
+     * @param command Contiene los datos del comando para ser procesados.
+     * @returns Retorna la respuesta estandarizada con el resultado de la operación.
+     */
+    async execute(command: CreateRemesaCommand) {
+        try {
+          // 1. Ejecutamos la operación en el repositorio utilizando los datos del comando.
+          const remesa = await this.remesaRepository.createRemesa(
+            command.fk_viaje,
+            command.numero_remesa,
+            command.numero_autorizacion,
+            command.tipo_empaque,
+            command.naturaleza_carga,
+            command.codigo_armonizado,
+            command.cantidad,
+            command.unidad_medida,
+            command.peso_total,
+            command.mercancia_peligrosa,
+            command.observaciones,
+          );
 
-      return ResponseUtil.success(remesa, 'Remesa creada exitosamente', 201);
-    } catch (error) {
-      console.error('Error en CreateRemesaHandler:', error);
-      const status = error.getStatus?.() ?? 500;
-      const message = error.response?.message || 'Error al crear la remesa';
-      return ResponseUtil.error(message, status);
+          // 2. Retornamos una respuesta exitosa estandarizada indicando que la operación se completó correctamente.
+
+          return ResponseUtil.success(remesa, 'Remesa creada exitosamente', 201);
+        } catch (error) {
+          // Capturamos cualquier excepción (ej. problemas de red o de integridad en BD).
+          // Registramos el error internamente para depuración técnica.
+          console.error('Error en CreateRemesaHandler:', error);
+          // Intentamos extraer el código de estado HTTP del error, o aplicamos un 500 por defecto.
+          const status = error.getStatus?.() ?? 500;
+          // Extraemos el mensaje específico del error o establecemos uno genérico.
+          const message = error.response?.message || 'Error al crear la remesa';
+          // Devolvemos la respuesta de error estandarizada al cliente.
+          return ResponseUtil.error(message, status);
+        }
     }
-  }
 }
